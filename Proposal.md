@@ -137,16 +137,40 @@ func f = int (int a, int b) => a + b
 int result = f(10, 20)
 ```
 
-## Comments (Todo: Trey)
-TODO
+## Comments 
+As many other popular scripting languages use # to denote single-line comments, we feel it is natural to continue this tradition.
+However, a pain point of Python is the lack of "real" multi-line comments so we will implement multi-line comments using /* and *\ tokens.
+
+Example:
+```python
+# who decided foo and bar would be fun words to use for code examples?
+```
+
+```java
+/* old code here:
+func foo() {
+    print("bar")
+}
+*/
+```
 
 ## Memory
 The Viper language will be call by value like Python is, and all memory management will be handled internally by a simple garbage collector.
 
 # Unique Features 
 
-## Statically Typed Variables (Todo: Trey)
-TODO
+## Statically Typed Variables
+As we wanted to develop a compiled scripting language that shared our favorite aspects of other languages, we decided that using static typing would make full use of the compiler and help to alleviate the runtime errors that make dynamically typed languages so tedious to use on systems where safety and security is key. Defining the type would be C-style in that variables must be declared or initiated with a type. Function return types and parameters must also be specified.
+
+Examples:
+```C
+int big_number;
+float small_number = 1.0;
+
+func int add1(int a) {
+    return a+1;
+}
+```
 
 ## Scope Definition Options
 Scope in Python is traditionally defined with whitespace.
