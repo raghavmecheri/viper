@@ -160,16 +160,17 @@ func myFunc = <ret_type> () => expression output
 
 Example Function Calls:
 ```javascript
-# Example Use Case
 
 int func y(int x, int y, func z) {
     return z(x + y);
 }
 
 y(10, 20, int (int a, int b) => a * b);
+```
 
-# Anonymous Function Call Example
+Anonymous Function Call Example
 
+```javascript
 nah (int a, int b) => {
     print(a);
     print(b);
