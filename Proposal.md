@@ -122,7 +122,7 @@ Users are required to specify the type of the arrow function’s return value an
 ```
 
 ```
-<ret_type> (<param_type> param1, ..., <param_type>paramN) => { # (multi-line expression)
+<ret_type> (<param_type> param1, ..., <param_type> paramN) => { # (multi-line expression)
     Complex expression output
 }
 ```
