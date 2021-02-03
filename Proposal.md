@@ -238,7 +238,7 @@ stdout:
 
 We expect to include other examples of syntactic sugar in the future.
 
-## A Cool Example in Viper (Todo: Raghav)
+## A Cool Example in Viper
 Let's look at function overloading, which is now made possible in Viper (due to explicit typing)
 ```go
 func add = int (int x, int y) => x + y;
