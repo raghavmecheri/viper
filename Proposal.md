@@ -70,7 +70,7 @@ See the below tables for a summary of each operation and its respective symbol.
 ## Control Flow
 Control flow mechanisms resemble for/while loops in either Python, or C:
 ```python
-for element in arr:
+for int element in arr:
     print(element);
 ```
 ```C
