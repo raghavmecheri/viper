@@ -98,21 +98,22 @@ else:
 ## Functions
 Functions in Viper resemble function calls in either Python, or Go. A basic function may be defined and invoked as follows:
 ```python
-func foo():
-	print("Hello World!")
+nah func foo():
+    print("Hello World!")
 foo()
 ```
 Viper also allows for explicit scoping, rather than using indentation. This allows us to move to a more well-defined scoping system, especially when we want to escape Python's well known tabs/spaces confict:
 ```go
-func foo() {
-	print("Hello World!")
+nah func foo() {
+	print("Hello World!");
 }
 foo()
 ```
 Viper also supports arrow functions, more on which may be found below. However, a sample arrow function may either be anonymous, or assigned to a function type variable:
 ```go
-func apply(x, f):
+int func apply(int x, int func f):
 	return f(x)
+
 int squared = apply(10, int (int x) => x * x)
 ```
 An assigned arrow function may look as follows:
