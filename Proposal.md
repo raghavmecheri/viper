@@ -149,7 +149,7 @@ Example:
 ```java
 /* old code here:
 func foo() {
-    print("bar")
+    print("bar");
 }
 */
 ```
