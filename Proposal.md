@@ -184,8 +184,36 @@ nah (int a, int b) => {
 }(10, 20);
 ```
 
-## Syntactic Sugar (Todo: Tommy)
-TODO
+## Syntactic Sugar
+The following syntax shorthands make writing Viper simple and easy.  
+
+### Ternary operator
+Viper supports a JavaScript-like ternary operator for variable assignment.  Unlike JavaScript, however, these operators can be chained together with the ```|``` symbol.
+
+```javascript
+int y = 1
+int x =
+      (y < 0) ? -1    # Set x to -1 if y < 0
+    | (y == 0) ? 0    # Set x to 0 if y is 0
+    | (y < 5) ? 1     # Set x to 1 if y is in the range [1, 5]
+    : 2               # If none of the above are true, set x to 2. This catch-all case must be last in the chain.
+```
+
+### Iterator indexing
+Viper makes an iterator's index available to the user, even when iterating directly over elements using the ```in``` keyword. 
+```golang
+int[] array = [3, 2, 1]
+for int num in array:
+    print(num.index)
+```
+stdout:
+```
+0
+1
+2
+```
+
+We expect to include other examples of syntactic sugar in the future.
 
 ## A Cool Example in Viper (Todo: Raghav)
 TODO
