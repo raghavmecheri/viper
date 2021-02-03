@@ -58,6 +58,7 @@ See the below tables for a summary of each operation and its respective symbol.
 ## Functions
 ## Comments
 ## Memory
+The Viper language will be call by value like Python is, and all memory management will be handled internally by a simple garbage collector.
 
 # Unique Features
 
