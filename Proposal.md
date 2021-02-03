@@ -1,3 +1,4 @@
+
 # Viper
 
 An amalgamation of all our favourite language quirks.
@@ -70,7 +71,30 @@ See the below tables for a summary of each operation and its respective symbol.
 TODO
 
 ## Functions (Todo: Raghav)
-TODO
+Functions in Viper resemble function calls in either Python, or Go. A basic function may be defined and invoked as follows:
+```python
+func foo():
+	print("Hello World!")
+foo()
+```
+Viper also allows for explicit scoping, rather than using indentation. This allows us to move to a more well-defined scoping system, especially when we want to escape Python's well known tabs/spaces confict:
+```go
+func foo() {
+	print("Hello World!")
+}
+foo()
+```
+Viper also supports arrow functions, more on which may be found below. However, a sample arrow function may either be anonymous, or assigned to a function type variable:
+```go
+func apply(x, f):
+	return f(x)
+int squared = apply(10, int (int x) => x * x)
+```
+An assigned arrow function may look as follows:
+```go
+func f = int (int a, int b) => a + b;
+int result = f(10, 20);
+```
 
 ## Comments (Todo: Trey)
 TODO
@@ -90,7 +114,7 @@ Instead, $~ will be used to open a local scope, and ~$ will be used to close the
 With this method, everything within the scope will be equivalent to four added spaces of indentation.
 Note that if this method is used, whitespace will be ignored for everything within the scope.
 Also, all lines must be ended with a semicolon. For example, a for loop can be established in a number of different ways:
-```golang
+```go
 for string elem in list:
     print(elem)
 
@@ -114,7 +138,7 @@ for string elem in list
 ```
 
 Examples of snippets that wouldn't work are:
-```golang
+```go
 for string elem in list
 {
     for char letter in elem:
@@ -123,7 +147,7 @@ for string elem in list
 ```
 
 Once you use traditional scoping, whitespace is ignored. The other way around would work fine though:
-```golang
+```go
 for string elem in list:
     for char letter in elem 
     {
@@ -167,7 +191,6 @@ func myFunc = <ret_type> () => expression output
 
 Example Function Calls:
 ```javascript
-
 int func y(int x, int y, func z) {
     return z(x + y);
 }
@@ -201,7 +224,7 @@ int x =
 
 ### Iterator indexing
 Viper makes an iterator's index available to the user, even when iterating directly over elements using the ```in``` keyword. 
-```golang
+```go
 int[] array = [3, 2, 1]
 for int num in array:
     print(num.index)
