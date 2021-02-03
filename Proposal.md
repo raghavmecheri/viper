@@ -70,7 +70,7 @@ See the below tables for a summary of each operation and its respective symbol.
 ## Control Flow (Todo: Ottomano)
 TODO
 
-## Functions (Todo: Raghav)
+## Functions
 Functions in Viper resemble function calls in either Python, or Go. A basic function may be defined and invoked as follows:
 ```python
 func foo():
