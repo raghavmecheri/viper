@@ -83,7 +83,7 @@ while (condition):
 	do something
 ```
 
-Cython uses if/else/elif conditionals like Python:
+Viper uses if/else/elif conditionals like Python:
 
 ```python
 if a == b:
