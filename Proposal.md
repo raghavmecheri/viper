@@ -135,14 +135,14 @@ Users are required to specify the type of the arrow function’s return value an
 ```
 
 ```javascript
-<ret_type> (<param_type> param1, ..., <param_type> paramN) => { # (multi-line expression)
-    Complex expression output
+<ret_type> (<param_type> param1, ..., <param_type> paramN) => {
+    complex expression output
 }
 ```
 
 ```javascript
 <ret_type> (<param_type> param1, ... , <param_type> paramN) => :
-    Complex expression output
+    complex expression output
 ```
 
 Additionally, these arrow functions can be assigned to function variables:
