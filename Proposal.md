@@ -83,7 +83,7 @@ Instead, $~ will be used to open a local scope, and ~$ will be used to close the
 With this method, everything within the scope will be equivalent to four added spaces of indentation.
 Note that if this method is used, whitespace will be ignored for everything within the scope.
 Also, all lines must be ended with a semicolon. For example, a for loop can be established in a number of different ways:
-```
+```golang
 for string elem in list:
     print(elem)
 
@@ -107,7 +107,7 @@ for string elem in list
 ```
 
 Examples of snippets that wouldn't work are:
-```
+```golang
 for string elem in list
 {
     for char letter in elem:
@@ -116,7 +116,7 @@ for string elem in list
 ```
 
 Once you use traditional scoping, whitespace is ignored. The other way around would work fine though:
-```
+```golang
 for string elem in list:
     for char letter in elem 
     {
@@ -130,36 +130,36 @@ This will function in the same manner as expected with function definitions, con
 Similar to arrow functions in Javascript, or Python lambda functions, users will be able to define functions on the fly with arrow functions.
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
 
-```
+```javascript
 <ret_type> (<param_type> param1, ..., <param_type> paramN) => expression output
 ```
 
-```
+```javascript
 <ret_type> (<param_type> param1, ..., <param_type> paramN) => { # (multi-line expression)
     Complex expression output
 }
 ```
 
-```
+```javascript
 <ret_type> (<param_type> param1, ... , <param_type> paramN) => :
     Complex expression output
 ```
 
 Additionally, these arrow functions can be assigned to function variables:
 
-```
+```javascript
 func x = <ret_type> (<param_type> param1, ...,<param_type> paramN) => expression output
 ```
 
 Note that even with zero parameters or one parameter, the () are still necessary
-```
+```javascript
 func myFunc = <ret_type> () => expression output
 
 <ret_type> (<param_type> param) => expression output
 ```
 
 Example Function Calls:
-```
+```javascript
 # Example Use Case
 
 int func y(int x, int y, func z) {
