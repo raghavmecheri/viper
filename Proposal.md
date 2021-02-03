@@ -107,7 +107,7 @@ for int element in arr:
     if element == 2:
         print("I'm going to skip the remaining statements")
 	skip
-    print("This element isn't a 2");
+    print("This element isn't a 2")
 ```
 
 ## Functions
