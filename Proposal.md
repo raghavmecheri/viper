@@ -54,15 +54,22 @@ See the below tables for a summary of each operation and its respective symbol.
 | true          | true boolean value                                    |
 | false         | false boolean value                                   |
 
-## Control Flow
-## Functions
-## Comments
+## Control Flow (Todo: Ottomano)
+TODO
+
+## Functions (Todo: Raghav)
+TODO
+
+## Comments (Todo: Trey)
+TODO
+
 ## Memory
 The Viper language will be call by value like Python is, and all memory management will be handled internally by a simple garbage collector.
 
-# Unique Features
+# Unique Features 
 
-## Statically Typed Variables
+## Statically Typed Variables (Todo: Trey)
+TODO
 
 ## Scope Definition Options
 Scope in Python is traditionally defined with whitespace.
@@ -163,3 +170,6 @@ nah (int a, int b) => {
     print(b);
 }(10, 20);
 ```
+
+## Syntactic Sugar (Todo: Tommy)
+TODO
