@@ -74,7 +74,7 @@ for element in arr:
 	print(element)
 ```
 ```C
-for (int i = 0; i<sizeof(arr); i++){
+for (int i = 0; i<sizeof(arr); i++){  # More on indentation vs explicit scoping below
 	printf(arr[i]);
 }
 ```
