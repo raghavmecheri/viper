@@ -12,7 +12,7 @@ By:
 
 ## Overview
 
-Viper is a statically typed imperative compiled programming language with similar syntax to Python and the safety mechanisms (an increased efficiency) of type checking. Cython forces the user to declare types of functions and variables, as one would do for C, yet in an easy to read and write syntax that mimics the simplicity of Python. 
+Viper is a statically typed imperative programming language with similar syntax to Python and the safety mechanisms (an increased efficiency) of type checking. Cython forces the user to declare types of functions and variables, as one would do for C, yet in an easy to read and write syntax that mimics the simplicity of Python. 
 
 Our goals for Viper are:
 * Python-styled syntax
@@ -68,7 +68,32 @@ See the below tables for a summary of each operation and its respective symbol.
 | false         | false boolean value                                   |
 
 ## Control Flow (Todo: Ottomano)
-TODO
+Control flow mechanisms resemble for/while loops in either Python, or C.
+```python
+for element in arr:
+	print(element)
+```
+```C
+for (int i = 0; i<sizeof(arr); i++){
+	printf(arr[i]);
+}
+```
+```python
+while (condition):
+	do something
+```
+
+Cython uses if/else/elif conditionals like Python:
+
+```python
+if a == b:
+	print(a)
+elif a > b:
+	print(b)
+else:
+	print("something is wrong")
+	
+```
 
 ## Functions
 Functions in Viper resemble function calls in either Python, or Go. A basic function may be defined and invoked as follows:
