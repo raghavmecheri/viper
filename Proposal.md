@@ -214,6 +214,10 @@ The following syntax shorthands make writing Viper simple and easy.
 Viper supports a JavaScript-like ternary operator for variable assignment.  Unlike JavaScript, however, these operators can be chained together with the ```|``` symbol.
 
 ```javascript
+int x = <boolean_exp> ? <output_if_true> : <output_if_false>
+```
+
+```javascript
 int y = 1
 int x =
       (y < 0) ? -1    # Set x to -1 if y < 0
@@ -252,8 +256,8 @@ char charResult = add('a', 'b');
 Another cool example could be something like the GCD function:
 ```go
 int func recursiveGCD(int a, int b) {
-	func conditional = int (int x, int y) => x == 0 ? y : y == 0 ? x : nah
-	func swappedGCD = int (int x, int y) => x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x)
+	func conditional = int (int x, int y) => x == 0 ? y : y == 0 ? x : nah;
+	func swappedGCD = int (int x, int y) => x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
 	int check = conditional(a, b);
 	if (check == nah) {
 		return swappedGCD(a, b);
