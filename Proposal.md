@@ -99,7 +99,7 @@ The abort keyword is the equivalent of break in Python; it stops the loop:
 for int element in arr:
     if element == 2:
         print("found it")
-	break
+	abort
 ```
 The skip keyword functions much like continue in Python; it rejects all the remaining statements in the loop and returns the control back to the top of the loop:
 ```python
