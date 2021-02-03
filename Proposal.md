@@ -12,6 +12,9 @@ Our goals for Viper are:
 * Choice of how to incorporate scope (whitespace or brackets) -- get rid of Python's tab/spaces issues
 * Arrow Functions/Lambdas
 
+## What sort of programs would Viper be useful for? (Todo: Musti)
+TODO
+
 # Basic Language Details
 
 ## Data Types and Operations
