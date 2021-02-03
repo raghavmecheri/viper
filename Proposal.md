@@ -71,42 +71,42 @@ See the below tables for a summary of each operation and its respective symbol.
 Control flow mechanisms resemble for/while loops in either Python, or C:
 ```python
 for element in arr:
-	print(element);
+    print(element);
 ```
 ```C
 for (int i = 0; i<sizeof(arr); i++){  # More on indentation vs explicit scoping below
-	print(arr[i]);
+    print(arr[i]);
 }
 ```
 ```python
 while (condition):
-	print("chilling");
+    print("chilling");
 ```
 
 Viper uses if/else/elif conditionals like Python:
 
 ```python
 if a == b:
-	print(a);
+    print(a);
 elif a > b:
-	print(b);
+    print(b);
 else:
-	print("something is wrong");
+    print("something is wrong");
 	
 ```
 The abort keyword is the equivalent of break in Python; it stops the loop:
 ```python
 for int element in arr:
-	if element == 2:
-		print("found it");
-		break;
+    if element == 2:
+        print("found it");
+	break;
 ```
 The skip keyword functions much like continue in Python; it rejects all the remaining statements in the loop and returns the control back to the top of the loop:
 ```python
 for int element in arr:
-	if element == 2:
-		print("I'm going to skip the remaining statements");
-	print("This element isn't a 2");
+    if element == 2:
+        print("I'm going to skip the remaining statements");
+    print("This element isn't a 2");
 ```
 
 ## Functions
