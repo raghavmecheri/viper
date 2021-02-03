@@ -22,8 +22,8 @@ Our goals for Viper are:
 
 Note: The global scope for a Viper program is assumed to comprise the main function, unless one already exists.
 
-## What sort of programs would Viper be useful for? (Todo: Musti)
-TODO
+## What sort of programs would Viper be useful for?
+Viper is perfect for almost all common scripting tasks generally associated with languages like Python or Javascript. It is still read top-down with the top-level acting as the default "main" function, but there are huge efficiency gains from Viper being statically-typed and compiled rather than interpreted. Additionally, we combine favorite features of both languages, as well as flexible syntax options and many forms of efficient syntactic sugar to ensure that not only will the code run quickly, but writing it will also be feel fast and natural. We are aiming to optimize both the speed and experience from thought to output. 
 
 # Basic Language Details
 
