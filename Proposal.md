@@ -239,4 +239,25 @@ stdout:
 We expect to include other examples of syntactic sugar in the future.
 
 ## A Cool Example in Viper (Todo: Raghav)
-TODO
+Let's look at function overloading, which is now made possible in Viper (due to explicit typing)
+```go
+func add = int (int x, int y) => x + y;
+func add = float (float x, float y) => x + y;
+func add = char (char x, char y) => x + y;
+
+int intResult = add(10, 20);
+float floatResult = add(10.1, 10.2);
+char charResult = add('a', 'b');
+```
+Another cool example could be something like the GCD function:
+```go
+int func recursiveGCD(int a, int b) {
+	func conditional = int (int x, int y) => x == 0 ? y : y == 0 ? x : nah
+	func swappedGCD = int (int x, int y) => x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x)
+	int check = conditional(a, b);
+	if (check == nah) {
+		return swappedGCD(a, b);
+	}
+	return check;
+}
+```
