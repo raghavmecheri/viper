@@ -12,6 +12,8 @@ Our goals for Viper are:
 * Choice of how to incorporate scope (whitespace or brackets) -- get rid of Python's tab/spaces issues
 * Arrow Functions/Lambdas
 
+Note: The global scope for a Viper program is assumed to comprise the main function, unless one already exists.
+
 ## What sort of programs would Viper be useful for? (Todo: Musti)
 TODO
 
