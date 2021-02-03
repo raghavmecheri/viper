@@ -67,7 +67,7 @@ See the below tables for a summary of each operation and its respective symbol.
 | true          | true boolean value                                    |
 | false         | false boolean value                                   |
 
-## Control Flow (Todo: Ottomano)
+## Control Flow
 Control flow mechanisms resemble for/while loops in either Python, or C.
 ```python
 for element in arr:
