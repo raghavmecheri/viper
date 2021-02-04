@@ -40,6 +40,8 @@ The primitive data structure which all other data structures will be built off i
 | int       	| A 8 byte number          	| =, ==, !=, +, -, *,<br>/, %, ++, –, +=, -=, <, >,<br>=<, >= 	| a = 1<br>a > b<br>a == b                  	|
 | float     	| An 8 byte decimal number 	| =, ==, !=, +, -, *,<br>/, %, ++, –, +=, -=, <, >,<br>=<, >= 	| a = 1<br>a > b<br>a == b                  	|
 | bool      	| A 1 byte boolean value   	| =, ==, !=, !, &&                                            	| a == b<br>a != b<br>!(a == b)<br>(a && b) 	|
+| nah      	| A 1 byte none type	   	| =, ==, !=	                                            	| a == b<br>a != b<br>				|
+
 
 The standard library will consist of data structures such as stacks, queues, hash maps, etc.
 Viper will use imperative-style control-flow mechanisms such as the for loop and while loop.
