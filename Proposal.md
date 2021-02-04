@@ -12,7 +12,7 @@ By:
 
 ## Overview
 
-Viper is a statically typed imperative programming language with similar syntax to Python and the safety mechanisms (an increased efficiency) of type checking. Cython forces the user to declare types of functions and variables, as one would do for C, yet in an easy to read and write syntax that mimics the simplicity of Python. 
+Viper is a statically typed imperative programming language with similar syntax to Python and the safety mechanisms (an increased efficiency) of type checking. Viper forces the user to declare types of functions and variables, as one would do for C, yet in an easy to read and write syntax that mimics the simplicity of Python. 
 
 Our goals for Viper are:
 * Python-styled syntax
