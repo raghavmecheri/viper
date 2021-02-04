@@ -44,7 +44,8 @@ The primitive data structure which all other data structures will be built off i
 The standard library will consist of data structures such as stacks, queues, hash maps, etc.
 Viper will use imperative-style control-flow mechanisms such as the for loop and while loop.
 Viper will also use if/else/elif statements. 
-Viper will be able to perform addition, subtraction, multiplication, division, compare (greater than, less than, equals), modulus, powers, concatenation, and increment/decrement. We will also have arrays of primitives, and an array of `char` types would constitute a string.
+Viper will be able to perform addition, subtraction, multiplication, division, compare (greater than, less than, equals), modulus, powers, concatenation, and increment/decrement. We will also have arrays and tuples of primitives. Just like in OCaml, tuples can also contain elements of multiple datatypes.
+An array of `char` types would constitute a string, and we plan to implement a `string` class in our standard library.
 
 ## Keywords
 
@@ -267,7 +268,7 @@ Anonymous Function Call Example
 nah (int a, int b) => {
     print(a);
     print(b);
-}(10, 20);
+} (10, 20);
 ```
 
 ## Additional Features
@@ -290,15 +291,11 @@ int x =
 ```
 
 ### Iterator indexing
-Viper makes an iterator's index available to the user, even when iterating directly over elements using the ```in``` keyword. We plan to either accomplish this by enforcing that the `in` operator returns a tuple (which would require for the introduction of tuples as a type) or by adding an `index` attribute to the value being iterated (which would require a wrapper over the primitive value). Both options have been demonstrated below, and we plan to evaluate the complexity of each option before choosing one of them:
+Viper makes an iterator's index available to the user, even when iterating directly over elements using the ```in``` keyword. We plan to either accomplish this by enforcing that the `in` operator returns a tuple, which can then be unpacked within the loop body. The second tuple value can also be implicitly ignored.
 
 ```go
 int[] array = [3, 2, 1]
-for int num in array:
-    print(num.index)
-    
-int[] array = [3, 2, 1]
-for (int num, int idx) in array:
+for int num, int idx in array:
     print(idx)
 ```
 stdout:
