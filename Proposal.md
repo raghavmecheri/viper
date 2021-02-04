@@ -1,4 +1,3 @@
-
 # Viper
 
 An amalgamation of all our favourite language quirks.
@@ -34,13 +33,13 @@ Viper also includes a null data type, which is defined with the keyword '''nah''
 The primitive data structure which all other data structures will be built off is the array.
 
 
-| Data Type 	| Description              	| Operations                                                  	| Examples                                  	|
-|-----------	|--------------------------	|-------------------------------------------------------------	|-------------------------------------------	|
-| char      	| A 1 byte character       	| =, ==, !=, +, ++,<br>–, <, >, =<, >=                        	| a + b<br>a >= b<br>a <= b                 	|
-| int       	| A 8 byte number          	| =, ==, !=, +, -, *,<br>/, %, ++, –, +=, -=, <, >,<br>=<, >= 	| a = 1<br>a > b<br>a == b                  	|
-| float     	| An 8 byte decimal number 	| =, ==, !=, +, -, *,<br>/, %, ++, –, +=, -=, <, >,<br>=<, >= 	| a = 1<br>a > b<br>a == b                  	|
-| bool      	| A 1 byte boolean value   	| =, ==, !=, !, &&                                            	| a == b<br>a != b<br>!(a == b)<br>(a && b) 	|
-| nah      	| A 1 byte none type	   	| =, ==, !=	                                            	| a == b<br>a != b<br>				|
+| Data Type     | Description               | Operations                                                    | Examples                                      |
+|-----------    |-------------------------- |-------------------------------------------------------------  |-------------------------------------------    |
+| char          | A 1 byte character        | =, ==, !=, +, ++,<br>–, <, >, =<, >=                          | a + b<br>a >= b<br>a <= b                     |
+| int           | A 8 byte number           | =, ==, !=, +, -, *,<br>/, %, ++, –, +=, -=, <, >,<br>=<, >=   | a = 1<br>a > b<br>a == b                      |
+| float         | An 8 byte decimal number  | =, ==, !=, +, -, *,<br>/, %, ++, –, +=, -=, <, >,<br>=<, >=   | a = 1<br>a > b<br>a == b                      |
+| bool          | A 1 byte boolean value    | =, ==, !=, !, &&                                              | a == b<br>a != b<br>!(a == b)<br>(a && b)     |
+| nah       | A 1 byte none type        | =, ==, !=                                                 | a == b<br>a != b<br>              |
 
 
 The standard library will consist of data structures such as stacks, queues, hash maps, etc.
@@ -51,21 +50,21 @@ An array of `char` types would constitute a string, and we plan to implement a `
 
 ## Keywords
 
-|    Keyword   	|                        Usage                       	|
-|:------------:	|:--------------------------------------------------:	|
-| char         	| Declares a character                               	|
-| int          	| Declares an integer                                	|
-| float        	| Declares a floating-point number                   	|
-| bool         	| Declares a boolean                                 	|
+|    Keyword    |                        Usage                          |
+|:------------: |:--------------------------------------------------:   |
+| char          | Declares a character                                  |
+| int           | Declares an integer                                   |
+| float         | Declares a floating-point number                      |
+| bool          | Declares a boolean                                    |
 | nah           | Declares our equivalent of a nulltype                 |
 | panic         | Throws an exception                                   |
-| func         	| Defines a function                                 	|
-| return       	| Specifies the return value of a function           	|
+| func          | Defines a function                                    |
+| return        | Specifies the return value of a function              |
 | abort         | Our equivalent of a break statement                   |
 | skip          | Skips the loop iteration - equivalent of continue     |
-| for/while    	| Defines a for or while loop, respectively          	|
-| if/else/elif 	| Controls the flow of if, else, and elif statements 	|
-| in           	| Specifies direct, index-free iteration             	|
+| for/while     | Defines a for or while loop, respectively             |
+| if/else/elif  | Controls the flow of if, else, and elif statements    |
+| in            | Specifies direct, index-free iteration                |
 | true          | true boolean value                                    |
 | false         | false boolean value                                   |
 
@@ -94,21 +93,21 @@ elif a > b:
     print(b)
 else:
     print("something is wrong")
-	
+    
 ```
 The abort keyword is the equivalent of break in Python; it stops the loop:
 ```python
 for int element in arr:
     if element == 2:
         print("found it")
-	abort
+    abort
 ```
 The skip keyword functions much like continue in Python; it rejects all the remaining statements in the loop and returns the control back to the top of the loop:
 ```python
 for int element in arr:
     if element == 2:
         print("I'm going to skip the remaining statements")
-	skip
+    skip
     print("This element isn't a 2")
 ```
 
@@ -122,14 +121,14 @@ foo()
 Viper also allows for explicit scoping, rather than using indentation. This allows us to move to a more well-defined scoping system, especially when we want to escape Python's well known tabs/spaces confict:
 ```go
 nah func foo() {
-	print("Hello World!");
+    print("Hello World!");
 }
 foo()
 ```
 Viper also supports arrow functions, more on which may be found below. However, a sample arrow function may either be anonymous, or assigned to a function type variable:
 ```go
 int func apply(int x, int func f):
-	return f(x)
+    return f(x)
 
 int squared = apply(10, int (int x) => x * x)
 ```
@@ -141,7 +140,7 @@ int result = f(10, 20)
 
 ## Comments 
 As many other popular scripting languages use # to denote single-line comments, we feel it is natural to continue this tradition.
-However, a pain point of Python is the lack of "real" multi-line comments so we will implement multi-line comments using /* and *\ tokens.
+However, a pain point of Python is the lack of "real" multi-line comments so we will implement multi-line comments using `/*` and `*/` tokens.
 
 Example:
 ```python
@@ -233,19 +232,21 @@ Users are required to specify the type of the arrow function’s return value an
 
 ```javascript
 <ret_type> (<param_type> param1, ..., <param_type> paramN) => {
-    complex expression output
+    return complex expression output
 }
 ```
 
 ```javascript
 <ret_type> (<param_type> param1, ... , <param_type> paramN) => :
-    complex expression output
+    return complex expression output
 ```
 
 Additionally, these arrow functions can be assigned to function variables:
 
 ```javascript
-func x = <ret_type> (<param_type> param1, ...,<param_type> paramN) => expression output
+func x = <ret_type> (<param_type> param1, ...,<param_type> paramN) => {
+    return expression output
+}
 ```
 
 Note that even with zero parameters or one parameter, the () are still necessary
@@ -289,7 +290,9 @@ int x =
       (y < 0) ? -1    # Set x to -1 if y < 0
     | (y == 0) ? 0    # Set x to 0 if y is 0
     | (y < 5) ? 1     # Set x to 1 if y is in the range [1, 5]
-    : 2               # If none of the above are true, set x to 2. This catch-all case must be last in the chain.
+    : 2
+# If none of the above are true, set x to 2.
+# This catch-all case must be last in the chain.
 ```
 
 ### Iterator indexing
@@ -323,12 +326,17 @@ char charResult = add('a', 'b');
 Another cool example could be something like the GCD function:
 ```go
 int func recursiveGCD(int a, int b) {
-	func conditional = int (int x, int y) => x == 0 ? y : y == 0 ? x : nah;
-	func swappedGCD = int (int x, int y) => x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
-	int check = conditional(a, b);
-	if (check == nah) {
-		return swappedGCD(a, b);
-	}
-	return check;
+    
+    func conditional = int (int x, int y) =>
+        x == 0 ? y : y == 0 ? x : nah;
+        
+    func swappedGCD = int (int x, int y) => 
+        x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
+    
+    int check = conditional(a, b);
+    if (check == nah) {
+        return swappedGCD(a, b);
+    }
+    return check;
 }
 ```
