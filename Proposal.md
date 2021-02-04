@@ -174,11 +174,10 @@ func int add1(int a) {
 
 ## Scope Definition Options
 Scope in Python is traditionally defined with whitespace.
-Viper retains this option, while also giving users the alternative to take a more traditional approach and avoid whitespace concerns.
-Instead, $~ will be used to open a local scope, and ~$ will be used to close the scope.
+Viper retains this option, while also giving users the alternative (via curly braces) to take a more traditional approach and avoid whitespace concerns.
 With this method, everything within the scope will be equivalent to four added spaces of indentation.
-Note that if this method is used, whitespace will be ignored for everything within the scope.
-Also, all lines must be ended with a semicolon. For example, a for loop can be established in a number of different ways:
+Note that if this method is used, whitespace will be ignored for everything within the scope and every statement within a scope defined by `{}` must end with a semicolon.
+For example, a for loop can be established in a number of different ways:
 ```go
 for string elem in list:
     print(elem)
@@ -276,7 +275,7 @@ nah (int a, int b) => {
 The following syntax shorthands make writing Viper simple and easy.  
 
 ### Ternary operator
-Viper supports a JavaScript-like ternary operator for variable assignment.  Unlike JavaScript, however, these operators can be chained together with the ```|``` symbol.
+Viper supports a JavaScript-like ternary operator for variable assignment.  Unlike JavaScript, however, these operators can be chained together with the ```|``` symbol (similar to what we see in OCaml's pattern matching)
 
 ```javascript
 int x = <boolean_exp> ? <output_if_true> : <output_if_false>
@@ -292,11 +291,16 @@ int x =
 ```
 
 ### Iterator indexing
-Viper makes an iterator's index available to the user, even when iterating directly over elements using the ```in``` keyword. 
+Viper makes an iterator's index available to the user, even when iterating directly over elements using the ```in``` keyword. We plan to either accomplish this by enforcing that the `in` operator returns a tuple (which would require for the introduction of tuples as a type) or by adding an `index` attribute to the value being iterated (which would require a wrapper over the primitive value). Both options have been demonstrated below, and we plan to evaluate the complexity of each option before choosing one of them:
+
 ```go
 int[] array = [3, 2, 1]
 for int num in array:
     print(num.index)
+    
+int[] array = [3, 2, 1]
+for (int num, int idx) in array:
+    print(idx)
 ```
 stdout:
 ```
