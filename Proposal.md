@@ -321,7 +321,7 @@ char charResult = add('a', 'b');
 Another cool example could be something like the GCD function:
 ```go
 int func recursiveGCD(int a, int b) {
-	func conditional = int (int x, int y) => x == 0 ? y | y == 0 ? x : nah;
+	func conditional = int (int x, int y) => x == 0 ? y : y == 0 ? x : nah;
 	func swappedGCD = int (int x, int y) => x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
 	int check = conditional(a, b);
 	if (check == nah) {
