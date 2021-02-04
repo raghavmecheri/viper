@@ -30,7 +30,7 @@ Viper is perfect for almost all common scripting tasks generally associated with
 ## Data Types and Operations
 The standard data types in Viper are integers, floats, booleans, and characters.
 Strings are simply arrays of characters.
-Viper also includes a null data type, which is defined with the keyword null.
+Viper also includes a null data type, which is defined with the keyword '''nah'''.
 The primitive data structure which all other data structures will be built off is the array.
 
 
@@ -45,7 +45,6 @@ The standard library will consist of data structures such as stacks, queues, has
 Viper will use imperative-style control-flow mechanisms such as the for loop and while loop.
 Viper will also use if/else/elif statements. 
 Viper will be able to perform addition, subtraction, multiplication, division, compare (greater than, less than, equals), modulus, powers, concatenation, and increment/decrement. We will also have arrays of primitives, and an array of `char` types would constitute a string.
-See the below tables for a summary of each operation and its respective symbol.
 
 ## Keywords
 
@@ -271,18 +270,18 @@ nah (int a, int b) => {
 }(10, 20);
 ```
 
-## Syntactic Sugar
-The following syntax shorthands make writing Viper simple and easy.  
+## Additional Features
+The following features make writing Viper simple and easy.  
 
 ### Ternary operator
-Viper supports a JavaScript-like ternary operator for variable assignment.  Unlike JavaScript, however, these operators can be chained together with the ```|``` symbol (similar to what we see in OCaml's pattern matching)
+Viper supports a JavaScript-like ternary operator for variable assignment.  Unlike JavaScript, however, these operators can be chained together with the ```|``` symbol (similar to what we see in OCaml's pattern matching):
 
 ```javascript
 int x = <boolean_exp> ? <output_if_true> : <output_if_false>
 ```
-
+An example with chaining:
 ```javascript
-int y = 1
+int y = rand_int()
 int x =
       (y < 0) ? -1    # Set x to -1 if y < 0
     | (y == 0) ? 0    # Set x to 0 if y is 0
@@ -325,7 +324,7 @@ char charResult = add('a', 'b');
 Another cool example could be something like the GCD function:
 ```go
 int func recursiveGCD(int a, int b) {
-	func conditional = int (int x, int y) => x == 0 ? y : y == 0 ? x : nah;
+	func conditional = int (int x, int y) => x == 0 ? y | y == 0 ? x : nah;
 	func swappedGCD = int (int x, int y) => x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
 	int check = conditional(a, b);
 	if (check == nah) {
