@@ -1,2 +1,2 @@
 # viper
-An amalgamation of Ratghav
+An amalgamation of our favourite programming language traits

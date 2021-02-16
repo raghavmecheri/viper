@@ -1,4 +1,4 @@
-/* Ocamlyacc parser for MicroC */
+/* Based on the Ocamlyacc parser for MicroC */
 
 %{
 open Ast
