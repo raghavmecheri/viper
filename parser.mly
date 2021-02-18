@@ -5,7 +5,7 @@ open Ast
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN
+%token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN ARROW
 %token <int> INTLIT
 %token <char> CHARLIT
 %token <string> ID
@@ -41,7 +41,36 @@ fdecl:
 	 fname = $3;
 	 formals = $5;
 	 locals = List.rev $8;
-	 body = List.rev $9 } }
+         body = List.rev $9;
+         autoreturn = false } }
+   | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt_list
+     { { typ = $1;
+     fname = $3;
+     formals = $5;
+     locals = [];
+     body = List.rev $8;
+     autoreturn = true } }
+   | typ FUNC ID LPAREN formals_opt RPAREN ARROW LBRACE vdecl_list stmt_list RBRACE
+     { { typ = $1; 
+     fname = $3; 
+     formals = $5; 
+     locals = List.rev $9; 
+     body = List.rev $10; 
+     autoreturn = false } } 
+   | typ FUNC LPAREN formals_opt RPAREN ARROW stmt_list
+     { { typ = $1;
+     fname = "anon";
+     formals = $4;
+     locals = [];
+     body = List.rev $7; 
+     autoreturn = true } }
+   | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE vdecl_list stmt_list RBRACE
+     { { typ = $1;
+     fname = "anon";
+     formals = $4; 
+     locals = List.rev $8;
+     body = List.rev $9;
+     autoreturn = false } }  
 
 formals_opt:
     /* nothing */ { [] }
