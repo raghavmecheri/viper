@@ -4,6 +4,10 @@ int func helper(int a, int b) {
 
 int func helper2(int a, int b) => a + b;
 
+int func helper3(int a, int b) => {
+  return a + b;
+}
+
 nah func main() {
   int i;
   int j;
@@ -28,6 +32,7 @@ nah func main() {
 
   k = helper(i,j);
   k = helper2(i, j);
+  k = helper3(i, j);
   b = true;
   b = false;
   m = 'c';
