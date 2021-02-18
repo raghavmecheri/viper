@@ -5,13 +5,13 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Float | Void
+type typ = Int | Bool | Void | Char
 
 type bind = typ * string
 
 type expr =
-    Literal of int
-  | Fliteral of string
+    IntegerLiteral of int
+  | CharacterLiteral of char
   | BoolLit of bool
   | Id of string
   | Binop of expr * op * expr
@@ -26,6 +26,7 @@ type stmt =
   | Return of expr
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
+  | ForIter of string * expr * stmt
   | While of expr * stmt
 
 type func_decl = {
@@ -59,8 +60,8 @@ let string_of_uop = function
   | Not -> "!"
 
 let rec string_of_expr = function
-    Literal(l) -> string_of_int l
-  | Fliteral(l) -> l
+    IntegerLiteral(l) -> string_of_int l
+  |  CharacterLiteral(l) -> "'" ^ Char.escaped l ^ "'"
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
@@ -83,13 +84,15 @@ let rec string_of_stmt = function
   | For(e1, e2, e3, s) ->
       "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
+  | ForIter(name, e2, s) ->
+      "for (" ^ name ^ " in " ^ string_of_expr e2 ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
-  | Float -> "float"
-  | Void -> "void"
+  | Void -> "nah"
+  | Char -> "char"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

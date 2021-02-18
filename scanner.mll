@@ -1,9 +1,6 @@
 (* Ocamllex scanner for MicroC *)
 
-{ open parser }
-
-let digit = ['0' - '9']
-let digits = digit+
+{ open Parser }
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -33,17 +30,17 @@ rule token = parse
 | "for"    { FOR }
 | "while"  { WHILE }
 | "return" { RETURN }
-| "int"    { INT }
-| "bool"   { BOOL }
-| "float"  { FLOAT }
-| "nah"   { VOID }
-| "panic" { PANIC }
-| "true"   { BLIT(true)  }
-| "false"  { BLIT(false) }
+| "func"   { FUNC }
 | "in"     { IN }
-| digits as lxm { LITERAL(int_of_string lxm) }
-| digits '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
-| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*     as lxm { ID(lxm) }
+| "int"    { INT }
+| "char"   { CHAR }
+| "bool"   { BOOL }
+| "nah"   { VOID }
+| "true"   { TRUE }
+| "false"  { FALSE }
+| ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
+| ['\''](['a'-'z' 'A'-'Z'] as lxm)['\''] { CHARLIT(lxm) }
+| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
