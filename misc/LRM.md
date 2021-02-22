@@ -197,9 +197,53 @@ The and operator is given higher precedence than the or operator.
 #### 5.3.6.5 Precedence of Variable Operators
 Variable operators are given a lower precedence than binary operators and are right associative. 
 ## 5.4 Scope
-### 5.4.1 Curly Braces
-### 5.4.2 Indentation
+Scope in Python is traditionally defined with whitespace.
+Viper retains this option, while also giving users the alternative (via curly braces) to take a more traditional approach and avoid whitespace concerns.
+With this method, everything within the scope will be equivalent to four added spaces of indentation.
+Note that if this method is used, whitespace will be ignored for everything within the scope and every statement within a scope defined by `{}` must end with a semicolon.
+For example, a for loop can be established in a number of different ways:
+```go
+for string elem in list:
+    print(elem)
 
+# Is the same as:
+
+for string elem in list {
+    print(elem);
+}
+
+# Is the same as:
+
+for string elem in list
+{
+    print(elem);
+}
+
+# Is the same as:
+
+for string elem in list
+{ print(elem); }
+```
+
+Examples of snippets that wouldn't work are:
+```go
+for string elem in list
+{
+    for char letter in elem:
+        print(letter)
+}
+```
+
+Once you use traditional scoping, whitespace is ignored. The other way around would work fine though:
+```go
+for string elem in list:
+    for char letter in elem 
+    {
+        print(letter);
+    }
+```
+
+This will function in the same manner as expected with function definitions, conditionals, etc.
 
 
 
