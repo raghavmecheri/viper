@@ -19,6 +19,7 @@ type expr =
   | BoolLit of bool
   | ListLit of expr list
   | Id of string
+  | Dec of typ * string
   | Access of expr * expr
   | AccessAssign of expr * expr * expr
   | Binop of expr * op * expr
@@ -80,6 +81,7 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ "," ^ string_of_expr elem) "" lst ^ "]"
   | Id(s) -> s
+  | Dec(t, s) -> string_of_typ t ^ " " ^ s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
