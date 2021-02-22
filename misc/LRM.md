@@ -30,11 +30,17 @@ A while statement takes in a boolean expression. If the boolean expression retur
 ### 5.1.3 Jump Statements
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
 #### 5.1.3.1 Continue Statement
+The continue statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
 #### 5.1.3.2 Break Statement
+The break statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
 ## 5.2 Expressions
+Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
 ### 5.2.1 Truth-Value Expression
+Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
 ### 5.2.2 Functions
+Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 #### 5.2.2.1 Arrow Functions
+Viper supports arrow functions as well. 
 ## 5.3 Operators
 ### 5.3.1 Unary Operators
 #### 5.3.1.1 The NOT Operator
