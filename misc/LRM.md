@@ -19,26 +19,66 @@ Selector Statements are involved with Viper's control flow. These statements are
 The if statement takes in a boolean expression within parentheses and runs the statements within its scope if the boolean expression returns true. 
 #### 5.1.1.2 If/Elif/Else Statement
 The if statement has optional statements that can come after it such as elif and else. Elif is shorthand for "else if" which means that it will be run if the previous if statement's boolean expression was false. An elif statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all elif statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
+```python
+if a == b:
+    print(a)
+elif a > b:
+    print(b)
+else:
+    print("something is wrong")
+    
+```
 ### 5.1.2 Iterator Statements
 Iterator Statements are involved with Viper's ability to loop through statements. These statements compose for loops and while loops.
 #### 5.1.2.1 For Statement
 A for statement takes in an argument in the form of (assignment; condition; iterator), followed by a list of statements within its scope. The assignment creates a variable and initializes it to a given number. The condition is a boolean expression; if it returns true, the list of statements within the for statement's scope is run. The iterator changes the value of the variable in the assignment. Then the condition is checked with the new value and if it returns true, the statements are run again, otherwise the statements are not run again.
+```C
+for (int i = 0; i<sizeof(arr); i++){  # More on indentation vs explicit scoping below
+    print(arr[i]);
+}
+```
 
 A for statement can take a second form as well. The second form of a for statement is an identifer, followed by the keyword in, followed by an object that is iterable. This statement will iterate over the values in the iterable object, using the identifier for each value, and run the statements in its scope. Once there is no elements left in the iterable object, the for statement will stop.
+```python
+for int element in arr:
+    print(element)
+```
 #### 5.1.2.2 While Statement
 A while statement takes in a boolean expression. If the boolean expression returns a value of true, the statements within its scope are run. After all statements are run, the boolean expression is evaluated again; if true then statements are run again, otherwise, the while statement is done. This process repeats until the boolean expression returns a value of false.
+```python
+while (condition):
+    print("chilling")
+```
 ### 5.1.3 Jump Statements
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
-#### 5.1.3.1 Continue Statement
-The continue statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
-#### 5.1.3.2 Break Statement
-The break statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
+#### 5.1.3.1 Skip Statement
+The skip statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
+```python
+for int element in arr:
+    if element == 2:
+        print("I'm going to skip the remaining statements")
+    skip
+    print("This element isn't a 2")
+```
+#### 5.1.3.2 Abort Statement
+The abort statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
+```python
+for int element in arr:
+    if element == 2:
+        print("found it")
+    abort
+```
 ## 5.2 Expressions
 Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
 ### 5.2.1 Truth-Value Expression
 Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
 ### 5.2.2 Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
+```python
+nah func foo():
+    print("Hello World!")
+foo()
+```
 #### 5.2.2.1 Arrow Functions
 Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
