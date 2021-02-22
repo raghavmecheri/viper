@@ -125,6 +125,7 @@ expr:
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
   | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
+  | expr ARROPEN expr ARRCLOSE ASSIGN expr { AccessAssign($1, $3, $6) } 
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
 
