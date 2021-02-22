@@ -8,18 +8,56 @@ Trey
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
 ## Primitive Data Types
-The five primitive types supported by Viper are ```char```, ```int```, ```float```, ```bool```, and ```nah```. The table below summarizes their important properties, with more details in the following sections.  
-| Primitive Type | Size | Description | Declaration |
+The five primitive types supported by Viper are ```char```, ```int```, ```float```, ```bool```, and ```nah```. The table below summarizes their properties and declarations, with more details in the following sections.  
+| Primitive Type | Size | Description | Declaration/Usage |
 |-----------|-----------|-----------|-----------|
-| ```char``` | 1 byte | Represents single ASCII characters | ```char a = 'a'```<br>```char null_term = '\0'```<br>```char newline = '\n'``` |
-| ```int``` | 8 bytes | Stores signed integer values | ```int pos = 12```<br>```int neg = -980``` |
-| ```float``` | 8 bytes | Stores signed floating-point numbers | ```float pos = 3.2```<br>```float neg = -29.7```<br>```float dec = 0.003``` |
-| ```bool```          | 1 byte    | Stores either ```true``` or ```false``` | a == b<br>a != b<br>!(a == b)<br>(a && b)     |
-| ```nah```       | 1 byte       | Viper's ```null``` value                                                | a == b<br>a != b<br>              |
+| ```char``` | 2 bytes | Represents single ASCII characters | ```char a = 'a'```<br>```char c = 'b' + 1```<br>```char newline = '\n'``` |
+| ```int``` | 8 bytes | Stores signed integer values | ```int pos = 12```<br>```int neg = -980```<br>```int sum = 4 + 5``` |
+| ```float``` | 8 bytes | Stores signed floating-point numbers | ```float pos = 3.2```<br>```float neg = -29.7```<br>```float dec = 0.003```<br>```float whole_num = 2.0```|
+| ```bool``` | 1 byte | Stores either ```true``` or ```false``` | ```bool t = true```<br>```bool f = false```<br>```bool falsy = t && f``` |
+| ```nah```       | 1 byte       | Viper's ```null``` value | ```int nil = nah```<br>```char empt = nah```<br>```return nah``` |
 
 ### ```char```
-```char``` is the type that represents single ASCII characters. In Viper, a ```char``` is represented as an ASCII character enclosed in single quotes. Special characters, like the newline and tab characters, are defined with an escape backslash (```'\n'``` and ```'\t'```, respectively). Each ```char``` behaves like an ```int``` in that it takes on the decimal value of its assigned ASCII character. Therefore, numerical operations that are valid for integers are also valid for ```char```s.
+```char``` is the type that represents single ASCII characters. In Viper, a ```char``` is represented as an ASCII character enclosed in single quotes. Special characters, like the newline and tab characters, are defined with an escape backslash (```'\n'``` and ```'\t'```, respectively). Each ```char``` behaves like an ```int``` in that it takes on the decimal value of its assigned ASCII character. Therefore, numerical operations that are valid for integers are also valid for ```char```s.  
 
+### ```int```
+```int```s represent signed integer values. The minimum value of an ```int``` is -2<sup>31</sup>, and the maximum value is 2<sup>31</sup> - 1. Negative integer values must be defined with a preceding minus (-) symbol, but positive integer values cannot be defined with a preceding plus (+) symbol.  
+
+### ```float```
+```float```s represent signed floating-point numbers. To define a ```float```, at least one digit must precede a decimal point (.), and at least one digit must follow. For example, ```.8``` and ```8.``` are invalid, and result in syntax errors. These values are correctly defined as ```0.8``` and ```1.0```, with padding zeroes to ensure that there is a least one digit on each side of the decimal point.  
+
+### ```bool```
+```bool```s hold one of the two Boolean values: ```true``` or ```false```. Expressions using the logical and (```&&```), logical or (```||```), and equality operators are evaluated to ```bool```s. For example, the expression ```(1 < 2) && ('c' == 'c')``` evaluates to a ```bool``` with value ```true```. Additionally, specific values of each primitive type evaluate to certain ```bool``` values. See the table below for details (note that ```nah``` always evaluates to ```false```).  
+| Primitive Type | ```true``` values | ```false``` values |
+|-----|------|-----|
+| ```char``` | All values but ```'\0'``` | ```'\0'```
+| ```int``` | [-2<sup>31</sup>, -1], [1, 2<sup>31</sup> - 1] | 0
+| ```float``` | All values but 0.0 | 0.0
+| ```bool``` | ```true``` | ```false```
+| ```nah``` | n/a | ```nah```   
+
+### ```nah```
+```nah``` is Viper's ```null``` value. It can be used to initialize any other data type, and is a valid return value for any function, regardless of the expected return type. Functions with no return value are declared with type ```nah```.  
+
+## Higher-Order Data Types  
+Viper also supports various higher-order data types, including ```list```, ```string```, ```group```, and ```dict```.  
+| Type | Description | Declaration/Usage |
+|-----------|-----------|-----------|
+| ```list``` | Ordered lists of any type | ```int[] list = [] /* Empty */```<br>```float[] scores = [9.7, 8.2]``` |
+| ```string``` | Stores sequences of character literals | ```string pet = "bear"```<br>```string date = "2/24/21"``` |
+| ```group``` | Lightweight structure to hold type-specified collections of data | ```(int, int) coord = (3, -4)```<br>```(string, int) name_id = ("Bon", 4432)``` |
+| ```dict``` | Key-value pairs with random access | ```[int: int] pos = [] /* Empty */ ```<br>```[string: (string, int)] items = [```<br>                             ```"milk": ("dairy", 5),```<br>                           ```"apple": ("fruit", 3) ]```
+
+
+### ```list```
+
+
+### ```string```
+The ```string``` type of Viper is implented as a ```list``` of ```chars```.  
+
+### ```group```  
+
+### ```dict```
 
 # Type System
 Trey
