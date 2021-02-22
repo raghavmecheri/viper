@@ -4,8 +4,15 @@ Tommy
 # Lexical Conventions
 Trey
 
-# Data Types
-Tommy
+# Data Types  
+Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
+
+## Primitive Data Types
+The five primitive types supported by Viper are ```char```, ```int```, ```float```, ```bool```, and ```nah```. The table below summarizes their important properties.
+
+### ```char```
+```char``` is the type that represents single ASCII characters. In Viper, a ```char``` is represented as an ASCII character enclosed in single quotes. Special characters, like the newline and tab characters, are defined with an escape backslash (```'\n'``` and ```'\t'```, respectively). Each ```char``` behaves like an ```int``` in that it takes on the decimal value of its assigned ASCII character. Therefore, numerical operations that are valid for integers are also valid for ```char```s.
+
 
 # Type System
 Trey
