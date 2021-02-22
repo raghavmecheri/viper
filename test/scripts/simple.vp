@@ -1,0 +1,20 @@
+int a = 10;
+int b = 10;
+int c = 20;
+
+c = a + b;
+
+int e[];
+int[] f;
+
+int g[] = [1,2,3,4];
+
+nah func main() {
+    int d = 10;
+}
+
+int func square(int x) => x * x;
+
+main();
+
+square(5);

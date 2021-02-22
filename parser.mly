@@ -106,8 +106,10 @@ expr:
   | CHARLIT         { CharacterLiteral($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
-  | iden             { $1 }
-  | typ iden         { Dec($1, $2) }
+  | ID               { Id($1) }
+  | typ ID           { Dec($1, $2) }
+  | typ ID list_exp  { AccessDec($1, $2, $3) }
+  | typ list_exp ID  { AccessDec($1, $3, $2) }
   | list_exp         { $1 }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
@@ -123,16 +125,14 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | typ iden ASSIGN expr { DecAssign($1, $2, $4) }
-  | iden ASSIGN expr   { Assign($1, $3) }
-  | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
-  | expr ARROPEN expr ARRCLOSE ASSIGN expr { AccessAssign($1, $3, $6) } 
-  | iden LPAREN actuals_opt RPAREN { Call($1, $3) }
+  | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
+  | typ ID list_exp ASSIGN expr { AccessDecAssign($1, $2, $3, $5) }
+  | typ list_exp ID ASSIGN expr { AccessDecAssign($1, $3, $2, $5) }  
+  | ID ASSIGN expr   { Assign($1, $3) }
+  | expr list_exp { Access($1, $2)  }
+  | ID list_exp ASSIGN expr { AccessAssign($1, $2, $4) }
+  | expr LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
-
-iden:
-    ID { Id($1) }
-  | ID ARROPEN ARRCLOSE { ArrId($1) }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }
