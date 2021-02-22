@@ -62,14 +62,14 @@ The ```string``` type of Viper is implented as a ```list``` of ```chars```.
 # Type System
 Trey
 
-# 5 Statements, Expressions, Operators and Scope
-## 5.1 Statements
+# 5) Statements, Expressions, Operators and Scope
+## 5.1) Statements
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
-### 5.1.1 Selector Statements
+### 5.1.1) Selector Statements
 Selector Statements are involved with Viper's control flow. These statements are the conditionals that Viper uses to control the flow of a program. These statements include the if statement and the if/elif/else statement.
-#### 5.1.1.1 If Statement
+#### 5.1.1.1) If Statement
 The if statement takes in a boolean expression within parentheses and runs the statements within its scope if the boolean expression returns true. 
-#### 5.1.1.2 If/Elif/Else Statement
+#### 5.1.1.2) If/Elif/Else Statement
 The if statement has optional statements that can come after it such as elif and else. Elif is shorthand for "else if" which means that it will be run if the previous if statement's boolean expression was false. An elif statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all elif statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
 ```python
 if a == b:
