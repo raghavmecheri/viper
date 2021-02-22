@@ -2,7 +2,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN ARROW
@@ -31,45 +31,40 @@ program:
   decls EOF { $1 }
 
 decls:
-   /* nothing */ { [], [] }
- | decls vdecl { ($2 :: fst $1), snd $1 }
+   /* nothing */ { [], [] }  
  | decls fdecl { fst $1, ($2 :: snd $1) }
+ | decls stmt { ($2 :: fst $1), snd $1 }
 
 fdecl:
-   typ FUNC ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+   typ FUNC ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $1;
-	 fname = $3;
-	 formals = $5;
-	 locals = List.rev $8;
-         body = List.rev $9;
-         autoreturn = false } }
-   | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt_list
+	   fname = $3;
+	   formals = $5;
+     body = List.rev $8;
+     autoreturn = false } }
+   | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
      fname = $3;
      formals = $5;
-     locals = [];
-     body = List.rev $8;
+     body = [$8];
      autoreturn = true } }
-   | typ FUNC ID LPAREN formals_opt RPAREN ARROW LBRACE vdecl_list stmt_list RBRACE
+   | typ FUNC ID LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
      { { typ = $1; 
      fname = $3; 
-     formals = $5; 
-     locals = List.rev $9; 
-     body = List.rev $10; 
+     formals = $5;  
+     body = List.rev $9; 
      autoreturn = false } } 
-   | typ FUNC LPAREN formals_opt RPAREN ARROW stmt_list
+   | typ FUNC LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
      fname = "anon";
      formals = $4;
-     locals = [];
-     body = List.rev $7; 
+     body = [$7]; 
      autoreturn = true } }
-   | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE vdecl_list stmt_list RBRACE
+   | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
      { { typ = $1;
      fname = "anon";
      formals = $4; 
-     locals = List.rev $8;
-     body = List.rev $9;
+     body = List.rev $8;
      autoreturn = false } }  
 
 formals_opt:
@@ -85,13 +80,6 @@ typ:
   | BOOL { Bool }
   | VOID { Void }
   | CHAR { Char }
-
-vdecl_list:
-    /* nothing */    { [] }
-  | vdecl_list vdecl { $2 :: $1 }
-
-vdecl:
-   typ ID SEMI { ($1, $2) }
 
 stmt_list:
     /* nothing */  { [] }
@@ -119,6 +107,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | list             { $1 }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -133,9 +122,19 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
+  | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
+  /* | expr ARROPEN expr ARRCLOSE { Access($1, $3) } */
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+
+list:
+  ARROPEN list_elems ARRCLOSE { ListLit($2) }
+
+list_elems:
+  /* nothing */           { [] }
+  | expr                  { [$1] }
+  | expr COMMA list_elems { $1 :: $3 }
 
 actuals_opt:
     /* nothing */ { [] }

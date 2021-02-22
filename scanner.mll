@@ -9,6 +9,8 @@ rule token = parse
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
+| ']'      { ARROPEN }
+| '['      { ARRCLOSE }
 | ';'      { SEMI }
 | ','      { COMMA }
 | '+'      { PLUS }
