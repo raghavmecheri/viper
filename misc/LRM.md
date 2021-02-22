@@ -8,7 +8,14 @@ Trey
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
 ## Primitive Data Types
-The five primitive types supported by Viper are ```char```, ```int```, ```float```, ```bool```, and ```nah```. The table below summarizes their important properties.
+The five primitive types supported by Viper are ```char```, ```int```, ```float```, ```bool```, and ```nah```. The table below summarizes their important properties, with more details in the following sections.  
+| Primitive Type | Size | Description | Declaration |
+|-----------|-----------|-----------|-----------|
+| ```char``` | 1 byte | Represents single ASCII characters | ```char a = 'a'```<br>```char null_term = '\0'```<br>```char newline = '\n'``` |
+| ```int``` | 8 bytes | Stores signed integer values | ```int pos = 12```<br>```int neg = -980``` |
+| ```float``` | 8 bytes | Stores signed floating-point numbers | ```float pos = 3.2```<br>```float neg = -29.7```<br>```float dec = 0.003``` |
+| ```bool```          | 1 byte    | Stores either ```true``` or ```false``` | a == b<br>a != b<br>!(a == b)<br>(a && b)     |
+| ```nah```       | 1 byte       | Viper's ```null``` value                                                | a == b<br>a != b<br>              |
 
 ### ```char```
 ```char``` is the type that represents single ASCII characters. In Viper, a ```char``` is represented as an ASCII character enclosed in single quotes. Special characters, like the newline and tab characters, are defined with an escape backslash (```'\n'``` and ```'\t'```, respectively). Each ```char``` behaves like an ```int``` in that it takes on the decimal value of its assigned ASCII character. Therefore, numerical operations that are valid for integers are also valid for ```char```s.
