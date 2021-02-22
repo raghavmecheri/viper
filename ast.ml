@@ -19,7 +19,7 @@ type expr =
   | BoolLit of bool
   | ListLit of expr list
   | Id of string
-  (* | Access of expr * expr *)
+  | Access of expr * expr
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
@@ -84,7 +84,7 @@ let rec string_of_expr = function
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e 
-  (* | Access(e, e) -> string_of_expr e ^ "[" ^ string_of_expr e ^ "]" *)
+  | Access(e, idx) -> string_of_expr e ^ "[" ^ string_of_expr idx ^ "]"
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
