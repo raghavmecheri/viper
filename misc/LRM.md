@@ -131,31 +131,71 @@ nah (int a, int b) => {
 } (10, 20);
 ``` 
 ## 5.3 Operators
+Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
 ### 5.3.1 Unary Operators
+Unary operators act on only one value. These include the not operator, the increment operator and the decrement operator.
 #### 5.3.1.1 The NOT Operator
+The NOT operator is given the symbol "!". When placed to the left of a bool, the value of the bool is flipped. If the value was true it is now false, vice versa. 
 #### 5.3.1.2 The Increment Operator
+The increment operator is given the symbol "++". When placed to the right of an integer, the value of the integer is incremented by one.
 #### 5.3.1.3 The Decrement Operator 
+The decrement operator is given the symbol "--". When placed to the right of an integer, the value of the integer is decremented by one.
 ### 5.3.2 Binary Operators 
+Binary operators act on two values. These include the addition operator, the subtraction operator, the multiplicative operator, the division operator, and the modulus operator.
 #### 5.3.2.1 The Addition Operator
+The addition operator is given the symbol, "+". It acts like addition in mathematics, i.e. it is written in between two values which result in the sum of the two values.
 #### 5.3.2.2 The Subtraction Operator
+The subtraction operator is given the symbol, "-". It acts like subtraction in mathematics, i.e. it is written in between two values which result in the difference of the two values.
 #### 5.3.2.3 The Multiplicative Operator
+The multiplicative operator is given the symbol, "\*". It acts like multiplication in mathematics, i.e. it is written in between two values which result in the product of the two values.
 #### 5.3.2.4 The Division Operator
+The division operator is given the symbol, "/". It acts like division in mathematics, i.e. it is written in between two values which result in the quotient of the two values.
 #### 5.3.2.5 The Modulus Operator
-### 5.3.3 Compare Operators
+The modulus operator is given the symbol, "%". It acts like modulus in mathematics, i.e. it is written in between two values which result in the remainder of the two values when divided. 
+### 5.3.3 Comparative Operators
+Comparative Operators compare two values and returns a bool.
 #### 5.3.3.1 The Greater Than Operator
+The greater than operator is given the symbol, ">". When written in between two values, it returns false if the first value is less than or equal to the second value and returns true if the first value is greater than the second value.
 #### 5.3.3.2 The Greater Than Or Equal To Operator
+The greater than or equal to operator is given the symbol, ">=". When written in between two values, it returns false if the first value is less than the second value and returns true if the first value is greater than or equal to the second value.
 #### 5.3.3.3 The Less Than Operator
+The less than operator is given the symbol, "<". When written in between two values, it returns true if the first value is less than the second value and returns false if the first value is greater than or equal to the second value.
 #### 5.3.3.4 The Less Than Or Equal To Operator
+The less than or equal to operator is given the symbol, "<=". When written in between two values, it returns true if the first value is less than or equal to the second value and returns false if the first value is greater than the second value.
 #### 5.3.3.5 The Equals Operator
+The equals operator is given the symbol, "==". When written in between two values, it returns true if the first value is equal to the second value and returns false if the first value is not equal to the second value.
+#### 5.3.3.6 The Not Equals Operator
+The not equals operator is given the symbol, "!=". When written in between two values, it returns true if the first value is not equal to the second value and returns false if the first value is equal to the second value.
 ### 5.3.4 Logical Operators
+The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator.
 #### 5.3.4.1 The AND Operator
+The AND operator is given the symbol, "and". When written in between two bool values, it returns true if both values are true and false otherwise.
 #### 5.3.4.2 The OR Operator
+The OR operator is given the symbol, "or". When written in between two bool values, it returns false if both values are false and true otherwise.
 ### 5.3.5 Variable Operators
+Variable operators act on a variable and an integer. These include +=, -=, \*=, and /=.
 #### 5.3.5.1 The += Operator
+The += operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side is added to the variable value, which is updated as the new value for the variable.
 #### 5.3.5.2 The -= Operator
+The -= operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side is subtracted from the variable value, which is updated as the new value for the variable.
 #### 5.3.5.3 The \*= Operator
+The \*= operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side is multiplied by the variable value, which is updated as the new value for the variable.
 #### 5.3.5.4 The /= Operator
+The /= operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side divides the variable value, which is updated as the new value for the variable.
+#### 5.3.5.5 The = Operator
+The = operator is written between a variable name on the left hand side and a value on the right hand side. The value on the right hand side is assigned as the value for the variable on the left hand side. If the variable exists already, the value of the variable is overwritten, otherwise a new variable is created.
 ### 5.3.6 Precedence of Operators
+The precedence of operators is important for determining how to write programs in Viper. It is important to note that any expression within parentheses has the highest precedence.
+#### 5.3.6.1 Precedence of Unary Operators
+Unary operators receive the highest precedence, second to parentheses.
+#### 5.3.6.2 Precedence of Binary Operators
+The multiplicative operator, division operator, and modulus operator are left associative and have a higher precedence than the addition operator and the subtraction operator. The addition and subtraction operator are also left associative. 
+#### 5.3.6.3 Precedence of Comparative Operators
+The >, >=, <, <= operators are given higher precedence than the != and == operators.
+#### 5.3.6.4 Precedence of Logical Operators
+The and operator is given higher precedence than the or operator.
+#### 5.3.6.5 Precedence of Variable Operators
+Variable operators are given a lower precedence than binary operators and are right associative. 
 ## 5.4 Scope
 ### 5.4.1 Curly Braces
 ### 5.4.2 Indentation
