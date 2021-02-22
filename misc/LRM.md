@@ -40,7 +40,56 @@ Truth-Value expressions in Viper are boolean expressions. They can include logic
 ### 5.2.2 Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 #### 5.2.2.1 Arrow Functions
-Viper supports arrow functions as well. 
+Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
+Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
+
+```javascript
+<ret_type> (<param_type> param1, ..., <param_type> paramN) => expression output
+```
+
+```javascript
+<ret_type> (<param_type> param1, ..., <param_type> paramN) => {
+    return complex expression output
+}
+```
+
+```javascript
+<ret_type> (<param_type> param1, ... , <param_type> paramN) => :
+    return complex expression output
+```
+
+Additionally, these arrow functions can be assigned to function variables:
+
+```javascript
+func x = <ret_type> (<param_type> param1, ...,<param_type> paramN) => {
+    return expression output
+}
+```
+
+Note that even with zero parameters or one parameter, the () are still necessary
+```javascript
+func myFunc = <ret_type> () => expression output
+
+<ret_type> (<param_type> param) => expression output
+```
+
+Example Function Calls:
+```javascript
+int func y(int x, int y, func z) {
+    return z(x + y);
+}
+
+y(10, 20, int (int a, int b) => a * b);
+```
+
+Anonymous Function Call Example
+
+```javascript
+nah (int a, int b) => {
+    print(a);
+    print(b);
+} (10, 20);
+``` 
 ## 5.3 Operators
 ### 5.3.1 Unary Operators
 #### 5.3.1.1 The NOT Operator
