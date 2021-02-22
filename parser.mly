@@ -2,7 +2,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN ARROW
@@ -38,15 +38,15 @@ decls:
 fdecl:
    typ FUNC ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $1;
-	 fname = $3;
-	 formals = $5;
+	   fname = $3;
+	   formals = $5;
      body = List.rev $8;
      autoreturn = false } }
-   | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt_list
+   | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
      fname = $3;
      formals = $5;
-     body = List.rev $8;
+     body = [$8];
      autoreturn = true } }
    | typ FUNC ID LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
      { { typ = $1; 
@@ -54,11 +54,11 @@ fdecl:
      formals = $5;  
      body = List.rev $9; 
      autoreturn = false } } 
-   | typ FUNC LPAREN formals_opt RPAREN ARROW stmt_list
+   | typ FUNC LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
      fname = "anon";
      formals = $4;
-     body = List.rev $7; 
+     body = [$7]; 
      autoreturn = true } }
    | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
      { { typ = $1;
@@ -107,6 +107,7 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
+  | list             { $1 }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -123,8 +124,17 @@ expr:
   | NOT expr         { Unop(Not, $2) }
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
+  /* | expr ARROPEN expr ARRCLOSE { Access($1, $3) } */
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+
+list:
+  ARROPEN list_elems ARRCLOSE { ListLit($2) }
+
+list_elems:
+  /* nothing */           { [] }
+  | expr                  { [$1] }
+  | expr COMMA list_elems { $1 :: $3 }
 
 actuals_opt:
     /* nothing */ { [] }

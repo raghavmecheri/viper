@@ -4,10 +4,18 @@ int c = 20;
 
 c = a + b;
 
-int func main() {
+nah func main() {
     int d = 10;
 }
 
 int func main2() {
     main();
 }
+
+int func arrow (int x) => x * x - x / x + x;
+
+int func (int y) => y * 2;
+
+[5,7,34,5,7,34,2];
+main();
+arrow(5);
