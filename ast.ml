@@ -19,14 +19,15 @@ type expr =
   | BoolLit of bool
   | ListLit of expr list
   | Id of string
-  | Dec of typ * string
+  | ArrId of string
+  | Dec of typ * expr
   | Access of expr * expr
   | AccessAssign of expr * expr * expr
   | Binop of expr * op * expr
   | Unop of uop * expr
-  | Assign of string * expr
-  | DecAssign of typ * string * expr
-  | Call of string * expr list
+  | Assign of expr * expr
+  | DecAssign of typ * expr * expr
+  | Call of expr * expr list
   | Noexpr
 
 type stmt =
@@ -81,16 +82,17 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ "," ^ string_of_expr elem) "" lst ^ "]"
   | Id(s) -> s
-  | Dec(t, s) -> string_of_typ t ^ " " ^ s
+  | ArrId(s) -> s ^ "[]"
+  | Dec(t, e) -> string_of_typ t ^ " " ^ string_of_expr e
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
-  | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-  | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e 
+  | Assign(v, e) -> string_of_expr v ^ " = " ^ string_of_expr e
+  | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ string_of_expr v ^ " = " ^ string_of_expr e 
   | Access(e, idx) -> string_of_expr e ^ "[" ^ string_of_expr idx ^ "]"
   | AccessAssign(e, idx, l) -> string_of_expr e ^  "[" ^ string_of_expr idx ^ "] = " ^ string_of_expr l
   | Call(f, el) ->
-      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+      string_of_expr f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
 
 let rec string_of_stmt = function
