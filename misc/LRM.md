@@ -384,6 +384,18 @@ nah (int a, int b) => {
     print(b);
 } (10, 20);
 ``` 
+### 5.2.3) Guard Expression
+Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|" followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "|" followed by a value consistent with the data type for the variable. This can be thought of as a combination of if, elif and else statements for assigning a variable.
+```python
+int x = ??
+| 4 == 4 : 42;
+| 0;
+print(x);
+```
+stdout:
+```
+42
+```
 ## 5.3) Operators
 Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
 ### 5.3.1) Unary Operators
