@@ -13,6 +13,7 @@ type typ =
   | Float
   | String
   | Array of typ
+  | Tuple of typ list
 
 type bind = typ * string
 
@@ -23,7 +24,8 @@ type expr =
   | FloatLiteral of float
   | StringLiteral of string
   | ListLit of expr list
-  
+  | TupleLit of expr list
+
   | Id of string
   | Dec of typ * string
   | Binop of expr * op * expr
@@ -98,6 +100,7 @@ let rec string_of_typ = function
   | Float -> "float"
   | String -> "string"
   | Array(t) -> string_of_typ t ^ "[]"
+  | Tuple(t) -> "(" ^ List.fold_left (fun str elem -> str ^ string_of_typ elem ^ ",") "" t ^ ")"
 
 let rec string_of_expr = function
     IntegerLiteral(l) -> string_of_int l
@@ -107,6 +110,7 @@ let rec string_of_expr = function
   | FloatLiteral(l) -> string_of_float l
   | StringLiteral(s) -> "\"" ^ s ^ "\""
   | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ string_of_expr elem ^ ",") "" lst ^ "]"
+  | TupleLit(lst) -> "(" ^ List.fold_left (fun str elem -> str ^ string_of_expr elem ^ ",") "" lst ^ ")"
   | Id(s) -> s
   | Dec(t, v) -> string_of_typ t ^ " " ^ v
   | Binop(e1, o, e2) ->

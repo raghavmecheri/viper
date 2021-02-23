@@ -1,0 +1,3 @@
+(int, float) tuple = (1, 5.0);
+
+(bool, bool) tup = (true, true);

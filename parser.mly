@@ -87,6 +87,11 @@ typ:
   | FLOAT { Float }
   | STRING { String }
   | typ ARROPEN ARRCLOSE { Array($1) }
+  | LPAREN type_list RPAREN { Tuple($2) }
+
+type_list:
+    typ            { [$1] }
+  | typ COMMA type_list { $1 :: $3 }
 
 stmt_list:
     /* nothing */  { [] }
@@ -121,6 +126,7 @@ expr:
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | typ ID           { Dec($1, $2) }
+  | tuple_exp        { $1 }
   | list_exp         { $1 }
   
   | expr PLUS   expr { Binop($1, Add,   $3) }
@@ -167,6 +173,13 @@ pattern:
 c_pattern:
     expr COLON expr { [ConditionalPattern($1, $3)] }
   | expr COLON expr BAR c_pattern { ConditionalPattern($1, $3) :: $5 }
+
+tuple_exp:
+    LPAREN tuple_elems RPAREN   { TupleLit($2) }
+
+tuple_elems:
+    expr           { [$1] }
+  | expr COMMA tuple_elems  { $1 :: $3 }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }
