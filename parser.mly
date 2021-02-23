@@ -3,7 +3,7 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS QUESTION COLON
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT VOID FUNC IN ARROW PANIC
 %token SKIP ABORT
@@ -17,6 +17,7 @@ open Ast
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
+%left QUESTION COLON
 %left OR
 %left AND
 %left EQ NEQ
@@ -140,6 +141,8 @@ expr:
   | expr HAS     expr { Binop($1, Has,    $3) }
   | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
 
+  | expr QUESTION expr COLON expr { Ternop($1, $3, $5) }
+  
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
   | expr PLUS PLUS %prec INCR   { Unop(Incr, $1) }
