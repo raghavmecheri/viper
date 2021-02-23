@@ -11,6 +11,7 @@ type typ =
   | Void 
   | Char
   | Float
+  | String
   | Array of typ
 
 type bind = typ * string
@@ -20,6 +21,7 @@ type expr =
   | CharacterLiteral of char
   | BoolLit of bool
   | FloatLiteral of float
+  | StringLiteral of string
   | ListLit of expr list
   
   | Id of string
@@ -94,6 +96,7 @@ let rec string_of_typ = function
   | Void -> "nah"
   | Char -> "char"
   | Float -> "float"
+  | String -> "string"
   | Array(t) -> string_of_typ t ^ "[]"
 
 let rec string_of_expr = function
@@ -102,6 +105,7 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | FloatLiteral(l) -> string_of_float l
+  | StringLiteral(s) -> "\"" ^ s ^ "\""
   | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ "," ^ string_of_expr elem) "" lst ^ "]"
   | Id(s) -> s
   | Dec(t, v) -> string_of_typ t ^ " " ^ v

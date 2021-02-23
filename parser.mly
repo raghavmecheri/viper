@@ -5,11 +5,12 @@ open Ast
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS QUESTION COLON
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR MATCH BAR
-%token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT VOID FUNC IN ARROW PANIC
+%token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT STRING VOID FUNC IN ARROW PANIC
 %token SKIP ABORT
 %token <int> INTLIT
 %token <char> CHARLIT
 %token <float> FLOATLIT
+%token <string> STRLIT
 %token <string> ID
 %token EOF
 
@@ -84,6 +85,7 @@ typ:
   | VOID { Void }
   | CHAR { Char }
   | FLOAT { Float }
+  | STRING { String }
   | typ ARROPEN ARRCLOSE { Array($1) }
 
 stmt_list:
@@ -114,6 +116,7 @@ expr:
     INTLIT          { IntegerLiteral($1) }
   | CHARLIT         { CharacterLiteral($1) }
   | FLOATLIT        { FloatLiteral($1) }
+  | STRLIT          { StringLiteral($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
