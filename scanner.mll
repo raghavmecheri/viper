@@ -34,6 +34,7 @@ rule token = parse
 | "return" { RETURN }
 | "func"   { FUNC }
 | "in"     { IN }
+| "has"    { HAS }
 | "int"    { INT }
 | "char"   { CHAR }
 | "bool"   { BOOL }
