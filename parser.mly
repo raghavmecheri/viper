@@ -3,7 +3,7 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT VOID FUNC IN ARROW
 %token <int> INTLIT
@@ -20,6 +20,7 @@ open Ast
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
+%right HAS
 %left PLUS MINUS PLUS_ASSIGN MINUS_ASSIGN
 %left TIMES DIVIDE MODULO TIMES_ASSIGN DIVIDE_ASSIGN
 %nonassoc INCR DECR
@@ -132,7 +133,7 @@ expr:
   | expr GEQ    expr { Binop($1, Geq,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
-
+  | expr HAS     expr { Binop($1, Has,    $3) }
   | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
 
   | MINUS expr %prec NEG { Unop(Neg, $2) }

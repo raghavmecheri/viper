@@ -1,4 +1,4 @@
-(* Ocamllex scanner for MicroC *)
+(* Ocamllex scanner for viper, adapted from that of the MicroC compiler. Ref: https://github.com/cwabbott0/microc-llvm *)
 
 { open Parser }
 
@@ -39,13 +39,12 @@ rule token = parse
 | "return" { RETURN }
 | "func"   { FUNC }
 | "in"     { IN }
-
+| "has"    { HAS }
 | "int"    { INT }
 | "char"   { CHAR }
 | "bool"   { BOOL }
 | "float"  { FLOAT }
 | "nah"    { VOID }
-
 | "=>"     { ARROW }
 | "true"   { TRUE }
 | "false"  { FALSE }
