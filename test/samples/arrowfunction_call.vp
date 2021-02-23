@@ -1,0 +1,3 @@
+int func square (int x) => x * x;
+
+square(10);
