@@ -11,10 +11,10 @@ open Ast
 %token <string> ID
 %token EOF
 
+%left ARROPEN ARRCLOSE
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
-%nonassoc TYPEOVERRIDE
 %left OR
 %left AND
 %left EQ NEQ
@@ -119,12 +119,15 @@ expr:
   | expr GEQ    expr { Binop($1, Geq,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
+
+  | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
+
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | typ ID ASSIGN expr %prec TYPEOVERRIDE { DecAssign($1, $2, $4) }
+  | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
-  | LPAREN expr RPAREN { $2 } 
+  | LPAREN expr RPAREN { $2 }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }
