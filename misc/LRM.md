@@ -390,6 +390,7 @@ Guard expressions are an alternative way of using conditional statements. When a
 int x = ??
 | 4 == 4 : 42;
 | 0;
+print(x);
 ```
 stdout:
 ```
