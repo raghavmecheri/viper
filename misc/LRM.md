@@ -697,21 +697,26 @@ for string elem in list:
 This will function in the same manner as expected with function definitions, conditionals, etc.
 
 # 6) Standard Library
+Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
-## 6.1) Type Casting
+## 6.1) Built-in methods
 
-## 6.2) Lists
 
-## 6.3) Strings
+## 6.2) Type Casting
+
+
+## 6.3) Lists
+
+
+## 6.4) Strings
 
 
 # 7) Sample Code
-Example programs writtin in Viper below.
+Example programs written in Viper below.
 
 Fizzbuzz examples:
 ```{java}
-# fizzbuzz for-loop solution
-# standard simple solution
+# standard fizzbuzz for-loop solution
 for (int i = 1; i <= 100; i++) {
    if (i % 15 == 0) {
        print("fizzbuzz");
@@ -771,9 +776,9 @@ for (num in nums) {
 }
 
 float avg = sum/len(nums);
-print(avg)
+print(avg);
 
 # printing an average of a list of ints using Viper standard library
 int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
-print(avg)
+print(avg);
