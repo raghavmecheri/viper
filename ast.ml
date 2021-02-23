@@ -106,7 +106,7 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | FloatLiteral(l) -> string_of_float l
   | StringLiteral(s) -> "\"" ^ s ^ "\""
-  | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ "," ^ string_of_expr elem) "" lst ^ "]"
+  | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ string_of_expr elem ^ ",") "" lst ^ "]"
   | Id(s) -> s
   | Dec(t, v) -> string_of_typ t ^ " " ^ v
   | Binop(e1, o, e2) ->
