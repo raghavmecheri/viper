@@ -684,8 +684,84 @@ for string elem in list:
 
 This will function in the same manner as expected with function definitions, conditionals, etc.
 
-# Standard Library
-Musti
+# 6) Standard Library
 
-# Sample Code
-Raghav
+## 6.1) Type Casting
+
+## 6.2) Lists
+
+## 6.3) Strings
+
+
+# 7) Sample Code
+Example programs writtin in Viper below.
+
+Fizzbuzz examples:
+```{java}
+# fizzbuzz for-loop solution
+# standard simple solution
+for (int i = 1; i <= 100; i++) {
+   if (i % 15 == 0) {
+       print("fizzbuzz");
+   } else if (i % 3 == 0) {
+       print("fuzz");
+   } else if (i % 5 == 0) {
+       print("buzz");
+   } else {
+       print(i);
+   }
+}
+
+# fizzbuzz for-loop with nested ternary operator
+# valid, but overly complex solution
+for (int i = 0; i <= 100; i++) {
+    (i % 15 == 0) 
+        ? print("fizzbuzz")
+        : (i % 3 == 0) 
+            ? print("fizz") 
+            : (i % 5 == 0)
+                ? print("buzz")
+                : print(i);
+}
+
+# fizzbuzz for-loop with pattern-matching
+# valid, short, and easily comprehensible solution
+for (int i = 0; i <= 100; i++) {
+    string output = ??
+        i % 15 == 0 : "fizzbuzz"
+        | i % 3 == 0 : "fizz"
+        | i % 5 == 0 : "buzz"
+        ?? i;
+
+    print(output);
+}
+```
+
+Int array sum examples:
+```{java}
+# printing an average of a list of ints, (almost) C-style
+int[] nums = [1, 2, 3, 4];
+int sum = 0;
+
+for(int i = 0; i < len(nums); i++) {
+    sum = sum + nums[i];
+}
+
+float avg = sum/len(nums);
+print(avg);
+
+# printing an average of a list of ints using Viper conventions
+int[] nums = [1, 2, 3, 4];
+int sum = 0;
+
+for (num in nums) {
+    sum += num;
+}
+
+float avg = sum/len(nums);
+print(avg)
+
+# printing an average of a list of ints using Viper standard library
+int[] nums = [1,2,3,4];
+float avg = sum(nums)/len(nums);
+print(avg)
