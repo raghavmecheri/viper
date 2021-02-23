@@ -21,15 +21,23 @@ type expr =
   | BoolLit of bool
   | FloatLiteral of float
   | ListLit of expr list
+  
   | Id of string
   | Dec of typ * string
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Ternop of expr * expr * expr
+  
   | Assign of string * expr
   | OpAssign of string * op * expr
   | DecAssign of typ * string * expr
   | Access of expr * expr 
+  
+  | MatchPattern of expr list * expr
+  | ConditionalPattern of expr * expr
+  | PatternMatch of string * expr
+  | DecPatternMatch of typ * string * expr
+  
   | Call of string * expr list
   | Noexpr
 
@@ -104,7 +112,11 @@ let rec string_of_expr = function
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Access(e, l) -> string_of_expr e ^ "[" ^ string_of_expr l ^ "]" (*List.fold_left (fun s e -> s ^ "[" ^ string_of_expr e ^ "]") "" l*) 
-  | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e 
+  | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e
+  | ConditionalPattern(c, r) -> string_of_expr c ^ " : " ^ string_of_expr r
+  | MatchPattern(c, b) -> List.fold_left(fun s e -> string_of_expr e ^ " | " ^ s) "" c  ^ " | " ^ string_of_expr b 
+  | PatternMatch(s, e) -> s ^ " = " ^ string_of_expr e
+  | DecPatternMatch(t, s, e) -> string_of_typ t ^ " " ^ s ^ " = " ^ string_of_expr e
   | Call(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
 

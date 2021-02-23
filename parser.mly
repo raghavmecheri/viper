@@ -4,7 +4,7 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS QUESTION COLON
-%token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
+%token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR MATCH BAR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT VOID FUNC IN ARROW PANIC
 %token SKIP ABORT
 %token <int> INTLIT
@@ -17,7 +17,8 @@ open Ast
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
-%left QUESTION COLON
+%left QUESTION COLON MATCH
+%left BAR
 %left OR
 %left AND
 %left EQ NEQ
@@ -151,8 +152,18 @@ expr:
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
   
+  | typ ID ASSIGN MATCH pattern { DecPatternMatch($1, $2, $5) }
+  | ID ASSIGN MATCH pattern { PatternMatch($1, $4) }
+
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+
+pattern:
+    c_pattern BAR expr { MatchPattern($1, $3) }
+
+c_pattern:
+    expr COLON expr { [ConditionalPattern($1, $3)] }
+  | expr COLON expr BAR c_pattern { ConditionalPattern($1, $3) :: $5 }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }
