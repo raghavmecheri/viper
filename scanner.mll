@@ -49,6 +49,9 @@ rule token = parse
 | "true"   { TRUE }
 | "false"  { FALSE }
 | ['0'-'9']+['.']['0'-'9']+ as lxm { FLOATLIT(float_of_string lxm) }
+| "skip"   { SKIP }
+| "abort"  { ABORT }
+| "panic"  { PANIC }
 | ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
 | ['\''](['a'-'z' 'A'-'Z'] as lxm)['\''] { CHARLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }

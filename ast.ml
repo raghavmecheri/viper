@@ -36,6 +36,9 @@ type stmt =
     Block of stmt list
   | Expr of expr
   | Return of expr
+  | Skip of expr
+  | Abort of expr
+  | Panic of expr
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | ForIter of string * expr * stmt
@@ -108,6 +111,9 @@ let rec string_of_stmt = function
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ ";\n";
   | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
+  | Skip(expr) -> "skip " ^ string_of_expr expr ^ ";\n";
+  | Abort(expr) -> "abort " ^ string_of_expr expr ^ ";\n";
+  | Panic(expr) -> "panic " ^ string_of_expr expr ^ ";\n";
   | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
