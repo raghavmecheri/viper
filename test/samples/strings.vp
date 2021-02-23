@@ -7,8 +7,10 @@ test = "hello";
 string[] list = ["hi", "hello", test, test3];
 for (string check in list){
     if (check == "bye"){
-        panic "AHHHH";
+        panic "AHHHH this is broken!";
     }
 }
 
-/* ADD MORE CASES WHEN MORE POSSIBLE VALS */
+"@!#$*(YW(EF*H))";
+"\rwow\twow\nwow\rwow\twow\nwow";
+"11234569097654";

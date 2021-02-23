@@ -54,8 +54,8 @@ rule token = parse
 | "abort"  { ABORT }
 | "panic"  { PANIC }
 | ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
-| ['\''](['a'-'z' 'A'-'Z'] as lxm)['\''] { CHARLIT(lxm) }
-| ['\"'](['a'-'z' 'A'-'Z']* as lxm)['\"'] { STRLIT(lxm) }
+| ['\''](['\x20'-'\x7E'] as lxm)['\''] { CHARLIT(lxm) }
+| ['\"'](['\x20'-'\x7E']* as lxm)['\"'] { STRLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
