@@ -13,6 +13,7 @@ type typ =
   | Float
   | String
   | Array of typ
+  | Function of typ
   | Tuple of typ list
 
 type bind = typ * string
@@ -101,6 +102,7 @@ let rec string_of_typ = function
   | Float -> "float"
   | String -> "string"
   | Array(t) -> string_of_typ t ^ "[]"
+  | Function(t) -> string_of_typ t ^ " func"
   | Tuple(t) -> "(" ^ List.fold_left (fun str elem -> str ^ string_of_typ elem ^ ",") "" t ^ ")"
 
 let rec string_of_expr = function

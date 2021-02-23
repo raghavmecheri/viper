@@ -44,26 +44,26 @@ decls:
  | decls stmt { ($2 :: fst $1), snd $1 }
 
 fdecl:
-   typ FUNC ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
+   typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $1;
-	   fname = $3;
-	   formals = $5;
-     body = List.rev $8;
+	   fname = $2;
+	   formals = $4;
+     body = List.rev $7;
      autoreturn = false } }
-    | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt
+    | typ ID LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
-     fname = $3;
-     formals = $5;
-     body = [$8];
+     fname = $2;
+     formals = $4;
+     body = [$7];
      autoreturn = true } }
 /* 
-    | typ FUNC LPAREN formals_opt RPAREN ARROW stmt
+    | typ LPAREN formals_opt RPAREN ARROW stmt
       { { typ = $1;
       fname = "anon";
       formals = $4;
       body = [$7];
       autoreturn = true } }
-    | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
+    | typ LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
       { { typ = $1;
       fname = "anon";
       formals = $4;
@@ -86,6 +86,7 @@ typ:
   | CHAR { Char }
   | FLOAT { Float }
   | STRING { String }
+  | typ FUNC { Function($1) }
   | typ ARROPEN ARRCLOSE { Array($1) }
   | LPAREN type_list RPAREN { Tuple($2) }
 
@@ -175,15 +176,6 @@ c_pattern:
     expr COLON expr { [ConditionalPattern($1, $3)] }
   | expr COLON expr BAR c_pattern { ConditionalPattern($1, $3) :: $5 }
 
-/*
-tuple_exp:
-    LPAREN tuple_elems RPAREN   { TupleLit($2) }
-
-tuple_elems:
-    expr           { [$1] }
-  | expr COMMA tuple_elems  { $1 :: $3 }
-*/
-
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }
 
@@ -199,3 +191,17 @@ actuals_opt:
 actuals_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
+
+
+/* MARK: Stuff that we aren't using, but we might use (lol) */
+
+/*
+tuple_exp:
+    LPAREN tuple_elems RPAREN   { TupleLit($2) }
+
+tuple_elems:
+    expr           { [$1] }
+  | expr COMMA tuple_elems  { $1 :: $3 }
+*/
+
+
