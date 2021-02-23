@@ -36,7 +36,8 @@ type expr =
   | OpAssign of string * op * expr
   | DecAssign of typ * string * expr
   | Access of expr * expr 
-  
+  | AccessAssign of expr * expr * expr
+
   | MatchPattern of expr list * expr
   | ConditionalPattern of expr * expr
   | PatternMatch of string * expr
@@ -121,6 +122,9 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Access(e, l) -> string_of_expr e ^ "[" ^ string_of_expr l ^ "]" (*List.fold_left (fun s e -> s ^ "[" ^ string_of_expr e ^ "]") "" l*) 
   | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e
+  
+  | AccessAssign(i, idx, e) -> string_of_expr i ^ "[" ^ string_of_expr idx ^ "]" ^ " = " ^ string_of_expr e
+
   | ConditionalPattern(c, r) -> string_of_expr c ^ " : " ^ string_of_expr r
   | MatchPattern(c, b) -> List.fold_left(fun s e -> string_of_expr e ^ " | " ^ s) "" c  ^ " | " ^ string_of_expr b 
   | PatternMatch(s, e) -> s ^ " = " ^ string_of_expr e
