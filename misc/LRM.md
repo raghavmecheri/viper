@@ -51,7 +51,7 @@ Viper also supports various higher-order data types, including `list`, `string`,
 
 ### `list`
 Like many languages, Viper supports random access `list`s of any data type. A `list` is defined by specifying a non-`list` data type, followed by at least one set of square brackets (`[]`). Multi-dimesional lists can be created with additional sets of square brackets. `list`s have fixed types and fixed lengths, which must be declared at creation in the following ways:
-```
+```java
 /* 0. Empty with size explicitly given: */
 int[3] dust;
 float[10][10] edges;
@@ -65,7 +65,7 @@ string[] glizzy = cheese;
 ```  
 
 `list`s can be accessed and modified directly by specifying indices in square brackets. Indices are integers in the range [0, length - 1). Attempting to access or modify an index outside this range throw errors.
-```
+```java
 int[3] nums = [4, 0, 8];
 nums[2] = nums[1];   /* Sets the last element to 0 */
 nums[1] = 2;         /* Sets the middle element to 2 */
@@ -75,39 +75,40 @@ int error = nums[3]; /* Throws an error */
 
 ### `string`
 The `string` type of Viper is implented as a `list` of `char`s. `string`s are defined with the standard double quote notation.  
-```
+```java
 string name = "Ghav"
 ```
 Internally, a `string` is stored as a sequence of defined chars, followed by the null terminal character `'\0'`. The `string` `rat` is internally `['r', 'a', 't', '\0]`.
 
 ### `group`  
 A `group` is a type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared with parentheses:
-```
+```java
 (string, int) order = ("Chicken Katsu", 17);
 (float[2], string, bool) = ([0.1, 2.1], "boo", false);
 ```
 Elements of `group`s can be accessed and modified by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
-```
+```java
 (int, int) paws = (3, -2);
 int x = paws(1); /* Sets x to 3 */
 paws(2) = x;     /* Sets paws(2) to 3 */
 ```
 Elements of `groups` can also be named at creation. Named elements are then accessible and modifyable by using their names as indices.
-```
+```java
 (int r, int g, int b) color = (240, 130, 202);
 int red = color(r);
 color(b) = 112;
 ```
 ### `dict` 
 A `dict` is a mapping of key-value pairs. The types of both keys and values must be specified at creation, and keys must be unique. `dict` literals are defined with square brackets (`[]`), in which a colon (`:`) separates key and values, and commas separate key-value pairs.
-```
+```java
 [int: string] map = [1: "one", 2: "two", 3: "three"]
 ```
+
 `dict`s can be accessed and modified similarly to `list`s. Instead of using indices, however, `dict`s only accept key values. Attempting to use a key of an unexpected type, or using a key with no mapped value will result in an error.
-```
+```java
 /* Note: nested dicts */
 [char: [int: string]] wordmap = [
-        'a': [1: "aab", 2: "ab],
+        'a': [1: "aab", 2: "ab"],
         'b': [1: "baa", 2: "bad"],
         'c': [1: "cbb"]];
 [int: string] b_words = wordmap['b']; /* Retrieves [1: "baa", 2: "bad"] */
