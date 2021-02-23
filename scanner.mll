@@ -17,6 +17,7 @@ rule token = parse
 | '-'      { MINUS }
 | '*'      { TIMES }
 | '/'      { DIVIDE }
+| '%'      { MODULO }
 | '='      { ASSIGN }
 | "+="     { PLUS_ASSIGN }
 | "-="     { MINUS_ASSIGN }
@@ -38,13 +39,17 @@ rule token = parse
 | "return" { RETURN }
 | "func"   { FUNC }
 | "in"     { IN }
+
 | "int"    { INT }
 | "char"   { CHAR }
 | "bool"   { BOOL }
+| "float"  { FLOAT }
 | "nah"    { VOID }
+
 | "=>"     { ARROW }
 | "true"   { TRUE }
 | "false"  { FALSE }
+| ['0'-'9']+['.']['0'-'9']+ as lxm { FLOATLIT(float_of_string lxm) }
 | ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
 | ['\''](['a'-'z' 'A'-'Z'] as lxm)['\''] { CHARLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }

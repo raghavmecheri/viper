@@ -1,6 +1,6 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
+type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or
 
 type uop = Neg | Not | Incr | Decr
@@ -10,6 +10,7 @@ type typ =
   | Bool 
   | Void 
   | Char
+  | Float
   | Array of typ
 
 type bind = typ * string
@@ -18,6 +19,7 @@ type expr =
     IntegerLiteral of int
   | CharacterLiteral of char
   | BoolLit of bool
+  | FloatLiteral of float
   | ListLit of expr list
   | Id of string
   | Dec of typ * string
@@ -57,6 +59,7 @@ let string_of_op = function
   | Sub -> "-"
   | Mult -> "*"
   | Div -> "/"
+  | Mod -> "%"
   | Equal -> "=="
   | Neq -> "!="
   | Less -> "<"
@@ -77,6 +80,7 @@ let rec string_of_typ = function
   | Bool -> "bool"
   | Void -> "nah"
   | Char -> "char"
+  | Float -> "float"
   | Array(t) -> string_of_typ t ^ "[]"
 
 let rec string_of_expr = function
@@ -84,6 +88,7 @@ let rec string_of_expr = function
   | CharacterLiteral(l) -> "'" ^ Char.escaped l ^ "'"
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
+  | FloatLiteral(l) -> string_of_float l
   | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ "," ^ string_of_expr elem) "" lst ^ "]"
   | Id(s) -> s
   | Dec(t, v) -> string_of_typ t ^ " " ^ v

@@ -3,11 +3,12 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN ARROW
+%token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT VOID FUNC IN ARROW
 %token <int> INTLIT
 %token <char> CHARLIT
+%token <float> FLOATLIT
 %token <string> ID
 %token EOF
 
@@ -20,7 +21,7 @@ open Ast
 %left EQ NEQ
 %left LT GT LEQ GEQ
 %left PLUS MINUS PLUS_ASSIGN MINUS_ASSIGN
-%left TIMES DIVIDE TIMES_ASSIGN DIVIDE_ASSIGN
+%left TIMES DIVIDE MODULO TIMES_ASSIGN DIVIDE_ASSIGN
 %nonassoc INCR DECR
 %right NOT NEG
 
@@ -78,6 +79,7 @@ typ:
   | BOOL { Bool }
   | VOID { Void }
   | CHAR { Char }
+  | FLOAT { Float }
   | typ ARROPEN ARRCLOSE { Array($1) }
 
 stmt_list:
@@ -104,6 +106,7 @@ expr_opt:
 expr:
     INTLIT          { IntegerLiteral($1) }
   | CHARLIT         { CharacterLiteral($1) }
+  | FLOATLIT        { FloatLiteral($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
@@ -114,6 +117,7 @@ expr:
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
   | expr DIVIDE expr { Binop($1, Div,   $3) }
+  | expr MODULO expr { Binop($1, Mod, $3) }
 
   | ID PLUS_ASSIGN expr { OpAssign($1, Add, $3) }
   | ID MINUS_ASSIGN expr { OpAssign($1, Sub, $3) }
