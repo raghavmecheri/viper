@@ -19,6 +19,7 @@ open Ast
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
+%left IN
 %left PLUS MINUS
 %left TIMES DIVIDE
 %nonassoc INCR DECR
@@ -121,7 +122,7 @@ expr:
   | expr GEQ    expr { Binop($1, Geq,   $3) }
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
-
+  | expr IN     expr { Binop($1, In,    $3) }
   | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
 
   | MINUS expr %prec NEG { Unop(Neg, $2) }
