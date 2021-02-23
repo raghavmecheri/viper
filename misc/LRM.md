@@ -2,7 +2,134 @@
 Tommy
 
 # Lexical Conventions
-Trey
+## 2.1) TODO: Comments
+Single-line comments begin with a single octothorpe (#) when used outside of a string literal. All content until the end of the physical line is ignored.
+
+Viper allows for multi-line comments that begin with an opening forward slash followed by a star (/\*) and end with a closing backward slash followed by a star (\*\\). All content within the bounds of these symbols is ignored.
+
+## 2.2) Identifiers
+All user-defined identifiers (variable and function names) must begin with an ASCII letter and can contain any mix of ASCII letters and numbers. 
+
+Example valid identifiers:
+```
+lambda_bamba
+pythonCython
+RatGhav
+V1P3RisTh3b3sT
+```
+
+Example invalid identifiers:
+```
+68vip
+--!x
+V*x
+```
+
+## 2.3) TODO: Reserved Keywords, Identifiers, and Operators
+Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
+
+
+```
+# control flow
+while if elif else for in skip abort panic 
+
+# function and types
+func return char int float bool nah string dict group 
+
+# operators and values
++ - * / // ** = == != > >= < <= -= += and or is not true false
+```
+
+## 2.4) TODO: Indentation and Scoping
+TODO: Do we have +=, -=, etc? The mix use of semicolons is kind of confusing, we should pick one (require them everywhere?) 
+
+Viper allows for users to choose how they want to signify scoping and groups of statements within their programs. Following the use of a control-flow structure or function definition, users can choose to utilize indentation or brackets to signify scope as long as their use is consistent within the scope. 
+
+When using indentation, the number of tabs (or equivalent number of spaces) determines how statements are grouped. All control-flow and function definitions must be immediately followed by a single colon and each statement within the desired scope must be indented one tab further than the line that begins the scope.
+
+Example indentation usage:
+```
+func void foo():
+    print("bar")
+
+count = 0
+while count < 10:
+    if count % 2 == 0:
+        count += 1
+    
+    count += 1
+```
+
+When using brackets, a pair of opening and closing curly brackets ({}) represents a scope of statements within control-flow and function definition. All statements within the scope must be followed by a semi-colon, but are not required to be on a new line or indentation as previous statements. The core of the control-flow statement following the keyword must be surrounded by parenthesis as well.
+
+Example bracket scope usage:
+```
+func void foo() {
+    print("bar");
+}
+
+count = 0
+while (count < 10) {
+    if (count % 2 == 0) {
+        count += 1;
+    }
+
+    count += 1;
+}
+
+
+```
+
+For more information on statements and scoping, see Section 5.
+
+## 2.5) Literals
+Literals are the values that primitive types within Viper take on within the source code.
+
+Literals include:
+* boolean
+* char
+* int
+* float
+* nah
+
+### 2.5.1) Boolean Literals
+Boolean literals are used to indicate the truth value of an expression and are represented by the _bool_ data type. The two boolean literals used by Viper are the keywords _true_ and _false_.
+
+
+### 2.5.2) Char Literals
+Char literals represent a single Unicode letter and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_. 
+
+Examples of char literals:
+```
+'a'
+'+'
+'\n'
+'\\'
+```
+
+### 2.5.3) Int Literals
+Int literals represent a whole decimal number as an integer and always takes on the _int_ type. 
+
+Examples of int literals:
+```
+0
+42
+-70843
+```
+
+### 2.5.4) Float Literals
+A float literal represents a decimal floating point number and always takes on the _float_ data type. A float literal consists of a sequence of numbers representing the whole-number part, followed by an ASCII decimal point, followed by a sequence of numbers representing the decimal portion.
+
+Examples of float literals:
+```
+123.45
+-0.007
+3.485
+```
+
+### 2.5.5) Nah Literals
+The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
+
 
 # Data Types  
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
@@ -21,7 +148,7 @@ The five primitive types supported by Viper are ```char```, ```int```, ```float`
 ```char``` is the type that represents single ASCII characters. In Viper, a ```char``` is represented as an ASCII character enclosed in single quotes. Special characters, like the newline and tab characters, are defined with an escape backslash (```'\n'``` and ```'\t'```, respectively). Each ```char``` behaves like an ```int``` in that it takes on the decimal value of its assigned ASCII character. Therefore, numerical operations that are valid for integers are also valid for ```char```s.  
 
 ### ```int```
-```int```s represent signed integer values. The minimum value of an ```int``` is -2<sup>31</sup>, and the maximum value is 2<sup>31</sup> - 1. Negative integer values must be defined with a preceding minus (-) symbol, but positive integer values cannot be defined with a preceding plus (+) symbol.  
+```int```s represent signed integer values. The minimum value of an ```int``` is -2<sup>31</sup>, and the maximum value is 2<sup>31</sup> - 1. Negative integer values must be defined with a preceding minus (-) symbol, but positive integer values must not be defined with a preceding plus (+) symbol.  
 
 ### ```float```
 ```float```s represent signed floating-point numbers. To define a ```float```, at least one digit must precede a decimal point (.), and at least one digit must follow. For example, ```.8``` and ```8.``` are invalid, and result in syntax errors. These values are correctly defined as ```0.8``` and ```1.0```, with padding zeroes to ensure that there is a least one digit on each side of the decimal point.  
@@ -60,7 +187,24 @@ The ```string``` type of Viper is implented as a ```list``` of ```chars```.
 ### ```dict```
 
 # Type System
-Trey
+## Overview
+Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
+
+## Explicit Types
+Viper requires explicit user-specified types for variable declarations, function parameters, and return types in function definitions. 
+
+Examples include:
+```
+char x = 'y';
+
+func int foo(int x) {
+    return x+1;
+}
+```
+
+## TODO: Implicit Type Conversions
+
+## TODO: User Defined Types?
 
 # 5) Statements, Expressions, Operators and Scope
 ## 5.1) Statements
@@ -481,9 +625,6 @@ for string elem in list:
 ```
 
 This will function in the same manner as expected with function definitions, conditionals, etc.
-
-
-
 
 # Standard Library
 Musti
