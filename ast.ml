@@ -10,6 +10,7 @@ type typ =
   | Bool 
   | Void 
   | Char
+  | Array of typ
 
 type bind = typ * string
 
@@ -20,15 +21,11 @@ type expr =
   | ListLit of expr list
   | Id of string
   | Dec of typ * string
-  | Access of expr * expr
-  | AccessAssign of string * expr * expr
-  | AccessDec of typ * string * expr
-  | AccessDecAssign of typ * string * expr * expr
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
   | DecAssign of typ * string * expr
-  | Call of expr * expr list
+  | Call of string * expr list
   | Noexpr
 
 type stmt =
@@ -70,11 +67,12 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "!"
 
-let string_of_typ = function
+let rec string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
   | Void -> "nah"
   | Char -> "char"
+  | Array(t) -> string_of_typ t ^ "[]"
 
 let rec string_of_expr = function
     IntegerLiteral(l) -> string_of_int l
@@ -89,12 +87,7 @@ let rec string_of_expr = function
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e 
-  | Access(e, idx) -> string_of_expr e ^  string_of_expr idx
-  | AccessDec(t, v, l) -> string_of_typ t ^ " " ^ v ^  string_of_expr l
-  | AccessAssign(v, idx, l) ->  v ^ string_of_expr idx ^ " = " ^ string_of_expr l
-  | AccessDecAssign(t, v, idx, e) -> string_of_typ t ^ " " ^ v ^ string_of_expr idx ^ " = " ^ string_of_expr e
-  | Call(f, el) ->
-      string_of_expr f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | Call(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
 
 let rec string_of_stmt = function

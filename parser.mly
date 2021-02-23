@@ -14,6 +14,7 @@ open Ast
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
+%nonassoc TYPEOVERRIDE
 %left OR
 %left AND
 %left EQ NEQ
@@ -42,30 +43,26 @@ fdecl:
 	   formals = $5;
      body = List.rev $8;
      autoreturn = false } }
-   | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt
+    | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
      fname = $3;
      formals = $5;
      body = [$8];
      autoreturn = true } }
-   | typ FUNC ID LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
-     { { typ = $1; 
-     fname = $3; 
-     formals = $5;  
-     body = List.rev $9; 
-     autoreturn = false } } 
-   | typ FUNC LPAREN formals_opt RPAREN ARROW stmt
-     { { typ = $1;
-     fname = "anon";
-     formals = $4;
-     body = [$7]; 
-     autoreturn = true } }
-   | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
-     { { typ = $1;
-     fname = "anon";
-     formals = $4; 
-     body = List.rev $8;
-     autoreturn = false } }  
+/* 
+    | typ FUNC LPAREN formals_opt RPAREN ARROW stmt
+      { { typ = $1;
+      fname = "anon";
+      formals = $4;
+      body = [$7];
+      autoreturn = true } }
+    | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
+      { { typ = $1;
+      fname = "anon";
+      formals = $4;
+      body = List.rev $8;
+      autoreturn = false } }
+ */
 
 formals_opt:
     /* nothing */ { [] }
@@ -80,6 +77,7 @@ typ:
   | BOOL { Bool }
   | VOID { Void }
   | CHAR { Char }
+  | typ ARROPEN ARRCLOSE { Array($1) }
 
 stmt_list:
     /* nothing */  { [] }
@@ -108,8 +106,6 @@ expr:
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | typ ID           { Dec($1, $2) }
-  | typ ID list_exp  { AccessDec($1, $2, $3) }
-  | typ list_exp ID  { AccessDec($1, $3, $2) }
   | list_exp         { $1 }
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
@@ -125,14 +121,10 @@ expr:
   | expr OR     expr { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
-  | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
-  | typ ID list_exp ASSIGN expr { AccessDecAssign($1, $2, $3, $5) }
-  | typ list_exp ID ASSIGN expr { AccessDecAssign($1, $3, $2, $5) }  
+  | typ ID ASSIGN expr %prec TYPEOVERRIDE { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
-  | expr list_exp { Access($1, $2)  }
-  | ID list_exp ASSIGN expr { AccessAssign($1, $2, $4) }
-  | expr LPAREN actuals_opt RPAREN { Call($1, $3) }
-  | LPAREN expr RPAREN { $2 }
+  | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
+  | LPAREN expr RPAREN { $2 } 
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }
