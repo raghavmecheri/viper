@@ -3,11 +3,14 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT HAS
-%token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN ARROW
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS QUESTION COLON
+%token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR MATCH BAR
+%token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT STRING VOID FUNC IN ARROW PANIC
+%token SKIP ABORT
 %token <int> INTLIT
 %token <char> CHARLIT
+%token <float> FLOATLIT
+%token <string> STRLIT
 %token <string> ID
 %token EOF
 
@@ -15,13 +18,15 @@ open Ast
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
+%left QUESTION COLON MATCH
+%left BAR
 %left OR
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
 %right HAS
-%left PLUS MINUS
-%left TIMES DIVIDE
+%left PLUS MINUS PLUS_ASSIGN MINUS_ASSIGN
+%left TIMES DIVIDE MODULO TIMES_ASSIGN DIVIDE_ASSIGN
 %nonassoc INCR DECR
 %right NOT NEG
 
@@ -79,6 +84,8 @@ typ:
   | BOOL { Bool }
   | VOID { Void }
   | CHAR { Char }
+  | FLOAT { Float }
+  | STRING { String }
   | typ ARROPEN ARRCLOSE { Array($1) }
 
 stmt_list:
@@ -89,6 +96,9 @@ stmt:
     expr SEMI { Expr $1 }
   | RETURN SEMI { Return Noexpr }
   | RETURN expr SEMI { Return $2 }
+  | SKIP SEMI { Skip Noexpr }
+  | ABORT SEMI { Abort Noexpr }
+  | PANIC expr SEMI { Panic $2 }
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
@@ -105,15 +115,25 @@ expr_opt:
 expr:
     INTLIT          { IntegerLiteral($1) }
   | CHARLIT         { CharacterLiteral($1) }
+  | FLOATLIT        { FloatLiteral($1) }
+  | STRLIT          { StringLiteral($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | typ ID           { Dec($1, $2) }
   | list_exp         { $1 }
+  
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
   | expr DIVIDE expr { Binop($1, Div,   $3) }
+  | expr MODULO expr { Binop($1, Mod, $3) }
+
+  | ID PLUS_ASSIGN expr { OpAssign($1, Add, $3) }
+  | ID MINUS_ASSIGN expr { OpAssign($1, Sub, $3) }
+  | ID TIMES_ASSIGN expr { OpAssign($1, Mult, $3) }
+  | ID DIVIDE_ASSIGN expr { OpAssign($1, Div, $3) }
+
   | expr EQ     expr { Binop($1, Equal, $3) }
   | expr NEQ    expr { Binop($1, Neq,   $3) }
   | expr LT     expr { Binop($1, Less,  $3) }
@@ -125,6 +145,8 @@ expr:
   | expr HAS     expr { Binop($1, Has,    $3) }
   | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
 
+  | expr QUESTION expr COLON expr { Ternop($1, $3, $5) }
+  
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
   | expr PLUS PLUS %prec INCR   { Unop(Incr, $1) }
@@ -132,8 +154,19 @@ expr:
 
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
+  
+  | typ ID ASSIGN MATCH pattern { DecPatternMatch($1, $2, $5) }
+  | ID ASSIGN MATCH pattern { PatternMatch($1, $4) }
+
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
+
+pattern:
+    c_pattern MATCH expr { MatchPattern($1, $3) }
+
+c_pattern:
+    expr COLON expr { [ConditionalPattern($1, $3)] }
+  | expr COLON expr BAR c_pattern { ConditionalPattern($1, $3) :: $5 }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }

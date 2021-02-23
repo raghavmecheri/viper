@@ -8,3 +8,8 @@ char z = 'a';
 
 bool x = true;
 bool y = false;
+
+float xx = 1.0;
+float zz = 2.0;
+float zzz = 3.33;
+float aa = xx + zz;
