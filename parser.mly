@@ -159,7 +159,7 @@ expr:
   | LPAREN expr RPAREN { $2 }
 
 pattern:
-    c_pattern BAR expr { MatchPattern($1, $3) }
+    c_pattern MATCH expr { MatchPattern($1, $3) }
 
 c_pattern:
     expr COLON expr { [ConditionalPattern($1, $3)] }
