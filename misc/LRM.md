@@ -135,13 +135,14 @@ The nah literal represents a reference to a null value and always takes on the n
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
 ## Primitive Data Types
-The five primitive types supported by Viper are `char`, `int`, `float`, `bool`, and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
+The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, and `string`, and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
 | Primitive Type | Size | Description | Declaration/Usage |
 |-----------|-----------|-----------|-----------|
 | `char` | 2 bytes | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
 | `int` | 8 bytes | Stores signed integer values | `int pos = 12;`<br>`int neg = -980;`<br>`int sum = 4 + 5;` |
 | `float` | 8 bytes | Stores signed floating-point numbers | `float pos = 3.2;`<br>`float neg = -29.7;`<br>`float dec = 0.003;`<br>`float whole_num = 2.0;` |
 | `bool` | 1 byte | Stores either `true` or `false` | `bool t = true;`<br>`bool f = false;`<br>`bool falsy = t && f;` |
+| `string` | 8 bytes | Stores sequences of character literals | `string pet = "bear";`<br>`string date = "2/24/21";` |
 | `nah`  | 1 byte | Viper's `null` value | `int nil = nah;`<br>`char empt = nah;`<br>`return nah;` |
 
 ### `char`
@@ -163,15 +164,21 @@ The five primitive types supported by Viper are `char`, `int`, `float`, `bool`, 
 | `bool` | `true` | `false`
 | `nah` | n/a | `nah`   
 
+### `string`
+The `string` type of Viper is implented as a `list` of `char`s. `string`s are defined with the standard double quote notation.  
+```java
+string name = "Ghav"
+```
+Internally, a `string` is stored as a sequence of defined chars, followed by the null terminal character `'\0'`. The `string` `rat` is internally `['r', 'a', 't', '\0]`.
+
 ### `nah`
 `nah` is Viper's `null` value. It can be used to initialize any other data type, and is a valid return value for any function, regardless of the expected return type. Functions with no return value are declared with type `nah`.  
 
 ## Higher-Order Data Types  
-Viper also supports various higher-order data types, including `list`, `string`, `group`, and `dict`. More details can be found in the Standard Library section.
+Viper also supports various higher-order data types, including `list`, `group`, and `dict`. More details can be found in the Standard Library section.
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[3] array; /* Empty list of size 3 */`<br>`float[] scores = [9.7, 8.2];` |
-| `string` | Stores sequences of character literals | `string pet = "bear";`<br>`string date = "2/24/21";` |
 | `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
 | `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ("dairy", 5),   `<br>                        `"apple": ("fruit", 3) ];`
 
@@ -199,13 +206,6 @@ nums[1] = 2;         /* Sets the middle element to 2 */
 
 int error = nums[3]; /* Throws an error */
 ```
-
-### `string`
-The `string` type of Viper is implented as a `list` of `char`s. `string`s are defined with the standard double quote notation.  
-```java
-string name = "Ghav"
-```
-Internally, a `string` is stored as a sequence of defined chars, followed by the null terminal character `'\0'`. The `string` `rat` is internally `['r', 'a', 't', '\0]`.
 
 ### `group`  
 A `group` is a type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared with parentheses:
