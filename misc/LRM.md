@@ -312,27 +312,30 @@ for (int element in arr){
 #### 5.1.2.2) While Statement
 A while statement takes in a boolean expression. If the boolean expression returns a value of true, the statements within its scope are run. After all statements are run, the boolean expression is evaluated again; if true then statements are run again, otherwise, the while statement is done. This process repeats until the boolean expression returns a value of false.
 ```python
-while (condition):
+while (condition){
     print("chilling")
+}
 ```
 ### 5.1.3) Jump Statements
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
 #### 5.1.3.1) Skip Statement
 The skip statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
 ```python
-for int element in arr:
+for (int element in arr){
     if element == 2:
         print("I'm going to skip the remaining statements")
     skip
     print("This element isn't a 2")
+}
 ```
 #### 5.1.3.2) Abort Statement
 The abort statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
 ```python
-for int element in arr:
+for (int element in arr){
     if element == 2:
         print("found it")
     abort
+}
 ```
 ## 5.2) Expressions
 Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
@@ -341,9 +344,14 @@ Truth-Value expressions in Viper are boolean expressions. They can include logic
 ### 5.2.2) Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 ```python
-nah func foo():
+nah func foo(){
     print("Hello World!")
+}
 foo()
+```
+stdout:
+```
+Hello World!
 ```
 #### 5.2.2.1) Arrow Functions
 Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
