@@ -44,6 +44,7 @@ rule token = parse
 | "char"   { CHAR }
 | "bool"   { BOOL }
 | "float"  { FLOAT }
+| "string" { STRING }
 | "nah"    { VOID }
 | "=>"     { ARROW }
 | "true"   { TRUE }
@@ -54,6 +55,7 @@ rule token = parse
 | "panic"  { PANIC }
 | ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
 | ['\''](['a'-'z' 'A'-'Z'] as lxm)['\''] { CHARLIT(lxm) }
+| ['\"'](['a'-'z' 'A'-'Z']* as lxm)['\"'] { STRLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
