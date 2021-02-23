@@ -18,6 +18,10 @@ rule token = parse
 | '*'      { TIMES }
 | '/'      { DIVIDE }
 | '='      { ASSIGN }
+| "+="     { PLUS_ASSIGN }
+| "-="     { MINUS_ASSIGN }
+| "*="     { TIMES_ASSIGN }
+| "/="     { DIVIDE_ASSIGN } 
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }

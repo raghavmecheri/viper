@@ -3,7 +3,7 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT
+%token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL VOID FUNC IN ARROW
 %token <int> INTLIT
@@ -19,8 +19,8 @@ open Ast
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
-%left PLUS MINUS
-%left TIMES DIVIDE
+%left PLUS MINUS PLUS_ASSIGN MINUS_ASSIGN
+%left TIMES DIVIDE TIMES_ASSIGN DIVIDE_ASSIGN
 %nonassoc INCR DECR
 %right NOT NEG
 
@@ -109,10 +109,17 @@ expr:
   | ID               { Id($1) }
   | typ ID           { Dec($1, $2) }
   | list_exp         { $1 }
+  
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
   | expr DIVIDE expr { Binop($1, Div,   $3) }
+
+  | ID PLUS_ASSIGN expr { OpAssign($1, Add, $3) }
+  | ID MINUS_ASSIGN expr { OpAssign($1, Sub, $3) }
+  | ID TIMES_ASSIGN expr { OpAssign($1, Mult, $3) }
+  | ID DIVIDE_ASSIGN expr { OpAssign($1, Div, $3) }
+
   | expr EQ     expr { Binop($1, Equal, $3) }
   | expr NEQ    expr { Binop($1, Neq,   $3) }
   | expr LT     expr { Binop($1, Less,  $3) }
@@ -131,6 +138,7 @@ expr:
 
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
+  
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN { $2 }
 
