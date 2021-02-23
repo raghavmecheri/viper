@@ -21,6 +21,7 @@ open Ast
 %left LT GT LEQ GEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
+%nonassoc INCR DECR
 %right NOT NEG
 
 %start program
@@ -124,6 +125,9 @@ expr:
 
   | MINUS expr %prec NEG { Unop(Neg, $2) }
   | NOT expr         { Unop(Not, $2) }
+  | expr PLUS PLUS %prec INCR   { Unop(Incr, $1) }
+  | expr MINUS MINUS %prec DECR { Unop(Decr, $1) }
+
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
