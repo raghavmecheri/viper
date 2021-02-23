@@ -36,6 +36,7 @@ type stmt =
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | ForIter of string * expr * stmt
+  | DecForIter of typ * string * expr * stmt
   | While of expr * stmt
 
 type func_decl = {
@@ -107,6 +108,8 @@ let rec string_of_stmt = function
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | ForIter(name, e2, s) ->
       "for (" ^ name ^ " in " ^ string_of_expr e2 ^ ") " ^ string_of_stmt s
+  | DecForIter(t, name, e2, s) ->
+      "for (" ^ string_of_typ t ^ " " ^ name ^ " in " ^ string_of_expr e2 ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"

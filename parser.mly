@@ -94,6 +94,7 @@ stmt:
   | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
      { For($3, $5, $7, $9) }
   | FOR LPAREN ID IN expr RPAREN stmt { ForIter($3, $5, $7) }
+  | FOR LPAREN typ ID IN expr RPAREN stmt { DecForIter($3, $4, $6, $8) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr_opt:
