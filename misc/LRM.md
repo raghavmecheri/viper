@@ -9,6 +9,14 @@ By:
 - Matthew Ottomano (mro2120)
 - Raghav Mecheri (rm3614)
 
+[Go to Test](#999-test-header)
+
+[Go to Emoji Test](#888-test-emoji-header-)
+
+# `9.9.9` Test Header
+
+# `8.8.8` Test Emoji Header 📅
+
 # `0` Contents 📌
 1. [Overview 🚁](#1-Overview-🚁)  
 2. [Lexical Coventions 📝](#2-Lexical-Conventions-📝)  
