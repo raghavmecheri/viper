@@ -25,7 +25,30 @@ By:
         6. [nah](#2.5.6-Nah-Literals)
         7. [list](#2.5.7-List-Literals)
 3. [Data Types](#3-Data-Types)
+    1. [Primitive Types](#3.1-Primitive-Data-Types)
+        1. [char](#3.1.1-char)
+        2. [int](#3.1.2-int)
+        3. [float](#3.1.3-float)
+        4. [bool](#3.1.4-bool)
+        5. [string](#3.1.5-string)
+        6. [nah](#3.1.6-nah)
+    2. [Higher-Order Data Types](#3.2-Higher-Order-Data-Types)
+        1. [list](#3.2.1-list)
+        2. [group](#3.2.2-group)
+        3. [dict](#3.2.3-dict)
 4. [Type System](#4-Type-System)
+    1. [Explicit Types](#4.1-Explicit-Types)
+5. [Statements](#5-Statements)
+    1. [Selector Statements](#5.1-Selector-Statements)
+        1. [if](#5.1.1-If-Statement)
+        2. [if/elif/else](#5.1.2-If/Elif/Else-Statement)
+    2. [Iterator Statements](#5.2-Iterator-Statements)
+        1. [for](#5.2.1-For-Statement)
+        2. [while](#5.2.2-While-Statement)
+    3. [Jump Statements](#5.3-Jump-Statements)
+        1. [skip](#5.3.1-Skip-Statement)
+        2. [abort](#5.3.2-Abort-Statement)
+
 
 # `1` Overview
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
@@ -179,7 +202,7 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 | `char` | 2 bytes | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
 | `int` | 8 bytes | Stores signed integer values | `int pos = 12;`<br>`int neg = -980;`<br>`int sum = 4 + 5;` |
 | `float` | 8 bytes | Stores signed floating-point numbers | `float pos = 3.2;`<br>`float neg = -29.7;`<br>`float dec = 0.003;`<br>`float whole_num = 2.0;` |
-| `bool` | 1 byte | Stores either `true` or `false` | `bool t = true;`<br>`bool f = false;`<br>`bool falsy = t && f;` |
+| `bool` | 1 byte | Stores either `true` or `false` | `bool t = true;`<br>`bool f = false;`<br>`bool falsy = t and f;` |
 | `nah`  | 1 byte | Viper's `null` value | `int nil = nah;`<br>`char empt = nah;`<br>`return nah;` |
 
 ### `3.1.1` `char`
@@ -192,7 +215,7 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 `float`s represent signed floating-point numbers. To define a `float` at least one digit must precede a decimal point (.), and at least one digit must follow. For example, `.8` and `8.` are invalid, and result in syntax errors. These values are correctly defined as `0.8` and `1.0`, with padding zeroes to ensure that there is a least one digit on each side of the decimal point.  
 
 ### `3.1.4` `bool`
-`bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical and (`&&`), logical or (`||`), and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) && ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).  
+`bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical `and`, logical `or`, and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) and ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).  
 | Primitive Type | `true` values | `false` values |
 |-----|------|-----|
 | `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
@@ -282,11 +305,10 @@ int no_no = b_words[4]; /* Error: dict has no key 3 */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
-# 4. Type System
-## Overview
+# `4` Type System
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
-## Explicit Types
+## `4.1` Explicit Types
 Viper requires explicit user-specified types for variable declarations, function parameters, and return types in function definitions. 
 
 Examples include:
@@ -302,14 +324,13 @@ func int foo(int x) {
 
 ## TODO: User Defined Types?
 
-# 5) Statements, Expressions, Operators and Scope
-## 5.1) Statements
+# `5` Statements
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
-### 5.1.1) Selector Statements
+## `5.1` Selector Statements
 Selector Statements are involved with Viper's control flow. These statements are the conditionals that Viper uses to control the flow of a program. These statements include the if statement and the if/elif/else statement.
-#### 5.1.1.1) If Statement
+### `5.1.1` If Statement
 The if statement takes in a boolean expression within parentheses and runs the statements within its scope if the boolean expression returns true. 
-#### 5.1.1.2) If/Elif/Else Statement
+### `5.1.2` If/Elif/Else Statement
 The if statement has optional statements that can come after it such as elif and else. Elif is shorthand for "else if" which means that it will be run if the previous if statement's boolean expression was false. An elif statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all elif statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
 ```python
 if (a == b){
@@ -332,9 +353,9 @@ else{
   print(false);
 }
 ```
-### 5.1.2) Iterator Statements
+## `5.2` Iterator Statements
 Iterator Statements are involved with Viper's ability to loop through statements. These statements compose for loops and while loops.
-#### 5.1.2.1) For Statement
+### `5.2.1` For Statement
 A for statement takes in an argument in the form of (assignment; condition; iterator), followed by a list of statements within its scope. The assignment creates a variable and initializes it to a given number. The condition is a boolean expression; if it returns true, the list of statements within the for statement's scope is run. The iterator changes the value of the variable in the assignment. Then the condition is checked with the new value and if it returns true, the statements are run again, otherwise the statements are not run again.
 ```C
 for (int i = 0; i<sizeof(arr); i++){  
@@ -348,16 +369,16 @@ for (int element in arr) {
     print(element);
 }
 ```
-#### 5.1.2.2) While Statement
+### `5.2.2` While Statement
 A while statement takes in a boolean expression. If the boolean expression returns a value of true, the statements within its scope are run. After all statements are run, the boolean expression is evaluated again; if true then statements are run again, otherwise, the while statement is done. This process repeats until the boolean expression returns a value of false.
 ```python
 while (condition){
     print("chilling");
 }
 ```
-### 5.1.3) Jump Statements
+## `5.3` Jump Statements
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
-#### 5.1.3.1) Skip Statement
+### `5.3.1` Skip Statement
 The skip statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
 ```python
 for (int element in arr){
@@ -368,7 +389,7 @@ for (int element in arr){
     print("This element isn't a 2");
 }
 ```
-#### 5.1.3.2) Abort Statement
+### `5.3.2` Abort Statement
 The abort statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
 ```python
 for (int element in arr){
@@ -378,11 +399,11 @@ for (int element in arr){
     abort;
 }
 ```
-## 5.2) Expressions
+# `6` Expressions
 Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
-### 5.2.1) Truth-Value Expression
+## `6.1` Truth-Value Expression
 Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
-### 5.2.2) Functions
+## `6.2` Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 ```python
 nah func foo(){
@@ -390,7 +411,7 @@ nah func foo(){
 }
 foo();
 ```
-#### 5.2.2.1) Arrow Functions
+### `6.2.1` Arrow Functions
 Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
 
@@ -441,7 +462,7 @@ nah (int a, int b) => {
     print(b);
 } (10, 20);
 ``` 
-### 5.2.3) Guard Expression
+## `6.3` Guard Expression
 Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|", except the first one and last one, followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "??" followed by a value consistent with the data type for the variable. The first statement has neither a "|" nor a "??". This can be thought of as a combination of if, elif and else statements for assigning a variable.
 ```python
 int x = ??
@@ -454,7 +475,7 @@ stdout:
 ```
 42
 ```
-## 5.3) Operators
+# `7` Operators
 Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
 ### 5.3.1) Unary Operators
 Unary operators act on only one value. These include the not operator, the increment operator and the decrement operator.
