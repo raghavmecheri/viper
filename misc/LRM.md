@@ -283,7 +283,7 @@ func int foo(int x) {
 
 ## TODO: User Defined Types?
 
-# 5) Statements, Expressions, Operators and Scope
+# <span style="background-color: #FFFF00">5)<span/> Statements, Expressions, Operators and Scope
 ## 5.1) Statements
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
 ### 5.1.1) Selector Statements
