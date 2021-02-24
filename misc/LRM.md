@@ -158,10 +158,11 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, a
 `bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical and (`&&`), logical or (`||`), and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) && ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).  
 | Primitive Type | `true` values | `false` values |
 |-----|------|-----|
-| `char` | All values but `'\0'` | `'\0'`
+| `char` | All values but `'\0'` and `''` | `'\0'`, `''`
 | `int` | [-2<sup>31</sup>, -1], [1, 2<sup>31</sup> - 1] | 0
 | `float` | All values but 0.0 | 0.0
 | `bool` | `true` | `false`
+| `string` | All non-empty strings | `""`
 | `nah` | n/a | `nah`   
 
 ### `string`
