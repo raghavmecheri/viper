@@ -11,7 +11,7 @@ By:
 
 [Go to Test](#999-test-header)
 
-[Go to Emoji Test](#888-test-emoji-header-)
+[Go to Emoji Test](#888-test-emoji-header)
 
 # `9.9.9` Test Header
 
