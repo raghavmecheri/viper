@@ -14,7 +14,16 @@ By:
 2. [Lexical Coventions](#2-Lexical-Conventions)  
     1. [Comments](#2.1-Comments)  
     2. [Identifiers](#2.2-Identifiers)  
-    2. [Reserved Keywords, Identifiers, and Operators](#2.3-Reserved-Keywords-Identifiers-and-Operators)
+    3. [Reserved Keywords](#2.3-Reserved-Keywords)
+    4. [Scoping](#2.4-Scoping)
+    5. [Literals](#2.5-Literals)
+        1. [char](#2.5.1-Char-Literals)
+        2. [int](#2.5.2-Int-Literals)
+        3. [float](#2.5.3-Float-Literals)
+        4. [bool](#2.5.4-Boolean-Literals)
+        5. [string](#2.5.5-String-Literals)
+        6. [nah](#2.5.6-Nah-Literals)
+        7. [list](#2.5.7-List-Literals)
 3. [Data Types](#3-Data-Types)
 4. [Type System](#4-Type-System)
 
@@ -52,11 +61,7 @@ Example invalid identifiers:
 V*x
 ```
 
-<<<<<<< HEAD
-## `2.3` Reserved Keywords, Identifiers, and Operators
-=======
-## 2.3) Reserved Keywords
->>>>>>> f82512e7f4dd525844a48f432033d70ca84fb0f7
+## `2.3` Reserved Keywords
 Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
 
 ```
@@ -70,7 +75,7 @@ func char int float bool nah string dict group
 and or is not true false
 ```
 
-## 2.4) Scoping
+## `2.4` Scoping
 Viper uses a pair of opening and closing curly brackets ({}) to represents a scope of statements within control-flow and function definitions. All statements within the scope must be followed by a semi-colon, but are not required to be on a new line or indentation as previous statements. The core of the control-flow statement following the keyword must be surrounded by parenthesis as well.
 
 Example bracket scope usage:
@@ -91,7 +96,7 @@ while (count < 10) {
 
 For more information on statements and scoping, see Section 5.
 
-## 2.5) Literals
+## `2.5` Literals
 Literals are the values that primitive types within Viper take on within the source code.
 
 Literals include:
@@ -101,11 +106,7 @@ Literals include:
 * float
 * nah
 
-### 2.5.1) Boolean Literals
-Boolean literals are used to indicate the truth value of an expression and are represented by the _bool_ data type. The two boolean literals used by Viper are the keywords _true_ and _false_.
-
-
-### 2.5.2) Char Literals
+### `2.5.1` Char Literals
 Char literals represent a single ASCII character and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_.
 
 Examples of char literals:
@@ -115,7 +116,7 @@ Examples of char literals:
 '\n'
 ```
 
-### 2.5.3) Int Literals
+### `2.5.2` Int Literals
 Int literals represent a whole decimal number as an integer and always takes on the _int_ type. 
 
 Examples of int literals:
@@ -125,7 +126,7 @@ Examples of int literals:
 -70843
 ```
 
-### 2.5.4) Float Literals
+### `2.5.3` Float Literals
 A float literal represents a decimal floating point number and always takes on the _float_ data type. A float literal consists of a sequence of numbers representing the whole-number part, followed by an ASCII decimal point, followed by a sequence of numbers representing the decimal portion.
 
 Examples of float literals:
@@ -135,11 +136,14 @@ Examples of float literals:
 3.485
 ```
 
-### 2.5.5) Nah Literals
-The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
+### `2.5.4` Boolean Literals
+Boolean literals are used to indicate the truth value of an expression and are represented by the _bool_ data type. The two boolean literals used by Viper are the keywords _true_ and _false_.
 
-### 2.5.6) String Literals
+### `2.5.5` String Literals
 String literals are a sequence of chars surrounded by double quotes. These literals can be assigned to variables of the type _string_.
+
+### `2.5.6` Nah Literals
+The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
 
 Examples of string literals:
 ```
@@ -148,28 +152,28 @@ Examples of string literals:
 "H3sKell >>>"
 ```
 
-### 2.5.7) Array Literals
-All array literals consist of an opening square bracket, a sequence of objects/values all of the same type sepereated by commas, and a closing square bracket. Array literals must be assigned to variables of the type _array_ wrapping the same type the array literal contains. Array literals can contain array literals within themselves, leading to multi-dimensional arrays.
+### `2.5.7` List Literals
+All list literals consist of an opening square bracket, a sequence of objects/values all of the same type sepereated by commas, and a closing square bracket. List literals must be assigned to variables of the type _list_ wrapping the same type the array literal contains. List literals can contain array list within themselves, leading to multi-dimensional lists.
 
-Examples of valid array literals:
+Examples of valid list literals:
 ```
 [1, 2, 3]
 ["a", "b", "c"]
 [[1], [10]]
 ```
 
-Examples of invalid array literals:
+Examples of invalid list literals:
 ```
 [1, 'a', "3"]
 [nah, "beach"]
 [1, (5, 9)]
 ```
 
-# 3. Data Types  
+# `3` Data Types  
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
-## Primitive Data Types
-The five primitive types supported by Viper are `char`, `int`, `float`, `bool`, and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
+## `3.1` Primitive Data Types
+The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
 | Primitive Type | Size | Description | Declaration/Usage |
 |-----------|-----------|-----------|-----------|
 | `char` | 2 bytes | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
@@ -178,39 +182,46 @@ The five primitive types supported by Viper are `char`, `int`, `float`, `bool`, 
 | `bool` | 1 byte | Stores either `true` or `false` | `bool t = true;`<br>`bool f = false;`<br>`bool falsy = t && f;` |
 | `nah`  | 1 byte | Viper's `null` value | `int nil = nah;`<br>`char empt = nah;`<br>`return nah;` |
 
-### `char`
+### `3.1.1` `char`
 `char` is the type that represents single ASCII characters. In Viper, a `char` is represented as an ASCII character enclosed in single quotes. Special characters, like the newline and tab characters, are defined with an escape backslash (`'\n'` and `'\t'`, respectively). Each `char` behaves like an `int` in that it takes on the decimal value of its assigned ASCII character. Therefore, numerical operations that are valid for integers are also valid for `char`s.  
 
-### `int`
+### `3.1.2` `int`
 `int`s represent signed integer values. The minimum value of an `int` is -2<sup>31</sup>, and the maximum value is 2<sup>31</sup> - 1. Negative integer values must be defined with a preceding minus (-) symbol, but positive integer values cannot be defined with a preceding plus (+) symbol.  
 
-### `float`
+### `3.1.3` `float`
 `float`s represent signed floating-point numbers. To define a `float` at least one digit must precede a decimal point (.), and at least one digit must follow. For example, `.8` and `8.` are invalid, and result in syntax errors. These values are correctly defined as `0.8` and `1.0`, with padding zeroes to ensure that there is a least one digit on each side of the decimal point.  
 
-### `bool`
+### `3.1.4` `bool`
 `bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical and (`&&`), logical or (`||`), and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) && ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).  
 | Primitive Type | `true` values | `false` values |
 |-----|------|-----|
-| `char` | All values but `'\0'` | `'\0'`
+| `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
 | `int` | [-2<sup>31</sup>, -1], [1, 2<sup>31</sup> - 1] | 0
-| `float` | All values but 0.0 | 0.0
+| `float` | All `float`s but 0.0 | 0.0
 | `bool` | `true` | `false`
+| `string` | All non-empty `string`s | `""`
 | `nah` | n/a | `nah`   
 
-### `nah`
+### `3.1.5` `string`
+The `string` type of Viper is implented as a `list` of `char`s. `string`s are defined with the standard double quote notation.  
+```java
+string name = "Ghav"
+```
+Internally, a `string` is stored as a sequence of defined chars, followed by the null terminal character `'\0'`. The `string` "rat" is internally `['r', 'a', 't', '\0']`.
+
+### `3.1.6` `nah`
 `nah` is Viper's `null` value. It can be used to initialize any other data type, and is a valid return value for any function, regardless of the expected return type. Functions with no return value are declared with type `nah`.  
 
-## Higher-Order Data Types  
+## `3.2` Higher-Order Data Types  
 Viper also supports various higher-order data types, including `list`, `string`, `group`, and `dict`. More details can be found in the Standard Library section.
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[3] array; /* Empty list of size 3 */`<br>`float[] scores = [9.7, 8.2];` |
-| `string` | Stores sequences of character literals | `string pet = "bear";`<br>`string date = "2/24/21";` |
 | `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
 | `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ("dairy", 5),   `<br>                        `"apple": ("fruit", 3) ];`
 
 
-### `list`
+### `3.2.1` `list`
 Like many languages, Viper supports random access `list`s of any data type. A `list` is defined by specifying a non-`list` data type, followed by at least one set of square brackets (`[]`). Multi-dimesional lists can be created with additional sets of square brackets. `list`s have fixed types and fixed lengths, which must be declared at creation in the following ways:
 ```java
 /* 0. Empty with size explicitly given: */
@@ -234,14 +245,7 @@ nums[1] = 2;         /* Sets the middle element to 2 */
 int error = nums[3]; /* Throws an error */
 ```
 
-### `string`
-The `string` type of Viper is implented as a `list` of `char`s. `string`s are defined with the standard double quote notation.  
-```java
-string name = "Ghav"
-```
-Internally, a `string` is stored as a sequence of defined chars, followed by the null terminal character `'\0'`. The `string` `rat` is internally `['r', 'a', 't', '\0]`.
-
-### `group`  
+### `3.2.2` `group`  
 A `group` is a type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared with parentheses:
 ```java
 (string, int) order = ("Chicken Katsu", 17);
@@ -259,7 +263,7 @@ Elements of `groups` can also be named at creation. Named elements are then acce
 int red = color(r);
 color(b) = 112;
 ```
-### `dict` 
+### `3.2.3` `dict` 
 A `dict` is a mapping of key-value pairs. The types of both keys and values must be specified at creation, and keys must be unique. `dict` literals are defined with square brackets (`[]`), in which a colon (`:`) separates key and values, and commas separate key-value pairs.
 ```java
 [int: string] map = [1: "one", 2: "two", 3: "three"]
