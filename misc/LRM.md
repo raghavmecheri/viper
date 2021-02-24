@@ -10,22 +10,24 @@ By:
 - Raghav Mecheri (rm3614)
 
 # Contents
-- [Overview](#Data-Types)
-- [Lexical Coventions](#Lexical-Conventions)
-  - Comments
-  - [Identifiers](#Identifiers)
-  - Reserved Keywords, Identifiers, and Operators
+1. [Overview](#1-Overview)  
+2. [Lexical Coventions](#2-Lexical-Conventions)  
+    1. [Comments](#2.1-Comments)  
+    2. [Identifiers](#2.2-Identifiers)  
+    2. [Reserved Keywords, Identifiers, and Operators](#2.3-Reserved-Keywords-Identifiers-and-Operators)
+3. [Data Types](#3-Data-Types)
+4. [Type System](#4-Type-System)
 
-# Overview
+# `1` Overview
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
 
-# Lexical Conventions
-## 2.1) TODO: Comments
+# `2` Lexical Conventions
+## `2.1` Comments
 Single-line comments begin with a single octothorpe (#) when used outside of a string literal. All content until the end of the physical line is ignored.
 
 Viper allows for multi-line comments that begin with an opening forward slash followed by a star (/\*) and end with a closing backward slash followed by a star (\*\\). All content within the bounds of these symbols is ignored.
 
-## 2.2) Identifiers
+## `2.2` Identifiers
 All user-defined identifiers (variable and function names) must begin with an ASCII letter and can contain any mix of ASCII letters and numbers. 
 
 Example valid identifiers:
@@ -43,7 +45,7 @@ Example invalid identifiers:
 V*x
 ```
 
-## 2.3) TODO: Reserved Keywords, Identifiers, and Operators
+## `2.3` Reserved Keywords, Identifiers, and Operators
 Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
 
 
@@ -149,7 +151,7 @@ Examples of float literals:
 The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
 
 
-# Data Types  
+# 3. Data Types  
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
 ## Primitive Data Types
@@ -263,7 +265,7 @@ int no_no = b_words[4]; /* Error: dict has no key 3 */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
-# Type System
+# 4. Type System
 ## Overview
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
