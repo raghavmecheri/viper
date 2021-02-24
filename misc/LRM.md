@@ -10,14 +10,14 @@ By:
 - Raghav Mecheri (rm3614)
 
 # Contents
-- [Overview](#Overview)
-- Lexical Coventions  
+- [Overview](#Data-Types)
+- [Lexical Coventions](#Lexical-Conventions)
   - Comments
-  - Identifiers
+  - [Identifiers](#Identifiers)
   - Reserved Keywords, Identifiers, and Operators
 
 # Overview
-Tommy
+Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
 
 # Lexical Conventions
 ## 2.1) TODO: Comments
