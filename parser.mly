@@ -56,20 +56,6 @@ fdecl:
      formals = $4;
      body = [$7];
      autoreturn = true } }
-/* 
-    | typ LPAREN formals_opt RPAREN ARROW stmt
-      { { typ = $1;
-      fname = "anon";
-      formals = $4;
-      body = [$7];
-      autoreturn = true } }
-    | typ LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
-      { { typ = $1;
-      fname = "anon";
-      formals = $4;
-      body = List.rev $8;
-      autoreturn = false } }
- */
 
 formals_opt:
     /* nothing */ { [] }
@@ -112,6 +98,7 @@ stmt:
      { For($3, $5, $7, $9) }
   | FOR LPAREN ID IN expr RPAREN stmt { ForIter($3, $5, $7) }
   | FOR LPAREN typ ID IN expr RPAREN stmt { DecForIter($3, $4, $6, $8) }
+  | FOR LPAREN LPAREN formal_list RPAREN IN expr RPAREN stmt { DeconstForIter($4, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr_opt:
@@ -159,6 +146,7 @@ expr:
 
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
+  | LPAREN formal_list RPAREN ASSIGN expr { Deconstruct($2, $5) }
 
   | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
   | expr ARROPEN expr ARRCLOSE ASSIGN expr { AccessAssign($1, $3, $6) } 
@@ -204,4 +192,17 @@ tuple_elems:
   | expr COMMA tuple_elems  { $1 :: $3 }
 */
 
-
+/* 
+    | typ LPAREN formals_opt RPAREN ARROW stmt
+      { { typ = $1;
+      fname = "anon";
+      formals = $4;
+      body = [$7];
+      autoreturn = true } }
+    | typ LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
+      { { typ = $1;
+      fname = "anon";
+      formals = $4;
+      body = List.rev $8;
+      autoreturn = false } }
+ */

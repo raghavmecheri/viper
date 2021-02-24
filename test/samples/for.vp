@@ -26,9 +26,7 @@ for((int, bool) tup in list) {
     }
 }
 
-/*
-for((int index, int iter) in list) {
+for((int iter, int index) in list) {
     j += index;
     j += iter;
 }
-*/

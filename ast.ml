@@ -25,7 +25,6 @@ type expr =
   | FloatLiteral of float
   | StringLiteral of string
   | ListLit of expr list
-  | TupleLit of expr list
 
   | Id of string
   | Dec of typ * string
@@ -34,6 +33,7 @@ type expr =
   | Ternop of expr * expr * expr
   
   | Assign of string * expr
+  | Deconstruct of bind list * expr
   | OpAssign of string * op * expr
   | DecAssign of typ * string * expr
   | Access of expr * expr 
@@ -58,6 +58,7 @@ type stmt =
   | For of expr * expr * expr * stmt
   | ForIter of string * expr * stmt
   | DecForIter of typ * string * expr * stmt
+  | DeconstForIter of bind list * expr * stmt
   | While of expr * stmt
 
 type func_decl = {
@@ -103,7 +104,7 @@ let rec string_of_typ = function
   | String -> "string"
   | Array(t) -> string_of_typ t ^ "[]"
   | Function(t) -> string_of_typ t ^ " func"
-  | Tuple(t) -> "(" ^ List.fold_left (fun str elem -> str ^ string_of_typ elem ^ ",") "" t ^ ")"
+  | Tuple(t) -> "(" ^ String.concat ", " (List.map string_of_typ t) ^ ")"
 
 let rec string_of_expr = function
     IntegerLiteral(l) -> string_of_int l
@@ -112,8 +113,7 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | FloatLiteral(l) -> string_of_float l
   | StringLiteral(s) -> "\"" ^ s ^ "\""
-  | ListLit(lst) -> "[" ^ List.fold_left (fun str elem -> str ^ string_of_expr elem ^ ",") "" lst ^ "]"
-  | TupleLit(lst) -> "(" ^ List.fold_left (fun str elem -> str ^ string_of_expr elem ^ ",") "" lst ^ ")"
+  | ListLit(lst) -> "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
   | Id(s) -> s
   | Dec(t, v) -> string_of_typ t ^ " " ^ v
   | Binop(e1, o, e2) ->
@@ -124,11 +124,12 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Access(e, l) -> string_of_expr e ^ "[" ^ string_of_expr l ^ "]" (*List.fold_left (fun s e -> s ^ "[" ^ string_of_expr e ^ "]") "" l*) 
   | DecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e
-  
+  | Deconstruct(v, e) ->  "(" ^ String.concat ", " (List.map snd v) ^ ") = " ^ string_of_expr e  
+
   | AccessAssign(i, idx, e) -> string_of_expr i ^ "[" ^ string_of_expr idx ^ "]" ^ " = " ^ string_of_expr e
 
   | ConditionalPattern(c, r) -> string_of_expr c ^ " : " ^ string_of_expr r
-  | MatchPattern(c, b) -> List.fold_left(fun s e -> string_of_expr e ^ " | " ^ s) "" c  ^ " | " ^ string_of_expr b 
+  | MatchPattern(c, b) -> "?? " ^ String.concat " | " (List.map string_of_expr c) ^ " ?? " ^ string_of_expr b 
   | PatternMatch(s, e) -> s ^ " = " ^ string_of_expr e
   | DecPatternMatch(t, s, e) -> string_of_typ t ^ " " ^ s ^ " = " ^ string_of_expr e
   | Call(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
@@ -152,6 +153,7 @@ let rec string_of_stmt = function
       "for (" ^ name ^ " in " ^ string_of_expr e2 ^ ") " ^ string_of_stmt s
   | DecForIter(t, name, e2, s) ->
       "for (" ^ string_of_typ t ^ " " ^ name ^ " in " ^ string_of_expr e2 ^ ") " ^ string_of_stmt s
+  | DeconstForIter(p, expr, s) -> "for ((" ^ String.concat ", " (List.map snd p) ^ ") in " ^ string_of_expr expr ^ ") " ^ string_of_stmt s 
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
