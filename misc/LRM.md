@@ -9,108 +9,101 @@ By:
 - Matthew Ottomano (mro2120)
 - Raghav Mecheri (rm3614)
 
-[Go to Test](#999-test-header)
-
-[Go to Emoji Test](#888-test-emoji-header)
-
-# `9.9.9` Test Header
-
-# `8.8.8` Test Emoji Header 📅
 
 # `0` Contents 📌
-1. [Overview 🚁](#1-Overview-🚁)  
-2. [Lexical Coventions 📝](#2-Lexical-Conventions-📝)  
-    1. [Comments](#2.1-Comments)  
-    2. [Identifiers](#2.2-Identifiers)  
-    3. [Reserved Keywords](#2.3-Reserved-Keywords)
-    4. [Scoping](#2.4-Scoping)
-    5. [Literals](#2.5-Literals)
-        1. [char](#2.5.1-Char-Literals)
-        2. [int](#2.5.2-Int-Literals)
-        3. [float](#2.5.3-Float-Literals)
-        4. [bool](#2.5.4-Boolean-Literals)
-        5. [string](#2.5.5-String-Literals)
-        6. [nah](#2.5.6-Nah-Literals)
-        7. [list](#2.5.7-List-Literals)
-3. [Data Types  💾](#3-Data-Types-💾)
-    1. [Primitive Types](#3.1-Primitive-Data-Types)
-        1. [char](#3.1.1-char)
-        2. [int](#3.1.2-int)
-        3. [float](#3.1.3-float)
-        4. [bool](#3.1.4-bool)
-        5. [string](#3.1.5-string)
-        6. [nah](#3.1.6-nah)
-    2. [Higher-Order Data Types](#3.2-Higher-Order-Data-Types)
-        1. [list](#3.2.1-list)
-        2. [group](#3.2.2-group)
-        3. [dict](#3.2.3-dict)
-4. [Type System 🗃](#4-Type-System-🗃)
-    1. [Explicit Types](#4.1-Explicit-Types)
-5. [Statements 🗣](#5-Statements-🗣)
-    1. [Selector Statements](#5.1-Selector-Statements)
-        1. [if](#5.1.1-If-Statement)
-        2. [if/elif/else](#5.1.2-If/Elif/Else-Statement)
-    2. [Iterator Statements](#5.2-Iterator-Statements)
-        1. [for](#5.2.1-For-Statement)
-        2. [while](#5.2.2-While-Statement)
-    3. [Jump Statements](#5.3-Jump-Statements)
-        1. [skip](#5.3.1-Skip-Statement)
-        2. [abort](#5.3.2-Abort-Statement)
-6. [Expressions 🖥](#6-Expressions-🖥)
-    1. [Truth-Value Expressions](#6.1-Truth-Value-Expressions)
-    2. [Functions](#6.2-Functions)
-        1. [Arrow Functions](#6.2.1-Arrow-Functions)
-    3. [Guard Expressions](#6.3-Guard-Expressions)
-7. [Operators ➗](#7-Operators-➗)
-    1. [Unary Operators](#7.1-Unary-Operators)
-        1. [! (NOT)](#7.1.1-The-Not-Operator)
-        2. [++ (increment)](#7.1.2-The-Increment-Operator)
-        3. [-- (decrement)](#7.1.3-The-Decrement-Operator)
-    2. [Binary Operators](#7.2-Binary-Operators)
-        1. [+ (addition)](#7.2.1-The-Addition-Operator)
-        2. [- (subtraction)](#7.2.2-The-Subtraction-Operator)
-        3. [* (multiplication)](#7.2.3-The-Multiplicative-Operator)
-        4. [/ (division)](#7.2.4-The-Division-Operator)
-        5. [% (modulo)](#7.2.5-The-Modulus-Operator)
-    3. [Comparative Operators](#7.3-Comparative-Operators)
-        1. [> (greater than)](#7.3.1-The-Greater-Than-Operator)
-        2. [>= (greater than or equal to)](#7.3.2-The-Greater-Than-Or-Equal-To-Operator)
-        3. [< (less than)](#7.3.3-The-Less-Than-Operator)
-        4. [<= (less than or equal to)](#7.3.4-The-Less-Than-Or-Equal-To-Operator)
-        5. [== (equals)](#7.3.5-The-Equals-Operator)
-        6. [!= (not equals)](#7.3.6-The-Not-Equals-Operator)
-    4. [Logical Operators](#7.4-Logical-Operators)
-        1. [and](#7.4.1-The-AND-Operator)
-        2. [or](#7.4.2-The-OR-Operator)
-    5. [Variable Operators](#7.5-Variable-Operators)
-        1. [+= (quick add)](#7.5.1-The-=+-Operator)
-        2. [-= (quick subtract)](#7.5.2-The--=-Operator)
-        3. [*= (quick multiply)](#7.5.3-The-*=*-Operator)
-        4. [/= (quick divide)](#7.5.4-The-/=-Operator)
-        5. [= (assign)](#7.5.5-The-=-Operator)
-        6. [? : (ternary operators)](#7.5.6-The-Ternary-Operator)
-    6. [Precedence of Operators](#7.6-Precedence-Of-Operators)
-        1. [Unary](#7.6.1-Precedence-Of-Unary-Operators)
-        2. [Binary](#7.6.2-Precedence-Of-Binary-Operators)
-        3. [Comparative](#7.6.3-Precedence-Of-Comparative-Operators)
-        4. [Logical](#7.6.4-Precedence-Of-Logical-Operators)
-        5. [Variable](#7.6.5-Precedence-Of-Variable-Operators)
-8. [Scope 👀](#8-Scope-👀)
-9. [Standard Library 📚](#9-Standard-Library-📚)
-    1. [Built-in Functions](#9.1-Built-In-Functions)
-    2. [Type Casting](#9.2-Type-Casting)
-    3. [Lists](#9.3-Lists)
-        1. [List API](#9.3.1-List-API)
-    4. [Groups](#9.4-Groups)
-    5. [Dicts](#9.5-Dicts)
-10. [Sample Code ⌨️](#10-Sample-Code-⌨️)
-    1. [Fizzbuzz](#10.1-Fizzbuzz-Examples)
-    2. [Int list sum](#10.2-Int-List-Sum-Examples)
+1. [Overview 🚁](#1-overview)  
+2. [Lexical Coventions 📝](#2-lexical-conventions)  
+    1. [Comments](#21-comments)  
+    2. [Identifiers](#22-identifiers)  
+    3. [Reserved Keywords](#23-reserved-keywords)
+    4. [Scoping](#24-scoping)
+    5. [Literals](#25-literals)
+        1. [char](#251-char-literals)
+        2. [int](#252-int-literals)
+        3. [float](#253-float-literals)
+        4. [bool](#254-boolean-literals)
+        5. [string](#255-string-literals)
+        6. [nah](#256-nah-literals)
+        7. [list](#257-list-literals)
+3. [Data Types  💾](#3-data-types)
+    1. [Primitive Types](#31-primitive-data-types)
+        1. [char](#311-char)
+        2. [int](#312-int)
+        3. [float](#313-float)
+        4. [bool](#314-bool)
+        5. [string](#315-string)
+        6. [nah](#316-nah)
+    2. [Higher-Order Data Types](#32-higher-order-data-types)
+        1. [list](#321-list)
+        2. [group](#322-group)
+        3. [dict](#323-dict)
+4. [Type System 🗃](#4-type-system)
+    1. [Explicit Types](#41-explicit-types)
+5. [Statements 🗣](#5-statements)
+    1. [Selector Statements](#51-selector-statements)
+        1. [if](#511-if-statement)
+        2. [if/elif/else](#512-if/elif/else-statement)
+    2. [Iterator Statements](#52-iterator-statements)
+        1. [for](#521-for-statement)
+        2. [while](#522-while-statement)
+    3. [Jump Statements](#53-jump-statements)
+        1. [skip](#531-skip-statement)
+        2. [abort](#532-abort-statement)
+6. [Expressions 🖥](#6-expressions)
+    1. [Truth-Value Expressions](#61-truth-value-expressions)
+    2. [Functions](#62-functions)
+        1. [Arrow Functions](#621-arrow-functions)
+    3. [Guard Expressions](#63-guard-expressions)
+7. [Operators ➗](#7-operators)
+    1. [Unary Operators](#71-unary-operators)
+        1. [! (NOT)](#711-the-not-operator)
+        2. [++ (increment)](#712-the-increment-operator)
+        3. [-- (decrement)](#713-the-decrement-operator)
+    2. [Binary Operators](#72-binary-operators)
+        1. [+ (addition)](#721-the-addition-operator)
+        2. [- (subtraction)](#722-the-subtraction-operator)
+        3. [* (multiplication)](#723-the-multiplicative-operator)
+        4. [/ (division)](#724-the-division-operator)
+        5. [% (modulo)](#725-the-modulus-operator)
+    3. [Comparative Operators](#73-comparative-operators)
+        1. [> (greater than)](#731-the-greater-than-operator)
+        2. [>= (greater than or equal to)](#732-the-greater-than-or-equal-to-operator)
+        3. [< (less than)](#733-the-less-than-operator)
+        4. [<= (less than or equal to)](#734-the-less-than-or-equal-to-operator)
+        5. [== (equals)](#735-the-equals-operator)
+        6. [!= (not equals)](#736-the-not-equals-operator)
+    4. [Logical Operators](#74-logical-operators)
+        1. [and](#741-the-and-operator)
+        2. [or](#742-the-or-operator)
+    5. [Variable Operators](#75-variable-operators)
+        1. [+= (quick add)](#751-the-=+-operator)
+        2. [-= (quick subtract)](#752-the--=-operator)
+        3. [*= (quick multiply)](#753-the-*=*-operator)
+        4. [/= (quick divide)](#754-the-/=-operator)
+        5. [= (assign)](#755-the-=-operator)
+        6. [? : (ternary operators)](#756-the-ternary-operator)
+    6. [Precedence of Operators](#76-precedence-of-operators)
+        1. [Unary](#761-precedence-of-unary-operators)
+        2. [Binary](#762-precedence-of-binary-operators)
+        3. [Comparative](#763-precedence-of-comparative-operators)
+        4. [Logical](#764-precedence-of-logical-operators)
+        5. [Variable](#765-precedence-of-variable-operators)
+8. [Scope 👀](#8-scope)
+9. [Standard Library 📚](#9-standard-library)
+    1. [Built-in Functions](#91-built-in-functions)
+    2. [Type Casting](#92-type-casting)
+    3. [Lists](#93-lists)
+        1. [List API](#931-list-api)
+    4. [Groups](#94-groups)
+    5. [Dicts](#95-dicts)
+10. [Sample Code ⌨️](#10-sample-code)
+    1. [Fizzbuzz](#101-fizzbuzz-examples)
+    2. [Int list sum](#102-int-list-sum-examples)
 
 # `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `2` Lexical Conventions 📝
 ## `2.1` Comments
@@ -250,7 +243,7 @@ Examples of invalid list literals:
 [1, (5, 9)]
 ```
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `3` Data Types  💾
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
@@ -365,7 +358,7 @@ int no_no = b_words["balloon"]; /* Error: b_words has no key "balloon" */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `4` Type System 🗃
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
@@ -440,7 +433,7 @@ print(num1 + num2); /* "1738" */
 
 When making an implicit type conversion, the Viper type system attempts to make an conversion based on the context of the values and types around it. If a conversion inference can not be made, Viper assumes the type that leads to the least loss of precision.
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `5` Statements 🗣
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
@@ -517,7 +510,7 @@ for (int element in arr){
     abort;
 }
 ```
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `6` Expressions 🖥
 Expressions in Viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
@@ -597,7 +590,7 @@ stdout:
 ```
 42
 ```
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `7` Operators ➗
 Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
@@ -866,7 +859,7 @@ The and operator is given higher precedence than the or operator.
 ### `7.6.5` Precedence of Variable Operators
 Variable operators are given a lower precedence than binary operators and are right associative. 
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `8` Scope 👀
 Viper uses curly braces to define scope.
@@ -891,7 +884,7 @@ for string elem in list
 
 This will function in the same manner as expected with function definitions, conditionals, etc.
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `9` Standard Library 📚
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
@@ -906,7 +899,7 @@ Viper's standard library provides methods for casting between types for ease of 
 * int(x) - converts x to an int
 * chr(x) - converts x to a char
 
-For more on type casting, see [Type System 🗃](#4-Type-System-🗃).
+For more on type casting, see [Type System 🗃](#4-type-system).
 
 ## `9.3` Lists
 List functionality is provided through the standard library. List are dynamic array-like datatypes that provide an API to be used as a doubly-linked list, stack, queue, and more. 
@@ -922,7 +915,7 @@ In this example, li represents a variable of the List type.
 
 ## `9.5` Dicts
 
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
 
 # `10` Sample Code ⌨️
 Example programs written in Viper below.
@@ -996,4 +989,4 @@ int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
 print(avg);
 ```
-[↩️  Back to Contents 📌](#0-Contents-📌)
+[↩️  Back to Contents 📌](#0-contents)
