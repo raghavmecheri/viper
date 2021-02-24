@@ -48,6 +48,11 @@ By:
     3. [Jump Statements](#5.3-Jump-Statements)
         1. [skip](#5.3.1-Skip-Statement)
         2. [abort](#5.3.2-Abort-Statement)
+6. [Expressions](#6-Expressions)
+    1. [Truth-Value Expressions](#6.1-Truth-Value-Expressions)
+    2. [Functions](#6.2-Functions)
+        1. [Arrow Functions](#6.2.1-Arrow-Functions)
+    3. [Guard Expressions](#6.3-Guard-Expressions)
 
 
 # `1` Overview
@@ -295,13 +300,13 @@ A `dict` is a mapping of key-value pairs. The types of both keys and values must
 `dict`s can be accessed and modified similarly to `list`s. Instead of using indices, however, `dict`s only accept key values. Attempting to use a key of an unexpected type, or using a key with no mapped value will result in an error.
 ```java
 /* Note: nested dicts */
-[char: [int: string]] wordmap = [
-        'a': [1: "aab", 2: "ab"],
-        'b': [1: "baa", 2: "bad"],
-        'c': [1: "cbb"]];
-[int: string] b_words = wordmap['b']; /* Retrieves [1: "baa", 2: "bad"] */
-b_words[3] = "bing";
-int no_no = b_words[4]; /* Error: dict has no key 3 */
+[char: [string: int]] wordmap = [
+        'a': ["add": 2, "and": 3],
+        'b': ["blob": 1, "bap": 14],
+        'd': ["doink": 1]];
+[string: int] b_words = wordmap['b']; /* Retrieves ["blob": 1, "bap": 14] */
+b_words["bing"] = 4; /* Adds key-value pair ["bing": 4] to b_words */
+int no_no = b_words["balloon"]; /* Error: b_words has no key "balloon" */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
@@ -401,7 +406,7 @@ for (int element in arr){
 ```
 # `6` Expressions
 Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
-## `6.1` Truth-Value Expression
+## `6.1` Truth-Value Expressions
 Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
 ## `6.2` Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
@@ -462,7 +467,7 @@ nah (int a, int b) => {
     print(b);
 } (10, 20);
 ``` 
-## `6.3` Guard Expression
+## `6.3` Guard Expressions
 Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|", except the first one and last one, followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "??" followed by a value consistent with the data type for the variable. The first statement has neither a "|" nor a "??". This can be thought of as a combination of if, elif and else statements for assigning a variable.
 ```python
 int x = ??
@@ -477,9 +482,9 @@ stdout:
 ```
 # `7` Operators
 Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
-### 5.3.1) Unary Operators
+## `7.1` Unary Operators
 Unary operators act on only one value. These include the not operator, the increment operator and the decrement operator.
-#### 5.3.1.1) The NOT Operator
+### `7.1.1` The NOT Operator
 The NOT operator is given the symbol "!". When placed to the left of a bool, the value of the bool is flipped. If the value was true it is now false, vice versa. 
 ```python
 bool example = true;
@@ -489,7 +494,7 @@ stdout:
 ```
 false
 ```
-#### 5.3.1.2) The Increment Operator
+### `7.1.2` The Increment Operator
 The increment operator is given the symbol "++". When placed to the right of an integer, the value of the integer is incremented by one.
 ```python
 int example = 0;
@@ -499,7 +504,7 @@ stdout:
 ```
 1
 ```
-#### 5.3.1.3) The Decrement Operator 
+### `7.1.3` The Decrement Operator 
 The decrement operator is given the symbol "--". When placed to the right of an integer, the value of the integer is decremented by one.
 ```python
 int example = 0;
@@ -509,9 +514,9 @@ stdout:
 ```
 -1
 ```
-### 5.3.2) Binary Operators 
+## `7.2` Binary Operators 
 Binary operators act on two values. These include the addition operator, the subtraction operator, the multiplicative operator, the division operator, and the modulus operator.
-#### 5.3.2.1) The Addition Operator
+### `7.2.1` The Addition Operator
 The addition operator is given the symbol, "+". It acts like addition in mathematics, i.e. it is written in between two values which result in the sum of the two values.
 ```python
 int example1 = 1;
@@ -522,7 +527,7 @@ stdout:
 ```
 3
 ```
-#### 5.3.2.2) The Subtraction Operator
+### `7.2.2` The Subtraction Operator
 The subtraction operator is given the symbol, "-". It acts like subtraction in mathematics, i.e. it is written in between two values which result in the difference of the two values.
 ```python
 int example1 = 1;
@@ -533,7 +538,7 @@ stdout:
 ```
 -1
 ```
-#### 5.3.2.3) The Multiplicative Operator
+### `7.2.3` The Multiplicative Operator
 The multiplicative operator is given the symbol, "\*". It acts like multiplication in mathematics, i.e. it is written in between two values which result in the product of the two values.
 ```python
 int example1 = 1;
@@ -544,7 +549,7 @@ stdout:
 ```
 2
 ```
-#### 5.3.2.4) The Division Operator
+### `7.2.4` The Division Operator
 The division operator is given the symbol, "/". It acts like division in mathematics, i.e. it is written in between two values which result in the quotient of the two values.
 ```python
 int example1 = 1;
@@ -555,7 +560,7 @@ stdout:
 ```
 0.5
 ```
-#### 5.3.2.5) The Modulus Operator
+### `7.2.5` The Modulus Operator
 The modulus operator is given the symbol, "%". It acts like modulus in mathematics, i.e. it is written in between two values which result in the remainder of the two values when divided. 
 ```python
 int example1 = 4;
@@ -566,9 +571,9 @@ stdout:
 ```
 0
 ```
-### 5.3.3) Comparative Operators
+## `7.3` Comparative Operators
 Comparative Operators compare two values and returns a bool.
-#### 5.3.3.1) The Greater Than Operator
+### `7.3.1` The Greater Than Operator
 The greater than operator is given the symbol, ">". When written in between two values, it returns false if the first value is less than or equal to the second value and returns true if the first value is greater than the second value.
 ```python
 int example1 = 2;
@@ -579,7 +584,7 @@ stdout:
 ```
 false
 ```
-#### 5.3.3.2) The Greater Than Or Equal To Operator
+### `7.3.2` The Greater Than Or Equal To Operator
 The greater than or equal to operator is given the symbol, ">=". When written in between two values, it returns false if the first value is less than the second value and returns true if the first value is greater than or equal to the second value.
 ```python
 int example1 = 2;
@@ -590,7 +595,7 @@ stdout:
 ```
 true
 ```
-#### 5.3.3.3) The Less Than Operator
+### `7.3.3` The Less Than Operator
 The less than operator is given the symbol, "<". When written in between two values, it returns true if the first value is less than the second value and returns false if the first value is greater than or equal to the second value.
 ```python
 int example1 = 2;
@@ -601,7 +606,7 @@ stdout:
 ```
 false
 ```
-#### 5.3.3.4) The Less Than Or Equal To Operator
+### `7.3.4` The Less Than Or Equal To Operator
 The less than or equal to operator is given the symbol, "<=". When written in between two values, it returns true if the first value is less than or equal to the second value and returns false if the first value is greater than the second value.
 ```python
 int example1 = 2;
@@ -612,7 +617,7 @@ stdout:
 ```
 true
 ```
-#### 5.3.3.5) The Equals Operator
+### `7.3.5` The Equals Operator
 The equals operator is given the symbol, "==". When written in between two values, it returns true if the first value is equal to the second value and returns false if the first value is not equal to the second value.
 ```python
 int example1 = 2;
@@ -623,7 +628,7 @@ stdout:
 ```
 true
 ```
-#### 5.3.3.6) The Not Equals Operator
+### `7.3.6` The Not Equals Operator
 The not equals operator is given the symbol, "!=". When written in between two values, it returns true if the first value is not equal to the second value and returns false if the first value is equal to the second value.
 ```python
 int example1 = 2;
@@ -634,9 +639,9 @@ stdout:
 ```
 false
 ```
-### 5.3.4) Logical Operators
+## `7.4` Logical Operators
 The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator.
-#### 5.3.4.1) The AND Operator
+### `7.4.1` The AND Operator
 The AND operator is given the symbol, "and". When written in between two bool values, it returns true if both values are true and false otherwise.
 ```python
 bool example1 = true;
@@ -647,7 +652,7 @@ stdout:
 ```
 false
 ```
-#### 5.3.4.2) The OR Operator
+### `7.4.2` The OR Operator
 The OR operator is given the symbol, "or". When written in between two bool values, it returns false if both values are false and true otherwise.
 ```python
 bool example1 = true;
@@ -658,9 +663,9 @@ stdout:
 ```
 true
 ```
-### 5.3.5) Variable Operators
+## `7.5` Variable Operators
 Variable operators act on a variable and an integer. These include +=, -=, \*=, and /=.
-#### 5.3.5.1) The += Operator
+### `7.5.1` The += Operator
 The += operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side is added to the variable value, which is updated as the new value for the variable.
 ```python
 int example1 = 1;
@@ -671,7 +676,7 @@ stdout:
 ```
 2
 ```
-#### 5.3.5.2) The -= Operator
+### `7.5.2` The -= Operator
 The -= operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side is subtracted from the variable value, which is updated as the new value for the variable.
 ```python
 int example1 = 1;
@@ -682,7 +687,7 @@ stdout:
 ```
 0
 ```
-#### 5.3.5.3) The \*= Operator
+### `7.5.3` The \*= Operator
 The \*= operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side is multiplied by the variable value, which is updated as the new value for the variable.
 ```python
 int example1 = 1;
@@ -693,7 +698,7 @@ stdout:
 ```
 1
 ```
-#### 5.3.5.4) The /= Operator
+### `7.5.4` The /= Operator
 The /= operator is written in between a variable on the left hand side and an integer on the right hand side. The integer value on the right hand side divides the variable value, which is updated as the new value for the variable.
 ```python
 int example1 = 1;
@@ -704,7 +709,7 @@ stdout:
 ```
 1
 ```
-#### 5.3.5.5) The = Operator
+### `7.5.5` The = Operator
 The = operator is written between a variable name on the left hand side and a value on the right hand side. The value on the right hand side is assigned as the value for the variable on the left hand side. If the variable exists already, the value of the variable is overwritten, otherwise a new variable is created.
 ```python
 int example1 = 1;
@@ -714,7 +719,7 @@ stdout:
 ```
 1
 ```
-#### 5.3.5.6) The Ternary Operator
+#### `7.5.6` The Ternary Operator
 The Ternary Operator is given the symbol "?". This operator provides a short hand for an if-else statement and saves the result in a variable. When using the ternary operator in assigning a variable, Viper expects a boolean expression followed by the ternary operator "?". After the ternary operator, a value that matches the type of the variable being assigned is expected, followed by a ":" and another value that matches the type of the variable being assigned. If the boolean expression returns a truth value of true, then the first value is assigned to the variable, otherwise the second value is assigned.
 ```python
 int x = 5 < 10 ? 42 : 0;
@@ -724,19 +729,25 @@ stdout:
 ```
 42
 ```
-### 5.3.6) Precedence of Operators
+## `7.6` Precedence of Operators
 The precedence of operators is important for determining how to write programs in Viper. It is important to note that any expression within parentheses has the highest precedence.
-#### 5.3.6.1) Precedence of Unary Operators
+
+### `7.6.1` Precedence of Unary Operators
 Unary operators receive the highest precedence, second to parentheses.
-#### 5.3.6.2) Precedence of Binary Operators
+
+### `7.6.2` Precedence of Binary Operators
 The multiplicative operator, division operator, and modulus operator are left associative and have a higher precedence than the addition operator and the subtraction operator. The addition and subtraction operator are also left associative. 
-#### 5.3.6.3) Precedence of Comparative Operators
+
+### `7.6.3` Precedence of Comparative Operators
 The >, >=, <, <= operators are given higher precedence than the != and == operators.
-#### 5.3.6.4) Precedence of Logical Operators
+
+### `7.6.4` Precedence of Logical Operators
 The and operator is given higher precedence than the or operator.
-#### 5.3.6.5) Precedence of Variable Operators
+
+### `7.6.5` Precedence of Variable Operators
 Variable operators are given a lower precedence than binary operators and are right associative. 
-## 5.4) Scope
+
+# `8` Scope
 Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
 ```go
@@ -759,26 +770,28 @@ for string elem in list
 
 This will function in the same manner as expected with function definitions, conditionals, etc.
 
-# 6) Standard Library
+# `9` Standard Library
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
-## 6.1) Built-in methods
+## `9.1` Built-in methods
 
 
-## 6.2) Type Casting
+## `9.2` Type Casting
 
 
-## 6.3) Lists
+## `9.3` Lists
 
 
-## 6.4) Strings
+## `9.4` Groups
+
+## `9.5` Dicts
 
 
-# 7) Sample Code
+# `10` Sample Code
 Example programs written in Viper below.
 
-Fizzbuzz examples:
-```{java}
+## `10.1` Fizzbuzz examples:
+```java
 # standard fizzbuzz for-loop solution
 for (int i = 1; i <= 100; i++) {
    if (i % 15 == 0) {
@@ -817,8 +830,8 @@ for (int i = 0; i <= 100; i++) {
 }
 ```
 
-Int array sum examples:
-```{java}
+## `10.2` Int array sum examples:
+```java
 # printing an average of a list of ints, (almost) C-style
 int[] nums = [1, 2, 3, 4];
 int sum = 0;
