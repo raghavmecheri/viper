@@ -9,9 +9,9 @@ By:
 - Matthew Ottomano (mro2120)
 - Raghav Mecheri (rm3614)
 
-# `0` Contents
-1. [Overview](#1-Overview)  
-2. [Lexical Coventions](#2-Lexical-Conventions)  
+# `0` Contents 📌
+1. [Overview 🚁](#1-Overview-🚁)  
+2. [Lexical Coventions 📝](#2-Lexical-Conventions-📝)  
     1. [Comments](#2.1-Comments)  
     2. [Identifiers](#2.2-Identifiers)  
     3. [Reserved Keywords](#2.3-Reserved-Keywords)
@@ -24,7 +24,7 @@ By:
         5. [string](#2.5.5-String-Literals)
         6. [nah](#2.5.6-Nah-Literals)
         7. [list](#2.5.7-List-Literals)
-3. [Data Types](#3-Data-Types)
+3. [Data Types  💾](#3-Data-Types-💾)
     1. [Primitive Types](#3.1-Primitive-Data-Types)
         1. [char](#3.1.1-char)
         2. [int](#3.1.2-int)
@@ -36,9 +36,9 @@ By:
         1. [list](#3.2.1-list)
         2. [group](#3.2.2-group)
         3. [dict](#3.2.3-dict)
-4. [Type System](#4-Type-System)
+4. [Type System 🗃](#4-Type-System-🗃)
     1. [Explicit Types](#4.1-Explicit-Types)
-5. [Statements](#5-Statements)
+5. [Statements 🗣](#5-Statements-🗣)
     1. [Selector Statements](#5.1-Selector-Statements)
         1. [if](#5.1.1-If-Statement)
         2. [if/elif/else](#5.1.2-If/Elif/Else-Statement)
@@ -48,12 +48,12 @@ By:
     3. [Jump Statements](#5.3-Jump-Statements)
         1. [skip](#5.3.1-Skip-Statement)
         2. [abort](#5.3.2-Abort-Statement)
-6. [Expressions](#6-Expressions)
+6. [Expressions 🖥](#6-Expressions-🖥)
     1. [Truth-Value Expressions](#6.1-Truth-Value-Expressions)
     2. [Functions](#6.2-Functions)
         1. [Arrow Functions](#6.2.1-Arrow-Functions)
     3. [Guard Expressions](#6.3-Guard-Expressions)
-7. [Operators](#7-Operators)
+7. [Operators ➗](#7-Operators-➗)
     1. [Unary Operators](#7.1-Unary-Operators)
         1. [! (NOT)](#7.1.1-The-Not-Operator)
         2. [++ (increment)](#7.1.2-The-Increment-Operator)
@@ -87,23 +87,23 @@ By:
         3. [Comparative](#7.6.3-Precedence-Of-Comparative-Operators)
         4. [Logical](#7.6.4-Precedence-Of-Logical-Operators)
         5. [Variable](#7.6.5-Precedence-Of-Variable-Operators)
-8. [Scope](#8-Scope)
-9. [Standard Library](#9-Standard-Library)
+8. [Scope 👀](#8-Scope-👀)
+9. [Standard Library 📚](#9-Standard-Library-📚)
     1. [Built-in Functions](#9.1-Built-In-Functions)
     2. [Type Casting](#9.2-Type-Casting)
     3. [Lists](#9.3-Lists)
     4. [Groups](#9.4-Groups)
     5. [Dicts](#9.5-Dicts)
-10. [Sample Code](#10-Sample-Code)
+10. [Sample Code ⌨️](#10-Sample-Code-⌨️)
     1. [Fizzbuzz](#10.1-Fizzbuzz-Examples)
     2. [Int list sum](#10.2-Int-List-Sum-Examples)
 
-# `1` Overview 
+# `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `2` Lexical Conventions
+# `2` Lexical Conventions 📝
 ## `2.1` Comments
 Viper allows for multi-line comments that begin with an opening forward slash followed by a star (/\*) and end with a closing backward slash followed by a star (\*\\). All content within the bounds of these symbols is ignored. 
 
@@ -242,9 +242,9 @@ Examples of invalid list literals:
 [1, (5, 9)]
 ```
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `3` Data Types  
+# `3` Data Types  💾
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
 ## `3.1` Primitive Data Types
@@ -357,9 +357,9 @@ int no_no = b_words["balloon"]; /* Error: b_words has no key "balloon" */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `4` Type System
+# `4` Type System 🗃
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
 ## `4.1` Explicit Types
@@ -378,9 +378,9 @@ func int foo(int x) {
 
 ## TODO: User Defined Types?
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `5` Statements
+# `5` Statements 🗣
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
 ## `5.1` Selector Statements
 Selector Statements are involved with Viper's control flow. These statements are the conditionals that Viper uses to control the flow of a program. These statements include the if statement and the if/elif/else statement.
@@ -455,10 +455,10 @@ for (int element in arr){
     abort;
 }
 ```
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `6` Expressions
-Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
+# `6` Expressions 🖥
+Expressions in Viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
 
 ## `6.1` Truth-Value Expressions
 Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
@@ -535,9 +535,9 @@ stdout:
 ```
 42
 ```
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `7` Operators
+# `7` Operators ➗
 Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
 ## `7.1` Unary Operators
 Unary operators act on only one value. These include the not operator, the increment operator and the decrement operator.
@@ -804,9 +804,9 @@ The and operator is given higher precedence than the or operator.
 ### `7.6.5` Precedence of Variable Operators
 Variable operators are given a lower precedence than binary operators and are right associative. 
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `8` Scope
+# `8` Scope 👀
 Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
 ```go
@@ -829,9 +829,9 @@ for string elem in list
 
 This will function in the same manner as expected with function definitions, conditionals, etc.
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `9` Standard Library
+# `9` Standard Library 📚
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
 ## `9.1` Built-in Functions
@@ -847,9 +847,9 @@ Viper's standard library includes methods and functionalities that are used in n
 
 ## `9.5` Dicts
 
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
 
-# `10` Sample Code
+# `10` Sample Code ⌨️
 Example programs written in Viper below.
 
 ## `10.1` Fizzbuzz examples:
@@ -921,4 +921,4 @@ int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
 print(avg);
 ```
-[↩️  Back to Contents](#0-Contents)
+[↩️  Back to Contents 📌](#0-Contents-📌)
