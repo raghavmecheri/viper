@@ -96,7 +96,7 @@ By:
         1. [List API](#931-list-api)
     4. [Groups](#94-groups)
     5. [Dicts](#95-dicts)
-10. [Sample Code ⌨️](#10-sample-code)
+10. [Sample Code 🧩](#10-sample-code)
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
 
@@ -245,7 +245,7 @@ Examples of invalid list literals:
 
 [↩️  Back to Contents 📌](#0-contents)
 
-# `3` Data Types  💾
+# `3` Data Types 💾
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
 ## `3.1` Primitive Data Types
@@ -917,7 +917,7 @@ In this example, li represents a variable of the List type.
 
 [↩️  Back to Contents 📌](#0-contents)
 
-# `10` Sample Code ⌨️
+# `10` Sample Code 🧩
 Example programs written in Viper below.
 
 ## `10.1` Fizzbuzz examples:
