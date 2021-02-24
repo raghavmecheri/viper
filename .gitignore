@@ -21,3 +21,6 @@ setup.log
 *.install
 # Local OPAM switch
 _opam/
+
+# Ignore all PDF files
+*.pdf
