@@ -1,4 +1,4 @@
-# Viper
+# Viper  🐍
 ### An amalgamation of all our favorite language quirks.  
 <br>
 By:  
@@ -9,7 +9,7 @@ By:
 - Matthew Ottomano (mro2120)
 - Raghav Mecheri (rm3614)
 
-# Contents
+# `0` Contents
 1. [Overview](#1-Overview)  
 2. [Lexical Coventions](#2-Lexical-Conventions)  
     1. [Comments](#2.1-Comments)  
@@ -53,10 +53,55 @@ By:
     2. [Functions](#6.2-Functions)
         1. [Arrow Functions](#6.2.1-Arrow-Functions)
     3. [Guard Expressions](#6.3-Guard-Expressions)
+7. [Operators](#7-Operators)
+    1. [Unary Operators](#7.1-Unary-Operators)
+        1. [! (NOT)](#7.1.1-The-Not-Operator)
+        2. [++ (increment)](#7.1.2-The-Increment-Operator)
+        3. [-- (decrement)](#7.1.3-The-Decrement-Operator)
+    2. [Binary Operators](#7.2-Binary-Operators)
+        1. [+ (addition)](#7.2.1-The-Addition-Operator)
+        2. [- (subtraction)](#7.2.2-The-Subtraction-Operator)
+        3. [* (multiplication)](#7.2.3-The-Multiplicative-Operator)
+        4. [/ (division)](#7.2.4-The-Division-Operator)
+        5. [% (modulo)](#7.2.5-The-Modulus-Operator)
+    3. [Comparative Operators](#7.3-Comparative-Operators)
+        1. [> (greater than)](#7.3.1-The-Greater-Than-Operator)
+        2. [>= (greater than or equal to)](#7.3.2-The-Greater-Than-Or-Equal-To-Operator)
+        3. [< (less than)](#7.3.3-The-Less-Than-Operator)
+        4. [<= (less than or equal to)](#7.3.4-The-Less-Than-Or-Equal-To-Operator)
+        5. [== (equals)](#7.3.5-The-Equals-Operator)
+        6. [!= (not equals)](#7.3.6-The-Not-Equals-Operator)
+    4. [Logical Operators](#7.4-Logical-Operators)
+        1. [and](#7.4.1-The-AND-Operator)
+        2. [or](#7.4.2-The-OR-Operator)
+    5. [Variable Operators](#7.5-Variable-Operators)
+        1. [+= (quick add)](#7.5.1-The-=+-Operator)
+        2. [-= (quick subtract)](#7.5.2-The--=-Operator)
+        3. [*= (quick multiply)](#7.5.3-The-*=*-Operator)
+        4. [/= (quick divide)](#7.5.4-The-/=-Operator)
+        5. [= (assign)](#7.5.5-The-=-Operator)
+        6. [? : (ternary operators)](#7.5.6-The-Ternary-Operator)
+    6. [Precedence of Operators](#7.6-Precedence-Of-Operators)
+        1. [Unary](#7.6.1-Precedence-Of-Unary-Operators)
+        2. [Binary](#7.6.2-Precedence-Of-Binary-Operators)
+        3. [Comparative](#7.6.3-Precedence-Of-Comparative-Operators)
+        4. [Logical](#7.6.4-Precedence-Of-Logical-Operators)
+        5. [Variable](#7.6.5-Precedence-Of-Variable-Operators)
+8. [Scope](#8-Scope)
+9. [Standard Library](#9-Standard-Library)
+    1. [Built-in Functions](#9.1-Built-In-Functions)
+    2. [Type Casting](#9.2-Type-Casting)
+    3. [Lists](#9.3-Lists)
+    4. [Groups](#9.4-Groups)
+    5. [Dicts](#9.5-Dicts)
+10. [Sample Code](#10-Sample-Code)
+    1. [Fizzbuzz](#10.1-Fizzbuzz-Examples)
+    2. [Int list sum](#10.2-Int-List-Sum-Examples)
 
-
-# `1` Overview
+# `1` Overview 
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
+
+[↩️  Back to Contents](#0-Contents)
 
 # `2` Lexical Conventions
 ## `2.1` Comments
@@ -197,6 +242,8 @@ Examples of invalid list literals:
 [1, (5, 9)]
 ```
 
+[↩️  Back to Contents](#0-Contents)
+
 # `3` Data Types  
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
 
@@ -310,6 +357,8 @@ int no_no = b_words["balloon"]; /* Error: b_words has no key "balloon" */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
+[↩️  Back to Contents](#0-Contents)
+
 # `4` Type System
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
@@ -328,6 +377,8 @@ func int foo(int x) {
 ## TODO: Implicit Type Conversions
 
 ## TODO: User Defined Types?
+
+[↩️  Back to Contents](#0-Contents)
 
 # `5` Statements
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
@@ -404,10 +455,14 @@ for (int element in arr){
     abort;
 }
 ```
+[↩️  Back to Contents](#0-Contents)
+
 # `6` Expressions
 Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
+
 ## `6.1` Truth-Value Expressions
 Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
+
 ## `6.2` Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 ```python
@@ -480,6 +535,8 @@ stdout:
 ```
 42
 ```
+[↩️  Back to Contents](#0-Contents)
+
 # `7` Operators
 Operators are used on values to change them. This leads to interesting and complex expressions which can be useful. The different kinds of operators are Unary, Binary, Comparative, Logical and Variable.
 ## `7.1` Unary Operators
@@ -719,7 +776,7 @@ stdout:
 ```
 1
 ```
-#### `7.5.6` The Ternary Operator
+### `7.5.6` The Ternary Operator
 The Ternary Operator is given the symbol "?". This operator provides a short hand for an if-else statement and saves the result in a variable. When using the ternary operator in assigning a variable, Viper expects a boolean expression followed by the ternary operator "?". After the ternary operator, a value that matches the type of the variable being assigned is expected, followed by a ":" and another value that matches the type of the variable being assigned. If the boolean expression returns a truth value of true, then the first value is assigned to the variable, otherwise the second value is assigned.
 ```python
 int x = 5 < 10 ? 42 : 0;
@@ -747,6 +804,8 @@ The and operator is given higher precedence than the or operator.
 ### `7.6.5` Precedence of Variable Operators
 Variable operators are given a lower precedence than binary operators and are right associative. 
 
+[↩️  Back to Contents](#0-Contents)
+
 # `8` Scope
 Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
@@ -770,10 +829,12 @@ for string elem in list
 
 This will function in the same manner as expected with function definitions, conditionals, etc.
 
+[↩️  Back to Contents](#0-Contents)
+
 # `9` Standard Library
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
-## `9.1` Built-in methods
+## `9.1` Built-in Functions
 
 
 ## `9.2` Type Casting
@@ -786,6 +847,7 @@ Viper's standard library includes methods and functionalities that are used in n
 
 ## `9.5` Dicts
 
+[↩️  Back to Contents](#0-Contents)
 
 # `10` Sample Code
 Example programs written in Viper below.
@@ -830,7 +892,7 @@ for (int i = 0; i <= 100; i++) {
 }
 ```
 
-## `10.2` Int array sum examples:
+## `10.2` Int list sum examples:
 ```java
 # printing an average of a list of ints, (almost) C-style
 int[] nums = [1, 2, 3, 4];
@@ -859,3 +921,4 @@ int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
 print(avg);
 ```
+[↩️  Back to Contents](#0-Contents)
