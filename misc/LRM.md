@@ -6,7 +6,7 @@ Tommy
 ## 2.1) Comments
 Viper allows for multi-line comments that begin with an opening forward slash followed by a star (/\*) and end with a closing backward slash followed by a star (\*\\). All content within the bounds of these symbols is ignored. 
 
-```
+```java
 /* Single-line comments anyone? */
 
 /* How about 
@@ -18,7 +18,7 @@ multi-line?
 All user-defined identifiers (variable and function names) must begin with an ASCII letter and can contain any mix of ASCII letters and numbers. 
 
 Example valid identifiers:
-```
+```python
 lambda_bamba
 pythonCython
 RatGhav
@@ -26,7 +26,7 @@ V1P3RisTh3b3sT
 ```
 
 Example invalid identifiers:
-```
+```python
 68vip
 --!x
 V*x
@@ -35,7 +35,7 @@ V*x
 ## 2.3) Reserved Keywords
 Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
 
-```
+```python
 # control flow
 if else for while return skip abort panic in has 
 
@@ -50,7 +50,7 @@ and or is not true false
 Viper uses a pair of opening and closing curly brackets ({}) to represents a scope of statements within control-flow and function definitions. All statements within the scope must be followed by a semi-colon, but are not required to be on a new line or indentation as previous statements. The core of the control-flow statement following the keyword must be surrounded by parenthesis as well.
 
 Example bracket scope usage:
-```
+```java
 func void foo() {
     print("bar");
 }
@@ -85,7 +85,7 @@ Boolean literals are used to indicate the truth value of an expression and are r
 Char literals represent a single ASCII character and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_.
 
 Examples of char literals:
-```
+```python
 'a'
 '+'
 '\n'
@@ -95,7 +95,7 @@ Examples of char literals:
 Int literals represent a whole decimal number as an integer and always takes on the _int_ type. 
 
 Examples of int literals:
-```
+```python
 0
 42
 -70843
@@ -105,7 +105,7 @@ Examples of int literals:
 A float literal represents a decimal floating point number and always takes on the _float_ data type. A float literal consists of a sequence of numbers representing the whole-number part, followed by an ASCII decimal point, followed by a sequence of numbers representing the decimal portion.
 
 Examples of float literals:
-```
+```python
 123.45
 -0.007
 3.485
@@ -118,7 +118,7 @@ The nah literal represents a reference to a null value and always takes on the n
 String literals are a sequence of chars surrounded by double quotes. These literals can be assigned to variables of the type _string_.
 
 Examples of string literals:
-```
+```python
 "Stringy123"
 "ratghav merch boi"
 "H3sKell >>>"
@@ -128,14 +128,14 @@ Examples of string literals:
 All array literals consist of an opening square bracket, a sequence of objects/values all of the same type sepereated by commas, and a closing square bracket. Array literals must be assigned to variables of the type _array_ wrapping the same type the array literal contains. Array literals can contain array literals within themselves, leading to multi-dimensional arrays.
 
 Examples of valid array literals:
-```
+```python
 [1, 2, 3]
 ["a", "b", "c"]
 [[1], [10]]
 ```
 
 Examples of invalid array literals:
-```
+```python
 [1, 'a', "3"]
 [nah, "beach"]
 [1, (5, 9)]
@@ -254,25 +254,78 @@ int no_no = b_words[4]; /* Error: dict has no key 3 */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
 
-# Type System
-## Overview
+# 4) Type System
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
-## Explicit Types
-Viper requires explicit user-specified types for variable declarations, function parameters, and return types in function definitions. 
+## 4.1) Explicit Types
+Viper requires explicit user-specified types for variable declarations, function parameters, control flow, and return types in function definitions. An explicit type is required when new variables, placeholders, and parameters are created and need a type to be refrenced against.
 
-Examples include:
-```
+Variable intialization and assignment:
+```java
+string wow; 
 char x = 'y';
+wow = "doge"; /* Note: not required with assignment when type of identifier has been initialized */
+```
 
-func int foo(int x) {
-    return x+1;
+Function definitions:
+```javascript
+int func incrementer(int x) {
+    x += 1;
+}
+
+int func sum (int c) => c + c;
+```
+
+Control-flow:
+```java
+for (int i = 0; i <= 10; i++) {
+    print(i);
+}
+
+for (int num: nums) {
+    print(num);
 }
 ```
 
-## TODO: Implicit Type Conversions
+## 4.2) Explicit Type Conversions
+Viper utilizes casting functions available in the standard library to convert between types as needed. For example, casting up from an int to a float is a simple as wrapping an integer value expression in the _float_ function.
 
-## TODO: User Defined Types?
+Explicit type conversion functions include:
+* str(x) - converts x to a string
+* float(x) - converts x to a float
+* int(x) - converts x to an int
+* chr(x) - converts x to a char
+
+Examples of using explicit type conversions:
+```java
+int x = 1;
+char y = chr(x); /* converts 1 into '1' */
+
+int x = 2;
+int y = 5;
+int z = x+y; /* 7 */
+string xyz = str(x) + str(y) + str(z); /* "257" */
+```
+
+Note:
+See Section 6 for more details on explicit type casting functions.
+
+## 4.3) Implicit Type Conversions
+As Viper is statically-typed, we can rely on user-specified types to infer the desired type of an output and convert values accordingly. This comes in handy for common programming tasks such as math operations and string concatenation.
+
+Examples of implicit type conversion:
+```java
+/* when 2 integers are divided, Viper's type system is often able to infer which type the user would like to return from the result from hints such as the variable type. */
+int x = 2/5; /* 0 */
+float x = 2/5; /* .166666... */
+
+/* when a series of concatenations occurs starting with a string, all following operands will be converted to strings and then concatenated. */
+string num1 = "17";
+int num2 = 38;
+print(num1 + num2); /* "1738" */
+```
+
+When making an implicit type conversion, the Viper type system attempts to make an conversion based on the context of the values and types around it. If a conversion inference can not be made, Viper assumes the type that leads to the least loss of precision.
 
 # 5) Statements, Expressions, Operators and Scope
 ## 5.1) Statements
@@ -713,17 +766,32 @@ This will function in the same manner as expected with function definitions, con
 # 6) Standard Library
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
-## 6.1) Built-in methods
+## 6.1) TODO: Built-in methods
+Viper provides built-in methods for common operations inherit to everyday programming.
 
+## 6.2) Type Casting methods
+Viper's standard library provides methods for casting between types for ease of use and readability.
 
-## 6.2) Type Casting
+Type Casting functions include:
+* str(x) - converts x to a string
+* float(x) - converts x to a float
+* int(x) - converts x to an int
+* chr(x) - converts x to a char
 
+For more on type casting, see section 4.
 
 ## 6.3) Lists
+List functionality is provided through the standard library. List are dynamic array-like datatypes that provide an API to be used as a doubly-linked list, stack, queue, and more. 
 
+### 6.3.1) List API:
+In this example, li represents a variable of the List type.
+* li.append(ele) - appends an element to the end of the list
+* li.pop() - removes an element from the end of the list and returns it
+* li.size() - returns the length of a list
+* len(li) - returns the length of the list li
 
-## 6.4) Strings
-
+## 6.4) TODO: Strings
+String manipulation methods are 
 
 # 7) Sample Code
 Example programs written in Viper below.
