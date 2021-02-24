@@ -1,0 +1,7 @@
+(int, bool) t = [10, false];
+
+(int x, bool y) = t;
+
+(int) t2 = [10];
+
+(int y) = t2;
