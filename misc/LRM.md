@@ -782,3 +782,4 @@ print(avg);
 int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
 print(avg);
+```
