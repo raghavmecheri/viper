@@ -284,53 +284,71 @@ The if statement takes in a boolean expression within parentheses and runs the s
 #### 5.1.1.2) If/Elif/Else Statement
 The if statement has optional statements that can come after it such as elif and else. Elif is shorthand for "else if" which means that it will be run if the previous if statement's boolean expression was false. An elif statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all elif statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
 ```python
-if a == b:
-    print(a)
-elif a > b:
-    print(b)
-else:
-    print("something is wrong")
+if (a == b){
+    print(a);
+}
+elif (a > b){
+    print(b);
+}
+else{
+    print("something is wrong");
+}
     
+```
+If statements also can use a special keyword "has" to check if an element is in an array. The "has" keyword returns true if the element is in the array and false otherwise. The syntax is written by typing the name of the array, followed by "has" followed by the element.
+```python
+if (arr has 42){
+  print(true);
+}
+else{
+  print(false);
+}
 ```
 ### 5.1.2) Iterator Statements
 Iterator Statements are involved with Viper's ability to loop through statements. These statements compose for loops and while loops.
 #### 5.1.2.1) For Statement
 A for statement takes in an argument in the form of (assignment; condition; iterator), followed by a list of statements within its scope. The assignment creates a variable and initializes it to a given number. The condition is a boolean expression; if it returns true, the list of statements within the for statement's scope is run. The iterator changes the value of the variable in the assignment. Then the condition is checked with the new value and if it returns true, the statements are run again, otherwise the statements are not run again.
 ```C
-for (int i = 0; i<sizeof(arr); i++){  # More on indentation vs explicit scoping below
+for (int i = 0; i<sizeof(arr); i++){  
     print(arr[i]);
 }
 ```
 
 A for statement can take a second form as well. The second form of a for statement is an identifer, followed by the keyword in, followed by an object that is iterable. This statement will iterate over the values in the iterable object, using the identifier for each value, and run the statements in its scope. Once there is no elements left in the iterable object, the for statement will stop.
 ```python
-for int element in arr:
-    print(element)
+for (int element in arr) {
+    print(element);
+}
 ```
 #### 5.1.2.2) While Statement
 A while statement takes in a boolean expression. If the boolean expression returns a value of true, the statements within its scope are run. After all statements are run, the boolean expression is evaluated again; if true then statements are run again, otherwise, the while statement is done. This process repeats until the boolean expression returns a value of false.
 ```python
-while (condition):
-    print("chilling")
+while (condition){
+    print("chilling");
+}
 ```
 ### 5.1.3) Jump Statements
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
 #### 5.1.3.1) Skip Statement
 The skip statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
 ```python
-for int element in arr:
-    if element == 2:
-        print("I'm going to skip the remaining statements")
-    skip
-    print("This element isn't a 2")
+for (int element in arr){
+    if (element == 2) {
+        print("I'm going to skip the remaining statements");
+    }
+    skip;
+    print("This element isn't a 2");
+}
 ```
 #### 5.1.3.2) Abort Statement
 The abort statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
 ```python
-for int element in arr:
-    if element == 2:
-        print("found it")
-    abort
+for (int element in arr){
+    if (element == 2){
+        print("found it");
+    }
+    abort;
+}
 ```
 ## 5.2) Expressions
 Expressions in viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
@@ -339,9 +357,10 @@ Truth-Value expressions in Viper are boolean expressions. They can include logic
 ### 5.2.2) Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 ```python
-nah func foo():
-    print("Hello World!")
-foo()
+nah func foo(){
+    print("Hello World!");
+}
+foo();
 ```
 #### 5.2.2.1) Arrow Functions
 Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
@@ -395,11 +414,12 @@ nah (int a, int b) => {
 } (10, 20);
 ``` 
 ### 5.2.3) Guard Expression
-Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|" followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "|" followed by a value consistent with the data type for the variable. This can be thought of as a combination of if, elif and else statements for assigning a variable.
+Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|", except the first one and last one, followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "??" followed by a value consistent with the data type for the variable. The first statement has neither a "|" nor a "??". This can be thought of as a combination of if, elif and else statements for assigning a variable.
 ```python
 int x = ??
-| 4 == 4 : 42;
-| 0;
+4 == 4 : 42;
+| 5 == 3 : 24;
+?? 0;
 print(x);
 ```
 stdout:
@@ -645,6 +665,16 @@ stdout:
 ```
 1
 ```
+#### 5.3.5.6) The Ternary Operator
+The Ternary Operator is given the symbol "?". This operator provides a short hand for an if-else statement and saves the result in a variable. When using the ternary operator in assigning a variable, Viper expects a boolean expression followed by the ternary operator "?". After the ternary operator, a value that matches the type of the variable being assigned is expected, followed by a ":" and another value that matches the type of the variable being assigned. If the boolean expression returns a truth value of true, then the first value is assigned to the variable, otherwise the second value is assigned.
+```python
+int x = 5 < 10 ? 42 : 0;
+print(x);
+```
+stdout:
+```
+42
+```
 ### 5.3.6) Precedence of Operators
 The precedence of operators is important for determining how to write programs in Viper. It is important to note that any expression within parentheses has the highest precedence.
 #### 5.3.6.1) Precedence of Unary Operators
@@ -658,17 +688,9 @@ The and operator is given higher precedence than the or operator.
 #### 5.3.6.5) Precedence of Variable Operators
 Variable operators are given a lower precedence than binary operators and are right associative. 
 ## 5.4) Scope
-Scope in Python is traditionally defined with whitespace.
-Viper retains this option, while also giving users the alternative (via curly braces) to take a more traditional approach and avoid whitespace concerns.
-With this method, everything within the scope will be equivalent to four added spaces of indentation.
-Note that if this method is used, whitespace will be ignored for everything within the scope and every statement within a scope defined by `{}` must end with a semicolon.
+Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
 ```go
-for string elem in list:
-    print(elem)
-
-# Is the same as:
-
 for string elem in list {
     print(elem);
 }
@@ -684,24 +706,6 @@ for string elem in list
 
 for string elem in list
 { print(elem); }
-```
-
-Examples of snippets that wouldn't work are:
-```go
-for string elem in list
-{
-    for char letter in elem:
-        print(letter)
-}
-```
-
-Once you use traditional scoping, whitespace is ignored. The other way around would work fine though:
-```go
-for string elem in list:
-    for char letter in elem 
-    {
-        print(letter);
-    }
 ```
 
 This will function in the same manner as expected with function definitions, conditionals, etc.

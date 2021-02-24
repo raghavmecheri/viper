@@ -27,7 +27,6 @@ type expr =
   | ListLit of expr list
 
   | Id of string
-  | Dec of typ * string
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Ternop of expr * expr * expr
@@ -50,6 +49,7 @@ type expr =
 type stmt =
     Block of stmt list
   | Expr of expr
+  | Dec of typ * string
   | Return of expr
   | Skip of expr
   | Abort of expr
@@ -115,7 +115,6 @@ let rec string_of_expr = function
   | StringLiteral(s) -> "\"" ^ s ^ "\""
   | ListLit(lst) -> "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
   | Id(s) -> s
-  | Dec(t, v) -> string_of_typ t ^ " " ^ v
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | OpAssign(v, o, e) -> v ^ " " ^ string_of_op o ^ "= " ^ string_of_expr e
@@ -139,6 +138,7 @@ let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ ";\n";
+  | Dec(t, v) -> string_of_typ t ^ " " ^ v
   | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
   | Skip(expr) -> "skip " ^ string_of_expr expr ^ ";\n";
   | Abort(expr) -> "abort " ^ string_of_expr expr ^ ";\n";

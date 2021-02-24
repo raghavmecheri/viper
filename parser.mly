@@ -86,6 +86,7 @@ stmt_list:
 
 stmt:
     expr SEMI { Expr $1 }
+  | typ ID SEMI { Dec($1, $2) }
   | RETURN SEMI { Return Noexpr }
   | RETURN expr SEMI { Return $2 }
   | SKIP SEMI { Skip Noexpr }
@@ -113,7 +114,6 @@ expr:
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
-  | typ ID           { Dec($1, $2) }
   | list_exp         { $1 }
   
   | expr PLUS   expr { Binop($1, Add,   $3) }
