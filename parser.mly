@@ -14,7 +14,6 @@ open Ast
 %token <string> ID
 %token EOF
 
-%left ARROPEN ARRCLOSE
 %nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
@@ -29,6 +28,7 @@ open Ast
 %left TIMES DIVIDE MODULO TIMES_ASSIGN DIVIDE_ASSIGN
 %nonassoc INCR DECR
 %right NOT NEG
+%left ARROPEN ARRCLOSE
 
 %start program
 %type <Ast.program> program
@@ -44,32 +44,18 @@ decls:
  | decls stmt { ($2 :: fst $1), snd $1 }
 
 fdecl:
-   typ FUNC ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
+   typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $1;
-	   fname = $3;
-	   formals = $5;
-     body = List.rev $8;
+	   fname = $2;
+	   formals = $4;
+     body = List.rev $7;
      autoreturn = false } }
-    | typ FUNC ID LPAREN formals_opt RPAREN ARROW stmt
+    | typ ID LPAREN formals_opt RPAREN ARROW stmt
      { { typ = $1;
-     fname = $3;
-     formals = $5;
-     body = [$8];
+     fname = $2;
+     formals = $4;
+     body = [$7];
      autoreturn = true } }
-/* 
-    | typ FUNC LPAREN formals_opt RPAREN ARROW stmt
-      { { typ = $1;
-      fname = "anon";
-      formals = $4;
-      body = [$7];
-      autoreturn = true } }
-    | typ FUNC LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
-      { { typ = $1;
-      fname = "anon";
-      formals = $4;
-      body = List.rev $8;
-      autoreturn = false } }
- */
 
 formals_opt:
     /* nothing */ { [] }
@@ -86,7 +72,13 @@ typ:
   | CHAR { Char }
   | FLOAT { Float }
   | STRING { String }
+  | typ FUNC { Function($1) }
   | typ ARROPEN ARRCLOSE { Array($1) }
+  | LPAREN type_list RPAREN { Tuple($2) }
+
+type_list:
+    typ            { [$1] }
+  | typ COMMA type_list { $1 :: $3 }
 
 stmt_list:
     /* nothing */  { [] }
@@ -106,6 +98,7 @@ stmt:
      { For($3, $5, $7, $9) }
   | FOR LPAREN ID IN expr RPAREN stmt { ForIter($3, $5, $7) }
   | FOR LPAREN typ ID IN expr RPAREN stmt { DecForIter($3, $4, $6, $8) }
+  | FOR LPAREN LPAREN formal_list RPAREN IN expr RPAREN stmt { DeconstForIter($4, $7, $9) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr_opt:
@@ -143,7 +136,6 @@ expr:
   | expr AND    expr { Binop($1, And,   $3) }
   | expr OR     expr { Binop($1, Or,    $3) }
   | expr HAS     expr { Binop($1, Has,    $3) }
-  | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
 
   | expr QUESTION expr COLON expr { Ternop($1, $3, $5) }
   
@@ -154,7 +146,11 @@ expr:
 
   | typ ID ASSIGN expr { DecAssign($1, $2, $4) }
   | ID ASSIGN expr   { Assign($1, $3) }
-  
+  | LPAREN formal_list RPAREN ASSIGN expr { Deconstruct($2, $5) }
+
+  | expr ARROPEN expr ARRCLOSE { Access($1, $3) }
+  | expr ARROPEN expr ARRCLOSE ASSIGN expr { AccessAssign($1, $3, $6) } 
+
   | typ ID ASSIGN MATCH pattern { DecPatternMatch($1, $2, $5) }
   | ID ASSIGN MATCH pattern { PatternMatch($1, $4) }
 
@@ -183,3 +179,30 @@ actuals_opt:
 actuals_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
+
+
+/* MARK: Stuff that we aren't using, but we might use (lol) */
+
+/*
+tuple_exp:
+    LPAREN tuple_elems RPAREN   { TupleLit($2) }
+
+tuple_elems:
+    expr           { [$1] }
+  | expr COMMA tuple_elems  { $1 :: $3 }
+*/
+
+/* 
+    | typ LPAREN formals_opt RPAREN ARROW stmt
+      { { typ = $1;
+      fname = "anon";
+      formals = $4;
+      body = [$7];
+      autoreturn = true } }
+    | typ LPAREN formals_opt RPAREN ARROW LBRACE stmt_list RBRACE
+      { { typ = $1;
+      fname = "anon";
+      formals = $4;
+      body = List.rev $8;
+      autoreturn = false } }
+ */
