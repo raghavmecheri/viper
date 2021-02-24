@@ -1,11 +1,18 @@
 # Overview
 Tommy
 
-# Lexical Conventions
-## 2.1) TODO: Comments
-Single-line comments begin with a single octothorpe (#) when used outside of a string literal. All content until the end of the physical line is ignored.
 
-Viper allows for multi-line comments that begin with an opening forward slash followed by a star (/\*) and end with a closing backward slash followed by a star (\*\\). All content within the bounds of these symbols is ignored.
+# Lexical Conventions
+## 2.1) Comments
+Viper allows for multi-line comments that begin with an opening forward slash followed by a star (/\*) and end with a closing backward slash followed by a star (\*\\). All content within the bounds of these symbols is ignored. 
+
+```
+/* Single-line comments anyone? */
+
+/* How about 
+multi-line? 
+*/
+```
 
 ## 2.2) Identifiers
 All user-defined identifiers (variable and function names) must begin with an ASCII letter and can contain any mix of ASCII letters and numbers. 
@@ -25,42 +32,22 @@ Example invalid identifiers:
 V*x
 ```
 
-## 2.3) TODO: Reserved Keywords, Identifiers, and Operators
+## 2.3) Reserved Keywords
 Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
-
 
 ```
 # control flow
-while if elif else for in skip abort panic 
+if else for while return skip abort panic in has 
 
 # function and types
-func return char int float bool nah string dict group 
+func char int float bool nah string dict group 
 
-# operators and values
-+ - * / // ** = == != > >= < <= -= += and or is not true false
+# operators and literals
+and or is not true false
 ```
 
-## 2.4) TODO: Indentation and Scoping
-TODO: Do we have +=, -=, etc? The mix use of semicolons is kind of confusing, we should pick one (require them everywhere?) 
-
-Viper allows for users to choose how they want to signify scoping and groups of statements within their programs. Following the use of a control-flow structure or function definition, users can choose to utilize indentation or brackets to signify scope as long as their use is consistent within the scope. 
-
-When using indentation, the number of tabs (or equivalent number of spaces) determines how statements are grouped. All control-flow and function definitions must be immediately followed by a single colon and each statement within the desired scope must be indented one tab further than the line that begins the scope.
-
-Example indentation usage:
-```
-func void foo():
-    print("bar")
-
-count = 0
-while count < 10:
-    if count % 2 == 0:
-        count += 1
-    
-    count += 1
-```
-
-When using brackets, a pair of opening and closing curly brackets ({}) represents a scope of statements within control-flow and function definition. All statements within the scope must be followed by a semi-colon, but are not required to be on a new line or indentation as previous statements. The core of the control-flow statement following the keyword must be surrounded by parenthesis as well.
+## 2.4) Scoping
+Viper uses a pair of opening and closing curly brackets ({}) to represents a scope of statements within control-flow and function definitions. All statements within the scope must be followed by a semi-colon, but are not required to be on a new line or indentation as previous statements. The core of the control-flow statement following the keyword must be surrounded by parenthesis as well.
 
 Example bracket scope usage:
 ```
@@ -76,8 +63,6 @@ while (count < 10) {
 
     count += 1;
 }
-
-
 ```
 
 For more information on statements and scoping, see Section 5.
@@ -97,14 +82,13 @@ Boolean literals are used to indicate the truth value of an expression and are r
 
 
 ### 2.5.2) Char Literals
-Char literals represent a single Unicode letter and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_. 
+Char literals represent a single ASCII character and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_.
 
 Examples of char literals:
 ```
 'a'
 '+'
 '\n'
-'\\'
 ```
 
 ### 2.5.3) Int Literals
@@ -130,6 +114,32 @@ Examples of float literals:
 ### 2.5.5) Nah Literals
 The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
 
+### 2.5.6) String Literals
+String literals are a sequence of chars surrounded by double quotes. These literals can be assigned to variables of the type _string_.
+
+Examples of string literals:
+```
+"Stringy123"
+"ratghav merch boi"
+"H3sKell >>>"
+```
+
+### 2.5.7) Array Literals
+All array literals consist of an opening square bracket, a sequence of objects/values all of the same type sepereated by commas, and a closing square bracket. Array literals must be assigned to variables of the type _array_ wrapping the same type the array literal contains. Array literals can contain array literals within themselves, leading to multi-dimensional arrays.
+
+Examples of valid array literals:
+```
+[1, 2, 3]
+["a", "b", "c"]
+[[1], [10]]
+```
+
+Examples of invalid array literals:
+```
+[1, 'a', "3"]
+[nah, "beach"]
+[1, (5, 9)]
+```
 
 # Data Types  
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
@@ -264,7 +274,7 @@ func int foo(int x) {
 
 ## TODO: User Defined Types?
 
-# <span style="background-color: #FFFF00">5)</span> Statements, Expressions, Operators and Scope
+# 5) Statements, Expressions, Operators and Scope
 ## 5.1) Statements
 Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
 ### 5.1.1) Selector Statements
