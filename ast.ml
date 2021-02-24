@@ -44,6 +44,8 @@ type expr =
   | DecPatternMatch of typ * string * expr
   
   | Call of string * expr list
+  | AttributeCall of expr * string * expr list
+
   | Noexpr
 
 type stmt =
@@ -131,7 +133,10 @@ let rec string_of_expr = function
   | MatchPattern(c, b) -> "?? " ^ String.concat " | " (List.map string_of_expr c) ^ " ?? " ^ string_of_expr b 
   | PatternMatch(s, e) -> s ^ " = " ^ string_of_expr e
   | DecPatternMatch(t, s, e) -> string_of_typ t ^ " " ^ s ^ " = " ^ string_of_expr e
+  
   | Call(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | AttributeCall(e, f, el) -> string_of_expr e ^ "." ^ f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+
   | Noexpr -> ""
 
 let rec string_of_stmt = function
