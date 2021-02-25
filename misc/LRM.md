@@ -1,7 +1,9 @@
 # Viper  🐍
-### An amalgamation of all our favorite language quirks.  
-<br>
-By:  
+### An amalgamation of all our favorite language quirks.
+A hosted copy of this manual may be found [here](https://github.com/raghavmecheri/viper/blob/main/misc/LRM.md).
+<br><br>
+
+Authors:  
 
 - Mustafa Eyceoz (me2680)
 - Tommy Gomez (tjk2132)
@@ -79,11 +81,11 @@ By:
         2. [or](#742-the-or-operator)
         3. [has](#743-the-has-operator)
     5. [Variable Operators](#75-variable-operators)
-        1. [+= (quick add)](#751-the-=+-operator)
-        2. [-= (quick subtract)](#752-the--=-operator)
-        3. [*= (quick multiply)](#753-the-*=*-operator)
-        4. [/= (quick divide)](#754-the-/=-operator)
-        5. [= (assign)](#755-the-=-operator)
+        1. [+= (quick add)](#751-the--operator)
+        2. [-= (quick subtract)](#752-the--operator)
+        3. [*= (quick multiply)](#753-the--operator)
+        4. [/= (quick divide)](#754-the--operator)
+        5. [= (assign)](#755-the--operator)
         6. [? : (ternary operators)](#756-the-ternary-operator)
     6. [Precedence of Operators](#76-precedence-of-operators)
         1. [Unary](#761-precedence-of-unary-operators)
@@ -94,34 +96,35 @@ By:
 8. [Scope 👀](#8-scope)
 9. [Standard Library 📚](#9-standard-library)
     1. [Math Functions](#91-math-functions)
-        1. [sqrt()](#911-sqrt())
-        2. [pow()](#912-pow())
-        3. [floor()](#913-floor())
-        4. [ceil()](#914-ceil())
-        5. [round()](#915-round())
-        6. [min()](#916-min())
-        7. [max()](#917-max())
-        8. [trunc()](#918-trunc())
+        1. [sqrt()](#911-sqrt)
+        2. [pow()](#912-pow)
+        3. [floor()](#913-floor)
+        4. [ceil()](#914-ceil)
+        5. [round()](#915-round)
+        6. [min()](#916-min)
+        7. [max()](#917-max)
+        8. [trunc()](#918-trunc)
     2. [Primitive Type Casting Functions](#92-primitive-type-casting-functions)
-        1. [char()](#921-char())
-        2. [int()](#922-int())
-        3. [float()](#923-float())
-        4. [bool()](#924-bool())
-        5. [str()](#925-str())
+        1. [char()](#921-char)
+        2. [int()](#922-int)
+        3. [float()](#923-float)
+        4. [bool()](#924-bool)
+        5. [str()](#925-str)
     3. [Miscellaneous Functions](#9.3-miscellaneous-functions)
-        1. [print()](#931-print())
-        2. [len()](#932-len())
+        1. [print()](#931-print)
+        2. [len()](#932-len)
     4. [Lists](#94-lists)
-        1. [append()](#941-append())
-        2. [prepend()](#942-prepend())
-        3. [remove()](#943-remove())
-        4. [join()](#944-join())
-        5. [sub()](#945-sub())
+        1. [append()](#941-append)
+        2. [prepend()](#942-prepend)
+        3. [remove()](#943-remove)
+        4. [join()](#944-join)
+        5. [sub()](#945-sub)
     5. [Groups](#95-groups)
     6. [Dicts](#96-dicts)
 10. [Sample Code 🧩](#10-sample-code)
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
+    3. [GCD Function](#103-gcd-function)
 
 # `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
@@ -268,11 +271,16 @@ Examples of invalid list literals:
 
 [↩️  Back to Contents 📌](#0-contents)
 
+<<<<<<< HEAD
 # `3` Data Types  💾
+=======
+# `3` Data Types 💾
+>>>>>>> 790a35bb3e5c60e0796ab3b5938b5bcd152e5ff5
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's [Standard Library 📚](#9-standard-library). 
 
 ## `3.1` Primitive Data Types
-The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
+The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.
+
 | Primitive Type | Size | Description | Declaration/Usage |
 |-----------|-----------|-----------|-----------|
 | `char` | 2 bytes | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
@@ -292,7 +300,8 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 `float`s represent signed floating-point numbers. To define a `float` at least one digit must precede a decimal point (.), and at least one digit must follow. For example, `.8` and `8.` are invalid, and result in syntax errors. These values are correctly defined as `0.8` and `1.0`, with padding zeroes to ensure that there is a least one digit on each side of the decimal point.  
 
 ### `3.1.4` `bool`
-`bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical `and`, logical `or`, and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) and ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).  
+`bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical `and`, logical `or`, and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) and ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).
+
 | Primitive Type | `true` values | `false` values |
 |-----|------|-----|
 | `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
@@ -314,6 +323,7 @@ Internally, a `string` is stored as a sequence of defined chars, followed by the
 
 ## `3.2` Higher-Order Data Types  
 Viper also supports various higher-order data types, including `list`, `string`, `group`, and `dict`. More details can be found in the Standard Library section.
+
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[0] array; /* Empty list */`<br>`float[] scores = [9.7, 8.2];` |
@@ -421,7 +431,7 @@ for (int num: nums) {
 }
 ```
 
-## 4.2) Explicit Type Conversions
+## `4.2` Explicit Type Conversions
 Viper utilizes casting functions available in the standard library to convert between types as needed. For example, casting up from an int to a float is a simple as wrapping an integer value expression in the _float_ function.
 
 Explicit type conversion functions include:
@@ -446,7 +456,7 @@ string xyz = str(x) + str(y) + str(z);
 Note:
 See Section 6 for more details on explicit type casting functions.
 
-## 4.3) Implicit Type Conversions
+## `4.3` Implicit Type Conversions
 As Viper is statically-typed, we can rely on user-specified types to infer the desired type of an output and convert values accordingly. This comes in handy for common programming tasks such as math operations and string concatenation.
 
 Examples of implicit type conversion:
@@ -1005,6 +1015,7 @@ if (x) {
 }
 ```
 See the below table for details on what values `bool()` maps to true and result in `true` and what values result in `false`:
+
 | Type | `true` values | `false` values |
 |-----|------|-----|
 | `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
