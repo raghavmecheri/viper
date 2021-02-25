@@ -1011,7 +1011,10 @@ string float_str = str(34.5); /* Returns "34.5" */
 string bool_str = str(false); /* Returns "false" */
 ```
 
-### `9.2.6` `print()`
+## 9.3 Miscellaneous Functions
+These functions are unclassified, and are useful in a variety of situation.
+
+### `9.3.1` `print()`
 `print()` prints the given `string` to a new line of standard output. It throws errors if it encounters a type other than `string`, and prints an empty new line if no inputs are given. To get around this, use the [str()](#925-str()) method with `string` concatenation (+).
 ```java
 print("Hola Mundo");
@@ -1032,17 +1035,53 @@ I have 388 bananas
 true-0.3
 ```
 
+### 
+
 ## `9.3` Lists
-List functionality is provided through the standard library. List are dynamic array-like datatypes that provide an API to be used as a doubly-linked list, stack, queue, and more. 
+List functionality is provided through the standard library. Lists are mutable, static sequences of a single data type with fixed sizes. Lists are accessed and modified with square brackets ([]). See [Higher-Order Data Types: lists](#321-list) for more details on instantiation and modification. The following sections describe additional list-specific operations implemented in the list api. These operations are all called on instances of lists, and thus take the form `list.operation(parameters)`.
 
-### `9.3.1` List API
-In this example, li represents a variable of the List type.
-* li.append(ele) - appends an element to the end of the list
-* li.pop() - removes an element from the end of the list and returns it
-* li.size() - returns the length of a list
-* len(li) - returns the length of the list li
+### `9.3.1` `append()`
+`append()` adds an input element to the end of a specified list. Because lists have fixed sizes, the original list remains unmodified, and `append()` returns a new list with the input element attached. The type of the input to `append()` must match the type of the list. 
+```java
+int[] channels = [31, 44, 21];
+int[] new_channels = channels.append(54);
+/* new_channels contains: [31, 44, 21, 54] */
+```
 
-## `9.4` Groups
+### `9.3.2` `prepend()`
+`prepend()` works in the same way as `append()`, but it adds the input element to the front of the list.
+```java
+string[] cities = ["NEWY", "BOST", "MIAM"];
+string[] more_cities = cities.prepend("ATLA");
+/* more_cities contains: ["ATLA", "NEWY", "BOST", "MIAM"] */
+```
+
+### `9.3.3` `remove()`
+`remove()` takes in an `int` and removes the element at the index specified by the `int`. If the list has no such index, an error is thrown. Because lists have fixed sizes, the original list remains unmodified, and `remove()` returns a new list with the specified input element removed.
+```java
+char[] notes = ['a', 'c', 'd', 'c'];
+char[] less_notes = notes.remove(2);
+/* less_notes contains: ['a', 'c', 'c'] */
+```
+
+### `9.3.4` `join()`
+`join()` takes another list as input and appends it to the list that `join()` is called on. Because lists have fixed sizes, the original lists are unmodified, and `join()` returns a new list with the elements of the second list appended to the elements of the first. The type of both lists must match, or an error is thrown. 
+```java
+float[] class1 = [0.8, 0.8, 0.9];
+float[] class2 = [0.7, 0.75, 1.0];
+float[] all = class1.join(class2);
+/* all contains: [0.8, 0.8, 0.9, 0.7, 0.75, 1.0] */
+```
+
+### `9.3.5` `sub()`
+`sub()` takes two `int`s as input, and returns the sublists that fall between those two indices of the list. The element at the start index is included in the sublist, but the element at the end index is not. If the first index is out of the range of the list's indices, an error is thrown. If the second index is less than 0 or greater than the size of the list, an error is throw. Note that the second index is permitted to be one greater than the index of the list's last element, because the element at the second input is not included in the sublist. `sub()` returns a brand new list and leaves the original unmodified. 
+```java
+int[] nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+int[] less_than_5 = nums.sub(0, 5);
+int[] middle_3 = nums.sub(4, 7);
+/* less_than_5 contains: [0, 1, 2, 3, 4] */
+/* middle_3 contains: [4, 5, 6]
+```
 
 ## `9.5` Dicts
 
