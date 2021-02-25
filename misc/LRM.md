@@ -1035,12 +1035,22 @@ I have 388 bananas
 true-0.3
 ```
 
-### 
+### `9.3.2` `len()`
+The `len()` function is an all-purpose method that returns the `int` size of `string`s, `list`s, `group`s, and `dict`s. For `string`s, `len()` returns the number of characters in the `string` (excluding the null terminator at the end of its underlying `list` of `char`s). For `list`s, `len()` returns the number of elements in the `list`. For `group`s, `len()` returns the number of elements in the `group`, and for `dict`s, `len()` returns the number of key-value pairs.
+```java
+int str_length = len("Nice sock!\n\t"); /* str_length = 12 */
+int list_length = len([3, 1, 6, 76]); /* list_length = 4 */
+(int, float) groupie = (8, 8.8);
+int group_length = len(groupie); /* group_length = 2 */
+int dict_length = len(["word": 3,
+                       "knees": 5, 
+                       "port": 90]); /* dict_length = 3 */
+```
 
-## `9.3` Lists
+## `9.4` Lists
 List functionality is provided through the standard library. Lists are mutable, static sequences of a single data type with fixed sizes. Lists are accessed and modified with square brackets ([]). See [Higher-Order Data Types: lists](#321-list) for more details on instantiation and modification. The following sections describe additional list-specific operations implemented in the list api. These operations are all called on instances of lists, and thus take the form `list.operation(parameters)`.
 
-### `9.3.1` `append()`
+### `9.4.1` `append()`
 `append()` adds an input element to the end of a specified list. Because lists have fixed sizes, the original list remains unmodified, and `append()` returns a new list with the input element attached. The type of the input to `append()` must match the type of the list. 
 ```java
 int[] channels = [31, 44, 21];
@@ -1048,7 +1058,7 @@ int[] new_channels = channels.append(54);
 /* new_channels contains: [31, 44, 21, 54] */
 ```
 
-### `9.3.2` `prepend()`
+### `9.4.2` `prepend()`
 `prepend()` works in the same way as `append()`, but it adds the input element to the front of the list.
 ```java
 string[] cities = ["NEWY", "BOST", "MIAM"];
@@ -1056,7 +1066,7 @@ string[] more_cities = cities.prepend("ATLA");
 /* more_cities contains: ["ATLA", "NEWY", "BOST", "MIAM"] */
 ```
 
-### `9.3.3` `remove()`
+### `9.4.3` `remove()`
 `remove()` takes in an `int` and removes the element at the index specified by the `int`. If the list has no such index, an error is thrown. Because lists have fixed sizes, the original list remains unmodified, and `remove()` returns a new list with the specified input element removed.
 ```java
 char[] notes = ['a', 'c', 'd', 'c'];
@@ -1064,7 +1074,7 @@ char[] less_notes = notes.remove(2);
 /* less_notes contains: ['a', 'c', 'c'] */
 ```
 
-### `9.3.4` `join()`
+### `9.4.4` `join()`
 `join()` takes another list as input and appends it to the list that `join()` is called on. Because lists have fixed sizes, the original lists are unmodified, and `join()` returns a new list with the elements of the second list appended to the elements of the first. The type of both lists must match, or an error is thrown. 
 ```java
 float[] class1 = [0.8, 0.8, 0.9];
@@ -1073,7 +1083,7 @@ float[] all = class1.join(class2);
 /* all contains: [0.8, 0.8, 0.9, 0.7, 0.75, 1.0] */
 ```
 
-### `9.3.5` `sub()`
+### `9.4.5` `sub()`
 `sub()` takes two `int`s as input, and returns the sublists that fall between those two indices of the list. The element at the start index is included in the sublist, but the element at the end index is not. If the first index is out of the range of the list's indices, an error is thrown. If the second index is less than 0 or greater than the size of the list, an error is throw. Note that the second index is permitted to be one greater than the index of the list's last element, because the element at the second input is not included in the sublist. `sub()` returns a brand new list and leaves the original unmodified. 
 ```java
 int[] nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -1082,8 +1092,12 @@ int[] middle_3 = nums.sub(4, 7);
 /* less_than_5 contains: [0, 1, 2, 3, 4] */
 /* middle_3 contains: [4, 5, 6]
 ```
+## `9.5` Groups
+Check back soon for the `group`s API.
 
-## `9.5` Dicts
+## `9.6` Dicts
+Check back soon for the `dict`s API.
+
 
 [↩️  Back to Contents 📌](#0-contents)
 
