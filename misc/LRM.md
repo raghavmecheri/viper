@@ -275,7 +275,8 @@ Examples of invalid list literals:
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's [Standard Library 📚](#9-standard-library). 
 
 ## `3.1` Primitive Data Types
-The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
+The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.
+
 | Primitive Type | Size | Description | Declaration/Usage |
 |-----------|-----------|-----------|-----------|
 | `char` | 2 bytes | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
@@ -295,7 +296,8 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 `float`s represent signed floating-point numbers. To define a `float` at least one digit must precede a decimal point (.), and at least one digit must follow. For example, `.8` and `8.` are invalid, and result in syntax errors. These values are correctly defined as `0.8` and `1.0`, with padding zeroes to ensure that there is a least one digit on each side of the decimal point.  
 
 ### `3.1.4` `bool`
-`bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical `and`, logical `or`, and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) and ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).  
+`bool`s hold one of the two Boolean values: `true` or `false`. Expressions using the logical `and`, logical `or`, and equality operators are evaluated to `bool`s. For example, the expression `(1 < 2) and ('c' == 'c')` evaluates to a `bool` with value `true`. Additionally, specific values of each primitive type evaluate to certain `bool` values. See the table below for details (note that `nah` always evaluates to `false`).
+
 | Primitive Type | `true` values | `false` values |
 |-----|------|-----|
 | `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
@@ -317,6 +319,7 @@ Internally, a `string` is stored as a sequence of defined chars, followed by the
 
 ## `3.2` Higher-Order Data Types  
 Viper also supports various higher-order data types, including `list`, `string`, `group`, and `dict`. More details can be found in the Standard Library section.
+
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[0] array; /* Empty list */`<br>`float[] scores = [9.7, 8.2];` |
@@ -1008,6 +1011,7 @@ if (x) {
 }
 ```
 See the below table for details on what values `bool()` maps to true and result in `true` and what values result in `false`:
+
 | Type | `true` values | `false` values |
 |-----|------|-----|
 | `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
