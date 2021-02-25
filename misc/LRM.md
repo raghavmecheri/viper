@@ -121,7 +121,7 @@ multi-line?
 All user-defined identifiers (variable and function names) must begin with an ASCII letter and can contain any mix of ASCII letters and numbers. 
 
 Example valid identifiers:
-```python
+```java
 lambda_bamba
 pythonCython
 RatGhav
@@ -129,7 +129,7 @@ V1P3RisTh3b3sT
 ```
 
 Example invalid identifiers:
-```python
+```java
 68vip
 --!x
 V*x
@@ -138,14 +138,14 @@ V*x
 ## `2.3` Reserved Keywords
 Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
 
-```python
-# control flow
+```java
+/* control flow */
 if else for while return skip abort panic in has 
 
-# function and types
+/* function and types */
 func char int float bool nah string dict group 
 
-# operators and literals
+/* operators and literals */
 and or is not true false
 ```
 
@@ -184,7 +184,7 @@ Literals include:
 Char literals represent a single ASCII character and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_.
 
 Examples of char literals:
-```python
+```java
 'a'
 '+'
 '\n'
@@ -194,7 +194,7 @@ Examples of char literals:
 Int literals represent a whole decimal number as an integer and always takes on the _int_ type. 
 
 Examples of int literals:
-```python
+```java
 0
 42
 -70843
@@ -204,7 +204,7 @@ Examples of int literals:
 A float literal represents a decimal floating point number and always takes on the _float_ data type. A float literal consists of a sequence of numbers representing the whole-number part, followed by an ASCII decimal point, followed by a sequence of numbers representing the decimal portion.
 
 Examples of float literals:
-```python
+```java
 123.45
 -0.007
 3.485
@@ -220,7 +220,7 @@ String literals are a sequence of chars surrounded by double quotes. These liter
 The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
 
 Examples of string literals:
-```python
+```java
 "Stringy123"
 "ratghav merch boi"
 "H3sKell >>>"
@@ -230,14 +230,14 @@ Examples of string literals:
 All list literals consist of an opening square bracket, a sequence of objects/values all of the same type sepereated by commas, and a closing square bracket. List literals must be assigned to variables of the type _list_ wrapping the same type the array literal contains. List literals can contain array list within themselves, leading to multi-dimensional lists.
 
 Examples of valid list literals:
-```python
+```java
 [1, 2, 3]
 ["a", "b", "c"]
 [[1], [10]]
 ```
 
 Examples of invalid list literals:
-```python
+```java
 [1, 'a', "3"]
 [nah, "beach"]
 [1, [5, 9]]
@@ -407,12 +407,14 @@ Explicit type conversion functions include:
 Examples of using explicit type conversions:
 ```java
 int x = 1;
-char y = chr(x); /* converts 1 into '1' */
+/* converts 1 into '1' */
+char y = chr(x);
 
 int x = 2;
 int y = 5;
 int z = x+y; /* 7 */
-string xyz = str(x) + str(y) + str(z); /* "257" */
+/* "257" */
+string xyz = str(x) + str(y) + str(z);
 ```
 
 Note:
@@ -423,11 +425,18 @@ As Viper is statically-typed, we can rely on user-specified types to infer the d
 
 Examples of implicit type conversion:
 ```java
-/* when 2 integers are divided, Viper's type system is often able to infer which type the user would like to return from the result from hints such as the variable type. */
+/* when 2 integers are divided, Viper's
+type system is often able to infer which type the
+user would like to return from the result
+from hints such as the variable type. */
 int x = 2/5; /* 0 */
 float x = 2/5; /* .166666... */
 
-/* when a series of concatenations occurs starting with a string, all following operands will be converted to strings and then concatenated. */
+/* when a series of concatenations
+occurs starting with a string,
+all following operands will be
+converted to strings and then
+concatenated. */
 string num1 = "17";
 int num2 = 38;
 print(num1 + num2); /* "1738" */
@@ -445,7 +454,7 @@ Selector Statements are involved with Viper's control flow. These statements are
 The if statement takes in a boolean expression within parentheses and runs the statements within its scope if the boolean expression returns true. 
 ### `5.1.2` If / Else if / Else Statement
 The if statement has optional statements that can come after it such as elif and else. Else if will be run if the previous if statement's boolean expression was false. An else if statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all else if statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
-```python
+```java
 if (a == b){
     print(a);
 }
@@ -458,7 +467,7 @@ else{
     
 ```
 If statements also can use a special keyword "has" to check if an element is in an array. The "has" keyword returns true if the element is in the array and false otherwise. The syntax is written by typing the name of the array, followed by "has" followed by the element.
-```python
+```java
 if (arr has 42){
   print(true);
 }
@@ -470,21 +479,21 @@ else{
 Iterator Statements are involved with Viper's ability to loop through statements. These statements compose for loops and while loops.
 ### `5.2.1` For Statement
 A for statement takes in an argument in the form of (assignment; condition; iterator), followed by a list of statements within its scope. The assignment creates a variable and initializes it to a given number. The condition is a boolean expression; if it returns true, the list of statements within the for statement's scope is run. The iterator changes the value of the variable in the assignment. Then the condition is checked with the new value and if it returns true, the statements are run again, otherwise the statements are not run again.
-```C
-for (int i = 0; i<sizeof(arr); i++){  
+```java
+for (int i = 0; i < sizeof(arr); i++){  
     print(arr[i]);
 }
 ```
 
 A for statement can take a second form as well. The second form of a for statement is an identifer, followed by the keyword in, followed by an object that is iterable. This statement will iterate over the values in the iterable object, using the identifier for each value, and run the statements in its scope. Once there is no elements left in the iterable object, the for statement will stop.
-```python
+```java
 for (int element in arr) {
     print(element);
 }
 ```
 ### `5.2.2` While Statement
 A while statement takes in a boolean expression. If the boolean expression returns a value of true, the statements within its scope are run. After all statements are run, the boolean expression is evaluated again; if true then statements are run again, otherwise, the while statement is done. This process repeats until the boolean expression returns a value of false.
-```python
+```java
 while (condition){
     print("chilling");
 }
@@ -493,7 +502,7 @@ while (condition){
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
 ### `5.3.1` Skip Statement
 The skip statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
-```python
+```java
 for (int element in arr){
     if (element == 2) {
         print("I'm going to skip the remaining statements");
@@ -504,7 +513,7 @@ for (int element in arr){
 ```
 ### `5.3.2` Abort Statement
 The abort statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
-```python
+```java
 for (int element in arr){
     if (element == 2){
         print("found it");
@@ -522,7 +531,7 @@ Truth-Value expressions in Viper are boolean expressions. They can include logic
 
 ## `6.2` Functions
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
-```python
+```java
 nah func foo(){
     print("Hello World!");
 }
@@ -533,7 +542,8 @@ Similar to arrow functions in Javascript, or Python lambda functions, users are 
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
 
 ```javascript
-<ret_type> func <name> (<param_type> param1, ..., <param_type> paramN) => expression output
+<ret_type> func <name> (<param_type> param1, ..., <param_type> paramN)
+    => expression output;
 ```
 
 Note that even with zero parameters or one parameter, the () are still necessary.
@@ -834,19 +844,19 @@ Variable operators are given a lower precedence than binary operators and are ri
 # `8` Scope 👀
 Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
-```go
+```java
 for string elem in list {
     print(elem);
 }
 
-# Is the same as:
+/* Is the same as: */
 
 for string elem in list
 {
     print(elem);
 }
 
-# Is the same as:
+/* Is the same as: */
 
 for string elem in list
 { print(elem); }
@@ -892,7 +902,8 @@ Example programs written in Viper below.
 
 ## `10.1` Fizzbuzz examples:
 ```java
-# standard fizzbuzz for-loop solution
+/* standard fizzbuzz
+for-loop solution */
 for (int i = 1; i <= 100; i++) {
    if (i % 15 == 0) {
        print("fizzbuzz");
@@ -905,8 +916,8 @@ for (int i = 1; i <= 100; i++) {
    }
 }
 
-# fizzbuzz for-loop with nested ternary operator
-# valid, but overly complex solution
+/* fizzbuzz for-loop with nested ternary operator
+valid, but overly complex solution */
 for (int i = 0; i <= 100; i++) {
     (i % 15 == 0) 
         ? print("fizzbuzz")
@@ -917,8 +928,8 @@ for (int i = 0; i <= 100; i++) {
                 : print(i);
 }
 
-# fizzbuzz for-loop with pattern-matching
-# valid, short, and easily comprehensible solution
+/* fizzbuzz for-loop with pattern-matching
+valid, short, and easily comprehensible solution */
 for (int i = 0; i <= 100; i++) {
     string output = ??
         i % 15 == 0 : "fizzbuzz"
@@ -932,7 +943,8 @@ for (int i = 0; i <= 100; i++) {
 
 ## `10.2` Int list sum examples:
 ```java
-# printing an average of a list of ints, (almost) C-style
+/* Printing an average of a list
+of ints, (almost) C-style */
 int[] nums = [1, 2, 3, 4];
 int sum = 0;
 
@@ -943,7 +955,8 @@ for(int i = 0; i < len(nums); i++) {
 float avg = sum/len(nums);
 print(avg);
 
-# printing an average of a list of ints using Viper conventions
+/* Printing an average of a list
+of ints using Viper conventions */
 int[] nums = [1, 2, 3, 4];
 int sum = 0;
 
@@ -954,9 +967,26 @@ for (num in nums) {
 float avg = sum/len(nums);
 print(avg);
 
-# printing an average of a list of ints using Viper standard library
+/* Printing an average of a list
+of ints using Viper standard library */
 int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
 print(avg);
+```
+
+## `10.3` GCD Function
+```java
+int func recursiveGCD(int a, int b) {
+    
+    int func conditional (int x, int y) =>
+        x == 0 ? y : y == 0 ? x : nah;
+        
+    int func swappedGCD (int x, int y) => 
+        x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
+    
+    int check = conditional(a, b);
+
+    return check == nah ? swappedGCD(a, b) : check;
+}
 ```
 [↩️  Back to Contents 📌](#0-contents)
