@@ -49,11 +49,11 @@ By:
     3. [Jump Statements](#53-jump-statements)
         1. [skip](#531-skip-statement)
         2. [abort](#532-abort-statement)
+    4. [Function Statement](#54-function-statement)
+        1. [Arrow Functions](#541-arrow-functions)
 6. [Expressions 🖥](#6-expressions)
     1. [Truth-Value Expressions](#61-truth-value-expressions)
-    2. [Functions](#62-functions)
-        1. [Arrow Functions](#621-arrow-functions)
-    3. [Guard Expressions](#63-guard-expressions)
+    3. [Guard Expressions](#62-guard-expressions)
 7. [Operators ➗](#7-operators)
     1. [Unary Operators](#71-unary-operators)
         1. [! (NOT)](#711-the-not-operator)
@@ -75,6 +75,7 @@ By:
     4. [Logical Operators](#74-logical-operators)
         1. [and](#741-the-and-operator)
         2. [or](#742-the-or-operator)
+        3. [has](#743-the-has-operator)
     5. [Variable Operators](#75-variable-operators)
         1. [+= (quick add)](#751-the-=+-operator)
         2. [-= (quick subtract)](#752-the--=-operator)
@@ -438,7 +439,7 @@ When making an implicit type conversion, the Viper type system attempts to make 
 [↩️  Back to Contents 📌](#0-contents)
 
 # `5` Statements 🗣
-Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
+Viper programs are composed of a list of statements. Statements are selector statements, iterator statements, jump statements, and function statements. 
 ## `5.1` Selector Statements
 Selector Statements are involved with Viper's control flow. These statements are the conditionals that Viper uses to control the flow of a program. These statements include the if statement and the if/elif/else statement.
 ### `5.1.1` If Statement
@@ -456,15 +457,6 @@ else{
     print("something is wrong");
 }
     
-```
-If statements also can use a special keyword "has" to check if an element is in an array. The "has" keyword returns true if the element is in the array and false otherwise. The syntax is written by typing the name of the array, followed by "has" followed by the element.
-```python
-if (arr has 42){
-  print(true);
-}
-else{
-  print(false);
-}
 ```
 ## `5.2` Iterator Statements
 Iterator Statements are involved with Viper's ability to loop through statements. These statements compose for loops and while loops.
@@ -512,15 +504,7 @@ for (int element in arr){
     abort;
 }
 ```
-[↩️  Back to Contents 📌](#0-contents)
-
-# `6` Expressions 🖥
-Expressions in Viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
-
-## `6.1` Truth-Value Expressions
-Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
-
-## `6.2` Functions
+## `5.4` Function Statement
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
 ```python
 nah func foo(){
@@ -528,7 +512,7 @@ nah func foo(){
 }
 foo();
 ```
-### `6.2.1` Arrow Functions
+### `5.4.1` Arrow Functions
 Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
 
@@ -546,8 +530,13 @@ int func y(int x, int y, int func z) {
 int func times (int a, int b) => a * b;
 y(10, 20, times);
 ```
+[↩️  Back to Contents 📌](#0-contents)
 
-## `6.3` Guard Expressions
+# `6` Expressions 🖥
+Expressions in Viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. 
+## `6.1` Truth-Value Expressions
+Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
+## `6.2` Guard Expressions
 Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|", except the first one and last one, followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "??" followed by a value consistent with the data type for the variable. The first statement has neither a "|" nor a "??". This can be thought of as a combination of if, elif and else statements for assigning a variable.
 ```python
 int x = ??
@@ -722,7 +711,7 @@ stdout:
 false
 ```
 ## `7.4` Logical Operators
-The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator.
+The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator. The HAS operator, which takes in an object containing elements and an element, returning a bool value.
 ### `7.4.1` The AND Operator
 The AND operator is given the symbol, "&&". When written in between two bool values, it returns true if both values are true and false otherwise.
 ```python
@@ -744,6 +733,16 @@ print((example1 || example2));
 stdout:
 ```
 true
+```
+### `7.4.3` The HAS Operator
+The HAS operator is given the symbol, "has". When written in between an object of elements and an element, it returns true if the element exists in the object of elements and false otherwise.
+```python
+if (arr has 42){
+  print(true);
+}
+else{
+  print(false);
+}
 ```
 ## `7.5` Variable Operators
 Variable operators act on a variable and an integer. These include +=, -=, \*=, and /=.
