@@ -90,12 +90,32 @@ By:
         5. [Variable](#765-precedence-of-variable-operators)
 8. [Scope 👀](#8-scope)
 9. [Standard Library 📚](#9-standard-library)
-    1. [Built-in Functions](#91-built-in-functions)
-    2. [Type Casting](#92-type-casting)
-    3. [Lists](#93-lists)
-        1. [List API](#931-list-api)
-    4. [Groups](#94-groups)
-    5. [Dicts](#95-dicts)
+    1. [Math Functions](#91-math-functions)
+        1. [sqrt()](#911-sqrt())
+        2. [pow()](#912-pow())
+        3. [floor()](#913-floor())
+        4. [ceil()](#914-ceil())
+        5. [round()](#915-round())
+        6. [min()](#916-min())
+        7. [max()](#917-max())
+        8. [trunc()](#918-trunc())
+    2. [Primitive Type Casting Functions](#92-primitive-type-casting-functions)
+        1. [char()](#921-char())
+        2. [int()](#922-int())
+        3. [float()](#923-float())
+        4. [bool()](#924-bool())
+        5. [str()](#925-str())
+    3. [Miscellaneous Functions](#9.3-miscellaneous-functions)
+        1. [print()](#931-print())
+        2. [len()](#932-len())
+    4. [Lists](#94-lists)
+        1. [append()](#941-append())
+        2. [prepend()](#942-prepend())
+        3. [remove()](#943-remove())
+        4. [join()](#944-join())
+        5. [sub()](#945-sub())
+    5. [Groups](#95-groups)
+    6. [Dicts](#96-dicts)
 10. [Sample Code ⌨️](#10-sample-code)
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
@@ -909,21 +929,21 @@ float one_four_four = pow(12); /* Returns 144.0 */
 float a_milly = pow(10.0, 6); /* Returns 1000000.0 */
 ```
 
-### `9.1.2` `floor()`
+### `9.1.3` `floor()`
 `floor()` takes a `float` input and returns the `int` result of truncating the `float`'s decimal components.
 ```java
 int zero = floor(0.999); /* Returns 0 */
 int whole_num = floor(72.0); /* Returns 72 */
 ```
 
-### `9.1.3` `ceil()`
+### `9.1.4` `ceil()`
 `ceil()` does the opposite of `floor()`. It takes a `float` input and returns the closest `int` greater than or equal to the given value.
 ```java
 int five = ceil(4.1); /* Returns 5 */
 int four = ceil(4.0); /* Returns 4 */
 ```
 
-### `9.1.4` `round()`
+### `9.1.5` `round()`
 `round()` takes a `float` input and returns the closest `int` to the given value. Values of ending in .5 always round to the next greatest `int`.
 ```java
 int three = round(3.2); /* Returns 3 */
@@ -931,7 +951,7 @@ int also_three = round(3.3); /* Returns 3 */
 int neg_three = round(-3.5); /* Returns -3 */
 ```
 
-### `9.1.5` `min()`
+### `9.1.6` `min()`
 `min()` takes either two `float`s, two `int`s, or two `char`s as input and returns the smallest value between the two. If `char`s are given, the decimal values of their ASCII symbols are used. The function is overloaded, so the return type is the same as the input type.
 ```java
 int negative1 = min(-1, 1); /* Returns -1 */
@@ -939,7 +959,7 @@ float gpa = min(5.7, 4.0); /* Returns 4.0 */
 char a_char = min('b', 'a'); /* Returns 'a' */
 ```
 
-### `9.1.6` `max()`
+### `9.1.7` `max()`
 `max()` takes either two `float`s, two `int`s, or two `char`s as input and returns the largest value between the two. If `char`s are given, the decimal values of their ASCII symbols are used. The function is overloaded, so the return type is the same as the input type.
 ```java
 int positive1 = max(-1, 1); /* Returns 1 */
@@ -947,7 +967,7 @@ float big = max(8.78, 9.9); /* Returns 9.9 */
 char e_char = max('e', 'a'); /* Returns 'e' */
 ```
 
-### `9.1.7` `trunc()`
+### `9.1.8` `trunc()`
 `trunc()` takes a `float` and `int` as input, and returns the `float` truncated to the number of decimal points specified by the `int`. The `int` must be greater than zero.
 ```java
 float whee = trunc(0.123456789, 3); /* Returns 0.123 */
@@ -958,12 +978,12 @@ float bad_bad_bad = trunc(0.99, 0); /* Throws an error */
 ## `9.2` Primitive Type Casting Functions
 Viper's standard library provides methods for casting between types for ease of use and readability. Type casting functions include:
 
-### `9.2.1` `chr()`
-`chr()` converts to `char`s. The input can be an `int` in range [0, 127], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. For empty strings, `chr()` returns an empty `char` (`''`). Passing any other types or `nah` to `chr()` results in an error.
+### `9.2.1` `char()`
+`char()` converts to `char`s. The input can be an `int` in range [0, 127], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. For empty strings, `char()` returns an empty `char` (`''`). Passing any other types or `nah` to `char()` results in an error.
 ```java
-char int_chr = chr(36); /* Returns '$' */
-char str_char = chr(str(true)); /* Returns 't' */
-char no_dont_do_it = chr(33.4); /* Throws an error */
+char int_chr = char(36); /* Returns '$' */
+char str_char = char(str(true)); /* Returns 't' */
+char no_dont_do_it = char(33.4); /* Throws an error */
 ``` 
 
 ### `9.2.2` `int()`
@@ -1011,7 +1031,7 @@ string float_str = str(34.5); /* Returns "34.5" */
 string bool_str = str(false); /* Returns "false" */
 ```
 
-## 9.3 Miscellaneous Functions
+## `9.3` Miscellaneous Functions
 These functions are unclassified, and are useful in a variety of situation.
 
 ### `9.3.1` `print()`
