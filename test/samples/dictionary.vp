@@ -10,3 +10,5 @@
 b_words["bing"] = 4;
 int no_no = b_words["balloon"];
 int bad_idea = wordmap["a"];
+
+[int: string] map = [];

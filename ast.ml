@@ -152,7 +152,7 @@ let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ ";\n";
-  | Dec(t, v) -> string_of_typ t ^ " " ^ v
+  | Dec(t, v) -> string_of_typ t ^ " " ^ v ^ ";\n";
   | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
   | Skip(expr) -> "skip " ^ string_of_expr expr ^ ";\n";
   | Abort(expr) -> "abort " ^ string_of_expr expr ^ ";\n";
