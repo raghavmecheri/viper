@@ -292,17 +292,17 @@ Internally, a `string` is stored as a sequence of defined chars, followed by the
 Viper also supports various higher-order data types, including `list`, `string`, `group`, and `dict`. More details can be found in the Standard Library section.
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
-| `list` | Ordered lists of any type | `int[3] array; /* Empty list of size 3 */`<br>`float[] scores = [9.7, 8.2];` |
+| `list` | Ordered lists of any type | `int[0] array; /* Empty list */`<br>`float[] scores = [9.7, 8.2];` |
 | `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
 | `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ("dairy", 5),   `<br>                        `"apple": ("fruit", 3) ];`
 
 
 ### `3.2.1` `list`
-Like many languages, Viper supports random access `list`s of any data type. A `list` is defined by specifying a non-`list` data type, followed by at least one set of square brackets (`[]`). Multi-dimesional lists can be created with additional sets of square brackets. `list`s have fixed types and fixed lengths, which must be declared at creation in the following ways:
+Like many languages, Viper supports random access `list`s of any data type. A `list` is defined by specifying a non-`list` data type, followed by at least one set of square brackets (`[]`). Multi-dimesional lists can be created with additional sets of square brackets. `list`s have fixed types, and can be created in the following ways:
 ```java
-/* 0. Empty with size explicitly given: */
-int[3] dust;
-float[10][10] edges;
+/* 0. Empty lists: */
+int[] dust;
+float[][] edges;
 
 /* 1. Size given implicitly by the length of the list literal: */
 string[] cheese = ["chewy", "bendy", "wiggly"];
@@ -314,7 +314,7 @@ string[] glizzy = cheese;
 
 `list`s can be accessed and modified directly by specifying indices in square brackets. Indices are integers in the range [0, length - 1). Attempting to access or modify an index outside this range throw errors.
 ```java
-int[3] nums = [4, 0, 8];
+int[] nums = [4, 0, 8];
 nums[2] = nums[1];   /* Sets the last element to 0 */
 nums[1] = 2;         /* Sets the middle element to 2 */
 
