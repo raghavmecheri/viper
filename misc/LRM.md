@@ -894,11 +894,64 @@ Viper's standard library includes methods and functionalities that are used in n
 Viper provides built-in methods for common operations used in everyday programming.
 
 ### `9.1.1` `sqrt()`
-`sqrt()` returns the square root of the given `int`, `float`, `char` as a `float`. If a `char` is given, the decimal value of its ASCII symbol is used.
-```python
+`sqrt()` returns the square root of the given `int`, `float`, or `char` as a `float`. If a `char` is given, the decimal value of its ASCII symbol is used.
+```java
 float four = sqrt(16); /* Returns 4.0 */
 float two = sqrt(four); /* Returns 2.0 */
 float eight = sqrt('@'); /* Returns 8.0 */
+```
+
+### `9.1.2` `pow()`
+`pow()` can be polymorphically used into two ways. If only one `int`, `float`, or `char` input is given, it returns the square (x<sup>2</sup>) of that input. If two `int`, `float`, or `char` inputs are given, it returns the `float` result of raising the first input to the power of the second. If `char`s are given, the decimal values of their ASCII symbols are used.
+```java
+float one_four_four = pow(12); /* Returns 144.0 */
+float a_milly = pow(10.0, 6); /* Returns 1000000.0 */
+```
+
+### `9.1.2` `floor()`
+`floor()` takes a `float` input and returns the `int` result of truncating the `float`'s decimal components.
+```java
+int zero = floor(0.999); /* Returns 0 */
+int whole_num = floor(72.0); /* Returns 72 */
+```
+
+### `9.1.3` `ceil()`
+`ceil()` does the opposite of `floor()`. It takes a `float` input and returns the closest `int` greater than or equal to the given value.
+```java
+int five = ceil(4.1); /* Returns 5 */
+int four = ceil(4.0); /* Returns 4 */
+```
+
+### `9.1.4` `round()`
+`round()` takes a `float` input and returns the closest `int` to the given value. Values of ending in .5 always round to the next greatest `int`.
+```java
+int three = round(3.2); /* Returns 3 */
+int also_three = round(3.3); /* Returns 3 */
+int neg_three = round(-3.5); /* Returns -3 */
+```
+
+### `9.1.5` `min()`
+`min()` takes either two `float`s, two `int`s, or two `char`s as input and returns the smallest value between the two. If `char`s are given, the decimal values of their ASCII symbols are used. The function is overloaded, so the return type is the same as the input type.
+```java
+int negative1 = min(-1, 1); /* Returns -1 */
+float gpa = min(5.7, 4.0); /* Returns 4.0 */
+char a_char = min('b', 'a'); /* Returns 'a' */
+```
+
+### `9.1.6` `max()`
+`max()` takes either two `float`s, two `int`s, or two `char`s as input and returns the largest value between the two. If `char`s are given, the decimal values of their ASCII symbols are used. The function is overloaded, so the return type is the same as the input type.
+```java
+int positive1 = max(-1, 1); /* Returns 1 */
+float big = max(8.78, 9.9); /* Returns 9.9 */
+char e_char = max('e', 'a'); /* Returns 'e' */
+```
+
+### `9.1.7` `trunc()`
+`trunc()` takes a `float` and `int` as input, and returns the `float` truncated to the number of decimal points specified by the `int`. The `int` must be greater than zero.
+```java
+float whee = trunc(0.123456789, 3); /* Returns 0.123 */
+float almost_whole_num = trunc(whee, 1); /* Returns 0.1 */
+float bad_bad_bad = trunc(0.99, 0); /* Throws an error */
 ```
 
 ## `9.2` Type Casting Functions
