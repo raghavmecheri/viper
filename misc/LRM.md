@@ -240,7 +240,7 @@ Examples of invalid list literals:
 ```python
 [1, 'a', "3"]
 [nah, "beach"]
-[1, (5, 9)]
+[1, [5, 9]]
 ```
 
 [↩️  Back to Contents 📌](#0-contents)
@@ -294,7 +294,7 @@ Viper also supports various higher-order data types, including `list`, `string`,
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[3] array; /* Empty list of size 3 */`<br>`float[] scores = [9.7, 8.2];` |
 | `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
-| `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ("dairy", 5),   `<br>                        `"apple": ("fruit", 3) ];`
+| `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ["dairy", 5],   `<br>                        `"apple": ["fruit", 3] ];`
 
 
 ### `3.2.1` `list`
@@ -322,22 +322,21 @@ int error = nums[3]; /* Throws an error */
 ```
 
 ### `3.2.2` `group`  
-A `group` is a type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared with parentheses:
+A `group` is an immutable type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared as lists and are auto-inferred:
 ```java
-(string, int) order = ("Chicken Katsu", 17);
-(float[2], string, bool) = ([0.1, 2.1], "boo", false);
+(string, int) order = ["Chicken Katsu", 17];
+(float[2], string, bool) = [[0.1, 2.1], "boo", false];
 ```
-Elements of `group`s can be accessed and modified by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
+Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
 ```java
-(int, int) paws = (3, -2);
-int x = paws(1); /* Sets x to 3 */
-paws(2) = x;     /* Sets paws(2) to 3 */
+(int, int) paws = [3, -2];
+int x = paws[0]; /* Sets x to 3 */
 ```
-Elements of `groups` can also be named at creation. Named elements are then accessible and modifyable by using their names as indices.
-```java
-(int r, int g, int b) color = (240, 130, 202);
-int red = color(r);
-color(b) = 112;
+Elements of `groups` can also be deconstructed into variables of their base type. These variables are then accessible within the same scope as the deconstruction.
+```python
+(int, int, int) t = [240, 130, 202];
+(int r, int g, int b) = t;
+print(r);
 ```
 ### `3.2.3` `dict` 
 A `dict` is a mapping of key-value pairs. The types of both keys and values must be specified at creation, and keys must be unique. `dict` literals are defined with square brackets (`[]`), in which a colon (`:`) separates key and values, and commas separate key-value pairs.
@@ -357,6 +356,9 @@ b_words["bing"] = 4; /* Adds key-value pair ["bing": 4] to b_words */
 int no_no = b_words["balloon"]; /* Error: b_words has no key "balloon" */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
+Empty dicts can also be declared.
+```python
+[string: int] rat = [];
 
 [↩️  Back to Contents 📌](#0-contents)
 
@@ -364,7 +366,7 @@ int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
 ## `4.1` Explicit Types
-Viper requires explicit user-specified types for variable declarations, function parameters, control flow, and return types in function definitions. An explicit type is required when new variables, placeholders, and parameters are created and need a type to be refrenced against.
+Viper requires explicit user-specified types for variable declarations, function parameters, control flow, and return types in function definitions. An explicit type is required when new variables, placeholders, and parameters are created and need a type to be referenced against.
 
 Variable intialization and assignment:
 ```java
@@ -441,13 +443,13 @@ Viper programs are composed of a list of statements. Statements are selector sta
 Selector Statements are involved with Viper's control flow. These statements are the conditionals that Viper uses to control the flow of a program. These statements include the if statement and the if/elif/else statement.
 ### `5.1.1` If Statement
 The if statement takes in a boolean expression within parentheses and runs the statements within its scope if the boolean expression returns true. 
-### `5.1.2` If/Elif/Else Statement
-The if statement has optional statements that can come after it such as elif and else. Elif is shorthand for "else if" which means that it will be run if the previous if statement's boolean expression was false. An elif statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all elif statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
+### `5.1.2` If / Else if / Else Statement
+The if statement has optional statements that can come after it such as elif and else. Else if will be run if the previous if statement's boolean expression was false. An else if statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all else if statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
 ```python
 if (a == b){
     print(a);
 }
-elif (a > b){
+else if (a > b){
     print(b);
 }
 else{
@@ -531,52 +533,20 @@ Similar to arrow functions in Javascript, or Python lambda functions, users are 
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
 
 ```javascript
-<ret_type> (<param_type> param1, ..., <param_type> paramN) => expression output
+<ret_type> func <name> (<param_type> param1, ..., <param_type> paramN) => expression output
 ```
 
-```javascript
-<ret_type> (<param_type> param1, ..., <param_type> paramN) => {
-    return complex expression output
-}
-```
-
-```javascript
-<ret_type> (<param_type> param1, ... , <param_type> paramN) => :
-    return complex expression output
-```
-
-Additionally, these arrow functions can be assigned to function variables:
-
-```javascript
-func x = <ret_type> (<param_type> param1, ...,<param_type> paramN) => {
-    return expression output
-}
-```
-
-Note that even with zero parameters or one parameter, the () are still necessary
-```javascript
-func myFunc = <ret_type> () => expression output
-
-<ret_type> (<param_type> param) => expression output
-```
+Note that even with zero parameters or one parameter, the () are still necessary.
 
 Example Function Calls:
 ```javascript
-int func y(int x, int y, func z) {
+int func y(int x, int y, int func z) {
     return z(x + y);
 }
-
-y(10, 20, int (int a, int b) => a * b);
+int func times (int a, int b) => a * b;
+y(10, 20, times);
 ```
 
-Anonymous Function Call Example
-
-```javascript
-nah (int a, int b) => {
-    print(a);
-    print(b);
-} (10, 20);
-``` 
 ## `6.3` Guard Expressions
 Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|", except the first one and last one, followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "??" followed by a value consistent with the data type for the variable. The first statement has neither a "|" nor a "??". This can be thought of as a combination of if, elif and else statements for assigning a variable.
 ```python
@@ -754,22 +724,22 @@ false
 ## `7.4` Logical Operators
 The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator.
 ### `7.4.1` The AND Operator
-The AND operator is given the symbol, "and". When written in between two bool values, it returns true if both values are true and false otherwise.
+The AND operator is given the symbol, "&&". When written in between two bool values, it returns true if both values are true and false otherwise.
 ```python
 bool example1 = true;
 bool example2 = false;
-print((example1 and example2));
+print((example1 && example2));
 ```
 stdout:
 ```
 false
 ```
 ### `7.4.2` The OR Operator
-The OR operator is given the symbol, "or". When written in between two bool values, it returns false if both values are false and true otherwise.
+The OR operator is given the symbol, "||". When written in between two bool values, it returns false if both values are false and true otherwise.
 ```python
 bool example1 = true;
 bool example2 = false;
-print((example1 or example2));
+print((example1 || example2));
 ```
 stdout:
 ```
@@ -890,7 +860,7 @@ This will function in the same manner as expected with function definitions, con
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
 ## `9.1` Built-in Functions
-Viper provides built-in methods for common operations inherit to everyday programming.
+Viper provides built-in methods for common operations inherent to everyday programming.
 
 ## `9.2` Type Casting
 Viper's standard library provides methods for casting between types for ease of use and readability. Type Casting functions include:
