@@ -15,6 +15,7 @@ type typ =
   | Array of typ
   | Function of typ
   | Tuple of typ list
+  | Dictionary of typ * typ
 
 type bind = typ * string
 
@@ -25,6 +26,9 @@ type expr =
   | FloatLiteral of float
   | StringLiteral of string
   | ListLit of expr list
+
+  | DictElem of expr * expr
+  | DictLit of expr list
 
   | Id of string
   | Binop of expr * op * expr
@@ -44,6 +48,8 @@ type expr =
   | DecPatternMatch of typ * string * expr
   
   | Call of string * expr list
+  | AttributeCall of expr * string * expr list
+
   | Noexpr
 
 type stmt =
@@ -105,6 +111,7 @@ let rec string_of_typ = function
   | Array(t) -> string_of_typ t ^ "[]"
   | Function(t) -> string_of_typ t ^ " func"
   | Tuple(t) -> "(" ^ String.concat ", " (List.map string_of_typ t) ^ ")"
+  | Dictionary(t1, t2) -> "[" ^ string_of_typ t1 ^ ":" ^ string_of_typ t2 ^ "]" 
 
 let rec string_of_expr = function
     IntegerLiteral(l) -> string_of_int l
@@ -113,7 +120,11 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | FloatLiteral(l) -> string_of_float l
   | StringLiteral(s) -> "\"" ^ s ^ "\""
+  
   | ListLit(lst) -> "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
+  | DictElem(e1, e2) -> string_of_expr e1 ^ " : " ^ string_of_expr e2 
+  | DictLit(lst) ->  "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
+
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -131,14 +142,17 @@ let rec string_of_expr = function
   | MatchPattern(c, b) -> "?? " ^ String.concat " | " (List.map string_of_expr c) ^ " ?? " ^ string_of_expr b 
   | PatternMatch(s, e) -> s ^ " = " ^ string_of_expr e
   | DecPatternMatch(t, s, e) -> string_of_typ t ^ " " ^ s ^ " = " ^ string_of_expr e
+  
   | Call(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | AttributeCall(e, f, el) -> string_of_expr e ^ "." ^ f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+
   | Noexpr -> ""
 
 let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ ";\n";
-  | Dec(t, v) -> string_of_typ t ^ " " ^ v
+  | Dec(t, v) -> string_of_typ t ^ " " ^ v ^ ";\n";
   | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
   | Skip(expr) -> "skip " ^ string_of_expr expr ^ ";\n";
   | Abort(expr) -> "abort " ^ string_of_expr expr ^ ";\n";

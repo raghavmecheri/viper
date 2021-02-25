@@ -53,3 +53,7 @@ parser.cmx : ast.cmx parser.cmi
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
 parser.cmi : ast.cmo
+
+setup-linux:
+	sudo apt-get install -y m4 llvm
+	opam install llvm ocamlfind

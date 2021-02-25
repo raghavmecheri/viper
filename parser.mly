@@ -2,7 +2,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA ARROPEN ARRCLOSE DOT
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MODULO HAS QUESTION COLON
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR MATCH BAR
 %token RETURN IF ELSE FOR WHILE INT CHAR BOOL FLOAT STRING VOID FUNC IN ARROW PANIC
@@ -28,7 +28,7 @@ open Ast
 %left TIMES DIVIDE MODULO TIMES_ASSIGN DIVIDE_ASSIGN
 %nonassoc INCR DECR
 %right NOT NEG
-%left ARROPEN ARRCLOSE
+%left ARROPEN ARRCLOSE DOT
 
 %start program
 %type <Ast.program> program
@@ -75,6 +75,7 @@ typ:
   | typ FUNC { Function($1) }
   | typ ARROPEN ARRCLOSE { Array($1) }
   | LPAREN type_list RPAREN { Tuple($2) }
+  | ARROPEN typ COLON typ ARRCLOSE { Dictionary($2, $4) }
 
 type_list:
     typ            { [$1] }
@@ -115,7 +116,8 @@ expr:
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | list_exp         { $1 }
-  
+  | dict_exp         { $1 }
+
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -126,7 +128,7 @@ expr:
   | ID MINUS_ASSIGN expr { OpAssign($1, Sub, $3) }
   | ID TIMES_ASSIGN expr { OpAssign($1, Mult, $3) }
   | ID DIVIDE_ASSIGN expr { OpAssign($1, Div, $3) }
-
+ 
   | expr EQ     expr { Binop($1, Equal, $3) }
   | expr NEQ    expr { Binop($1, Neq,   $3) }
   | expr LT     expr { Binop($1, Less,  $3) }
@@ -155,6 +157,8 @@ expr:
   | ID ASSIGN MATCH pattern { PatternMatch($1, $4) }
 
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
+  | expr DOT ID LPAREN actuals_opt RPAREN { AttributeCall($1, $3, $5) }
+  
   | LPAREN expr RPAREN { $2 }
 
 pattern:
@@ -163,6 +167,16 @@ pattern:
 c_pattern:
     expr COLON expr { [ConditionalPattern($1, $3)] }
   | expr COLON expr BAR c_pattern { ConditionalPattern($1, $3) :: $5 }
+
+dict_exp:
+    ARROPEN dict_elems ARRCLOSE { DictLit($2) }
+
+dict_elems:
+    dict_elem   { [$1] }
+    | dict_elem COMMA dict_elems  { $1 :: $3 }
+
+dict_elem:
+    expr COLON expr { DictElem($1, $3) }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }

@@ -39,6 +39,8 @@ By:
         3. [dict](#323-dict)
 4. [Type System 🗃](#4-type-system)
     1. [Explicit Types](#41-explicit-types)
+    2. [Explicit Type Conversion](#42-explicit-type-conversions)
+    3. [Implicit Type Conversion](#43-implicit-type-conversions)
 5. [Statements 🗣](#5-statements)
     1. [Selector Statements](#51-selector-statements)
         1. [if](#511-if-statement)
@@ -49,11 +51,11 @@ By:
     3. [Jump Statements](#53-jump-statements)
         1. [skip](#531-skip-statement)
         2. [abort](#532-abort-statement)
+    4. [Function Statement](#54-function-statement)
+        1. [Arrow Functions](#541-arrow-functions)
 6. [Expressions 🖥](#6-expressions)
     1. [Truth-Value Expressions](#61-truth-value-expressions)
-    2. [Functions](#62-functions)
-        1. [Arrow Functions](#621-arrow-functions)
-    3. [Guard Expressions](#63-guard-expressions)
+    3. [Guard Expressions](#62-guard-expressions)
 7. [Operators ➗](#7-operators)
     1. [Unary Operators](#71-unary-operators)
         1. [! (NOT)](#711-the-not-operator)
@@ -75,6 +77,7 @@ By:
     4. [Logical Operators](#74-logical-operators)
         1. [and](#741-the-and-operator)
         2. [or](#742-the-or-operator)
+        3. [has](#743-the-has-operator)
     5. [Variable Operators](#75-variable-operators)
         1. [+= (quick add)](#751-the-=+-operator)
         2. [-= (quick subtract)](#752-the--=-operator)
@@ -90,6 +93,7 @@ By:
         5. [Variable](#765-precedence-of-variable-operators)
 8. [Scope 👀](#8-scope)
 9. [Standard Library 📚](#9-standard-library)
+<<<<<<< HEAD
     1. [Math Functions](#91-math-functions)
         1. [sqrt()](#911-sqrt())
         2. [pow()](#912-pow())
@@ -117,6 +121,15 @@ By:
     5. [Groups](#95-groups)
     6. [Dicts](#96-dicts)
 10. [Sample Code ⌨️](#10-sample-code)
+=======
+    1. [Built-in Functions](#91-built-in-functions)
+    2. [Type Casting](#92-type-casting)
+    3. [Lists](#93-lists)
+        1. [List API](#931-list-api)
+    4. [Groups](#94-groups)
+    5. [Dicts](#95-dicts)
+10. [Sample Code 🧩](#10-sample-code)
+>>>>>>> 896c7ef23b73147495db24406b933791725ce345
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
 
@@ -141,7 +154,7 @@ multi-line?
 All user-defined identifiers (variable and function names) must begin with an ASCII letter and can contain any mix of ASCII letters and numbers. 
 
 Example valid identifiers:
-```python
+```java
 lambda_bamba
 pythonCython
 RatGhav
@@ -149,7 +162,7 @@ V1P3RisTh3b3sT
 ```
 
 Example invalid identifiers:
-```python
+```java
 68vip
 --!x
 V*x
@@ -158,14 +171,14 @@ V*x
 ## `2.3` Reserved Keywords
 Any Viper reserved keywords can not be used as user-defined identifiers. A list of reserved Viper keywords include:
 
-```python
-# control flow
+```java
+/* control flow */
 if else for while return skip abort panic in has 
 
-# function and types
+/* function and types */
 func char int float bool nah string dict group 
 
-# operators and literals
+/* operators and literals */
 and or is not true false
 ```
 
@@ -204,7 +217,7 @@ Literals include:
 Char literals represent a single ASCII character and expressed as a letter within single quotes. They also can represent escape sequences and special tokens such as '\t' and '\n'. These individual literals can be combined to make up a String when surrounded by double quotes. These character literals are always assigned to variables of the type _char_.
 
 Examples of char literals:
-```python
+```java
 'a'
 '+'
 '\n'
@@ -214,7 +227,7 @@ Examples of char literals:
 Int literals represent a whole decimal number as an integer and always takes on the _int_ type. 
 
 Examples of int literals:
-```python
+```java
 0
 42
 -70843
@@ -224,7 +237,7 @@ Examples of int literals:
 A float literal represents a decimal floating point number and always takes on the _float_ data type. A float literal consists of a sequence of numbers representing the whole-number part, followed by an ASCII decimal point, followed by a sequence of numbers representing the decimal portion.
 
 Examples of float literals:
-```python
+```java
 123.45
 -0.007
 3.485
@@ -240,7 +253,7 @@ String literals are a sequence of chars surrounded by double quotes. These liter
 The nah literal represents a reference to a null value and always takes on the nah type. This literal is represented by _nah_ made from ASCII characters.
 
 Examples of string literals:
-```python
+```java
 "Stringy123"
 "ratghav merch boi"
 "H3sKell >>>"
@@ -250,23 +263,28 @@ Examples of string literals:
 All list literals consist of an opening square bracket, a sequence of objects/values all of the same type sepereated by commas, and a closing square bracket. List literals must be assigned to variables of the type _list_ wrapping the same type the array literal contains. List literals can contain array list within themselves, leading to multi-dimensional lists.
 
 Examples of valid list literals:
-```python
+```java
 [1, 2, 3]
 ["a", "b", "c"]
 [[1], [10]]
 ```
 
 Examples of invalid list literals:
-```python
+```java
 [1, 'a', "3"]
 [nah, "beach"]
-[1, (5, 9)]
+[1, [5, 9]]
 ```
 
 [↩️  Back to Contents 📌](#0-contents)
 
+<<<<<<< HEAD
 # `3` Data Types  💾
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's [Standard Library 📚](#9-standard-library). 
+=======
+# `3` Data Types 💾
+Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
+>>>>>>> 896c7ef23b73147495db24406b933791725ce345
 
 ## `3.1` Primitive Data Types
 The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
@@ -315,7 +333,7 @@ Viper also supports various higher-order data types, including `list`, `string`,
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[0] array; /* Empty list */`<br>`float[] scores = [9.7, 8.2];` |
 | `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
-| `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ("dairy", 5),   `<br>                        `"apple": ("fruit", 3) ];`
+| `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ["dairy", 5],   `<br>                        `"apple": ["fruit", 3] ];`
 
 
 ### `3.2.1` `list`
@@ -343,13 +361,14 @@ int error = nums[3]; /* Throws an error */
 ```
 
 ### `3.2.2` `group`  
-A `group` is a type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared with parentheses:
+A `group` is an immutable type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared as lists and are auto-inferred:
 ```java
-(string, int) order = ("Chicken Katsu", 17);
-(float[2], string, bool) = ([0.1, 2.1], "boo", false);
+(string, int) order = ["Chicken Katsu", 17];
+(float[2], string, bool) = [[0.1, 2.1], "boo", false];
 ```
-Elements of `group`s can be accessed and modified by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
+Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
 ```java
+<<<<<<< HEAD
 (int, int) paws = (3, -2);
 int x = paws[1]; /* Sets x to 3 */
 paws[2] = x;     /* Sets paws[2] to 3 */
@@ -359,6 +378,16 @@ Elements of `groups` can also be named at creation. Named elements are then acce
 (int r, int g, int b) color = (240, 130, 202);
 int red = color[r];
 color[b] = 112;
+=======
+(int, int) paws = [3, -2];
+int x = paws[0]; /* Sets x to 3 */
+```
+Elements of `groups` can also be deconstructed into variables of their base type. These variables are then accessible within the same scope as the deconstruction.
+```python
+(int, int, int) t = [240, 130, 202];
+(int r, int g, int b) = t;
+print(r);
+>>>>>>> 896c7ef23b73147495db24406b933791725ce345
 ```
 
 ### `3.2.3` `dict` 
@@ -379,6 +408,10 @@ b_words["bing"] = 4; /* Adds key-value pair ["bing": 4] to b_words */
 int no_no = b_words["balloon"]; /* Error: b_words has no key "balloon" */
 int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 ```
+Empty dicts can also be declared.
+```python
+[string: int] rat = [];
+```
 
 [↩️  Back to Contents 📌](#0-contents)
 
@@ -386,7 +419,7 @@ int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 Viper utilizes a static typing system to benefit from the provided type safety and optimizations of a staticly typed compiled language. 
 
 ## `4.1` Explicit Types
-Viper requires explicit user-specified types for variable declarations, function parameters, control flow, and return types in function definitions. An explicit type is required when new variables, placeholders, and parameters are created and need a type to be refrenced against.
+Viper requires explicit user-specified types for variable declarations, function parameters, control flow, and return types in function definitions. An explicit type is required when new variables, placeholders, and parameters are created and need a type to be referenced against.
 
 Variable intialization and assignment:
 ```java
@@ -427,12 +460,14 @@ Explicit type conversion functions include:
 Examples of using explicit type conversions:
 ```java
 int x = 1;
-char y = chr(x); /* converts 1 into '1' */
+/* converts 1 into '1' */
+char y = chr(x);
 
 int x = 2;
 int y = 5;
 int z = x+y; /* 7 */
-string xyz = str(x) + str(y) + str(z); /* "257" */
+/* "257" */
+string xyz = str(x) + str(y) + str(z);
 ```
 
 Note:
@@ -443,11 +478,18 @@ As Viper is statically-typed, we can rely on user-specified types to infer the d
 
 Examples of implicit type conversion:
 ```java
-/* when 2 integers are divided, Viper's type system is often able to infer which type the user would like to return from the result from hints such as the variable type. */
+/* when 2 integers are divided, Viper's
+type system is often able to infer which type the
+user would like to return from the result
+from hints such as the variable type. */
 int x = 2/5; /* 0 */
 float x = 2/5; /* .166666... */
 
-/* when a series of concatenations occurs starting with a string, all following operands will be converted to strings and then concatenated. */
+/* when a series of concatenations
+occurs starting with a string,
+all following operands will be
+converted to strings and then
+concatenated. */
 string num1 = "17";
 int num2 = 38;
 print(num1 + num2); /* "1738" */
@@ -458,18 +500,18 @@ When making an implicit type conversion, the Viper type system attempts to make 
 [↩️  Back to Contents 📌](#0-contents)
 
 # `5` Statements 🗣
-Viper programs are composed of a list of statements. Statements are selector statements, iterator statements and jump statements. 
+Viper programs are composed of a list of statements. Statements are selector statements, iterator statements, jump statements, and function statements. 
 ## `5.1` Selector Statements
 Selector Statements are involved with Viper's control flow. These statements are the conditionals that Viper uses to control the flow of a program. These statements include the if statement and the if/elif/else statement.
 ### `5.1.1` If Statement
 The if statement takes in a boolean expression within parentheses and runs the statements within its scope if the boolean expression returns true. 
-### `5.1.2` If/Elif/Else Statement
-The if statement has optional statements that can come after it such as elif and else. Elif is shorthand for "else if" which means that it will be run if the previous if statement's boolean expression was false. An elif statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all elif statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
-```python
+### `5.1.2` If / Else if / Else Statement
+The if statement has optional statements that can come after it such as elif and else. Else if will be run if the previous if statement's boolean expression was false. An else if statement is like an if statement in that it takes in a boolean expression in parentheses and if the boolean expression returns a value of true, then the statements within its scope will be run. There can be infinitely many elif statements after an if statement. The else statement must come after the if and all else if statements, if any. The else statement will run the statements inside its scope if all the if statements and elif statements have a boolean expression that returns false.
+```java
 if (a == b){
     print(a);
 }
-elif (a > b){
+else if (a > b){
     print(b);
 }
 else{
@@ -477,8 +519,9 @@ else{
 }
     
 ```
+
 If statements also can use a special keyword "has" to check if an element is in an array. The "has" keyword returns true if the element is in the array and false otherwise. The syntax is written by typing the name of the array, followed by "has" followed by the element.
-```python
+```java
 if (arr has 42){
   print(true);
 }
@@ -486,25 +529,26 @@ else{
   print(false);
 }
 ```
+
 ## `5.2` Iterator Statements
 Iterator Statements are involved with Viper's ability to loop through statements. These statements compose for loops and while loops.
 ### `5.2.1` For Statement
 A for statement takes in an argument in the form of (assignment; condition; iterator), followed by a list of statements within its scope. The assignment creates a variable and initializes it to a given number. The condition is a boolean expression; if it returns true, the list of statements within the for statement's scope is run. The iterator changes the value of the variable in the assignment. Then the condition is checked with the new value and if it returns true, the statements are run again, otherwise the statements are not run again.
-```C
-for (int i = 0; i<sizeof(arr); i++){  
+```java
+for (int i = 0; i < sizeof(arr); i++){  
     print(arr[i]);
 }
 ```
 
 A for statement can take a second form as well. The second form of a for statement is an identifer, followed by the keyword in, followed by an object that is iterable. This statement will iterate over the values in the iterable object, using the identifier for each value, and run the statements in its scope. Once there is no elements left in the iterable object, the for statement will stop.
-```python
+```java
 for (int element in arr) {
     print(element);
 }
 ```
 ### `5.2.2` While Statement
 A while statement takes in a boolean expression. If the boolean expression returns a value of true, the statements within its scope are run. After all statements are run, the boolean expression is evaluated again; if true then statements are run again, otherwise, the while statement is done. This process repeats until the boolean expression returns a value of false.
-```python
+```java
 while (condition){
     print("chilling");
 }
@@ -513,7 +557,7 @@ while (condition){
 Jump statements are statements located within the scope of an iterator statement which dictates how to proceed within the iterator statement. 
 ### `5.3.1` Skip Statement
 The skip statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and go back to the beginning of the iterator statement.
-```python
+```java
 for (int element in arr){
     if (element == 2) {
         print("I'm going to skip the remaining statements");
@@ -524,7 +568,7 @@ for (int element in arr){
 ```
 ### `5.3.2` Abort Statement
 The abort statement appears in for statements and while statements. When the program encounters this statement, it will ignore any statements left in the iterator statement and leave the iterator statement, proceeding with other statements within the code, if any.
-```python
+```java
 for (int element in arr){
     if (element == 2){
         print("found it");
@@ -532,74 +576,40 @@ for (int element in arr){
     abort;
 }
 ```
-[↩️  Back to Contents 📌](#0-contents)
-
-# `6` Expressions 🖥
-Expressions in Viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. Functions, which take in input as parameters and returns a value are also considered expressions in Viper.
-
-## `6.1` Truth-Value Expressions
-Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
-
-## `6.2` Functions
+## `5.4` Function Statement
 Functions take input and may return output. Functions take the form of "returnType func functionName(parameter1, parameter2, ...)" The returnType is the type of the output that must be returned from the function. The func, is literally the word func. The functionName is the name of the function which must use the same convention as variables in Viper. The (parameter1, parameter2, ...), is the input of the function where each parameter is a variable. If a function is called, the statements in its scope will run, using any parameters given to the function and then returning the value of type, returnType, using the keyword return. Functions are called by writing the function name followed by a parantheses of parameters, if any. 
-```python
+```java
 nah func foo(){
     print("Hello World!");
 }
 foo();
 ```
-### `6.2.1` Arrow Functions
+### `5.4.1` Arrow Functions
 Similar to arrow functions in Javascript, or Python lambda functions, users are able to define functions with arrow functions.
 Users are required to specify the type of the arrow function’s return value and parameters. The syntax is as follows:
 
 ```javascript
-<ret_type> (<param_type> param1, ..., <param_type> paramN) => expression output
+<ret_type> func <name> (<param_type> param1, ..., <param_type> paramN)
+    => expression output;
 ```
 
-```javascript
-<ret_type> (<param_type> param1, ..., <param_type> paramN) => {
-    return complex expression output
-}
-```
-
-```javascript
-<ret_type> (<param_type> param1, ... , <param_type> paramN) => :
-    return complex expression output
-```
-
-Additionally, these arrow functions can be assigned to function variables:
-
-```javascript
-func x = <ret_type> (<param_type> param1, ...,<param_type> paramN) => {
-    return expression output
-}
-```
-
-Note that even with zero parameters or one parameter, the () are still necessary
-```javascript
-func myFunc = <ret_type> () => expression output
-
-<ret_type> (<param_type> param) => expression output
-```
+Note that even with zero parameters or one parameter, the () are still necessary.
 
 Example Function Calls:
 ```javascript
-int func y(int x, int y, func z) {
+int func y(int x, int y, int func z) {
     return z(x + y);
 }
-
-y(10, 20, int (int a, int b) => a * b);
+int func times (int a, int b) => a * b;
+y(10, 20, times);
 ```
+[↩️  Back to Contents 📌](#0-contents)
 
-Anonymous Function Call Example
-
-```javascript
-nah (int a, int b) => {
-    print(a);
-    print(b);
-} (10, 20);
-``` 
-## `6.3` Guard Expressions
+# `6` Expressions 🖥
+Expressions in Viper yield the recipe for evaluation. Expressions can be any data type in its simplest form and it can include operators in more complex forms. These include simple arithmetic expressions which yield a float or integer type, or boolean expressions which yield a true or false when evaluated. 
+## `6.1` Truth-Value Expressions
+Truth-Value expressions in Viper are boolean expressions. They can include logical operators and when evaluated, must return a value of type bool. 
+## `6.2` Guard Expressions
 Guard expressions are an alternative way of using conditional statements. When assigning a variable, Viper uses the symbol "??" to indicate the start of a guard expression. Each subsequent statement uses a "|", except the first one and last one, followed by a boolean expression, a ":", and then a value which fits the variable data type. If the boolean expression returns a value of true, then the expression to the right of the symbol ":" is used for the value of the variable. If the boolean expression is false, the program runs the next statement following the next symbol "|". The last statement in a guard expression contains a "??" followed by a value consistent with the data type for the variable. The first statement has neither a "|" nor a "??". This can be thought of as a combination of if, elif and else statements for assigning a variable.
 ```python
 int x = ??
@@ -774,28 +784,38 @@ stdout:
 false
 ```
 ## `7.4` Logical Operators
-The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator.
+The logical operators take in two bool values and returns a bool value. These operators include the AND operator and the OR operator. The HAS operator, which takes in an object containing elements and an element, returning a bool value.
 ### `7.4.1` The AND Operator
-The AND operator is given the symbol, "and". When written in between two bool values, it returns true if both values are true and false otherwise.
+The AND operator is given the symbol, "&&". When written in between two bool values, it returns true if both values are true and false otherwise.
 ```python
 bool example1 = true;
 bool example2 = false;
-print((example1 and example2));
+print((example1 && example2));
 ```
 stdout:
 ```
 false
 ```
 ### `7.4.2` The OR Operator
-The OR operator is given the symbol, "or". When written in between two bool values, it returns false if both values are false and true otherwise.
+The OR operator is given the symbol, "||". When written in between two bool values, it returns false if both values are false and true otherwise.
 ```python
 bool example1 = true;
 bool example2 = false;
-print((example1 or example2));
+print((example1 || example2));
 ```
 stdout:
 ```
 true
+```
+### `7.4.3` The HAS Operator
+The HAS operator is given the symbol, "has". When written in between an object of elements and an element, it returns true if the element exists in the object of elements and false otherwise.
+```python
+if (arr has 42){
+  print(true);
+}
+else{
+  print(false);
+}
 ```
 ## `7.5` Variable Operators
 Variable operators act on a variable and an integer. These include +=, -=, \*=, and /=.
@@ -886,19 +906,19 @@ Variable operators are given a lower precedence than binary operators and are ri
 # `8` Scope 👀
 Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
-```go
+```java
 for string elem in list {
     print(elem);
 }
 
-# Is the same as:
+/* Is the same as: */
 
 for string elem in list
 {
     print(elem);
 }
 
-# Is the same as:
+/* Is the same as: */
 
 for string elem in list
 { print(elem); }
@@ -911,8 +931,13 @@ This will function in the same manner as expected with function definitions, con
 # `9` Standard Library 📚
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
+<<<<<<< HEAD
 ## `9.1` Math Functions
 Viper provides built-in methods for common arithmetic operations.
+=======
+## `9.1` Built-in Functions
+Viper provides built-in methods for common operations inherent to everyday programming.
+>>>>>>> 896c7ef23b73147495db24406b933791725ce345
 
 ### `9.1.1` `sqrt()`
 `sqrt()` returns the square root of the given `int`, `float`, or `char` as a `float`. If a `char` is given, the decimal value of its ASCII symbol is used.
@@ -1121,12 +1146,13 @@ Check back soon for the `dict`s API.
 
 [↩️  Back to Contents 📌](#0-contents)
 
-# `10` Sample Code ⌨️
+# `10` Sample Code 🧩
 Example programs written in Viper below.
 
 ## `10.1` Fizzbuzz examples:
 ```java
-# standard fizzbuzz for-loop solution
+/* standard fizzbuzz
+for-loop solution */
 for (int i = 1; i <= 100; i++) {
    if (i % 15 == 0) {
        print("fizzbuzz");
@@ -1139,8 +1165,8 @@ for (int i = 1; i <= 100; i++) {
    }
 }
 
-# fizzbuzz for-loop with nested ternary operator
-# valid, but overly complex solution
+/* fizzbuzz for-loop with nested ternary operator
+valid, but overly complex solution */
 for (int i = 0; i <= 100; i++) {
     (i % 15 == 0) 
         ? print("fizzbuzz")
@@ -1151,8 +1177,8 @@ for (int i = 0; i <= 100; i++) {
                 : print(i);
 }
 
-# fizzbuzz for-loop with pattern-matching
-# valid, short, and easily comprehensible solution
+/* fizzbuzz for-loop with pattern-matching
+valid, short, and easily comprehensible solution */
 for (int i = 0; i <= 100; i++) {
     string output = ??
         i % 15 == 0 : "fizzbuzz"
@@ -1166,7 +1192,8 @@ for (int i = 0; i <= 100; i++) {
 
 ## `10.2` Int list sum examples:
 ```java
-# printing an average of a list of ints, (almost) C-style
+/* Printing an average of a list
+of ints, (almost) C-style */
 int[] nums = [1, 2, 3, 4];
 int sum = 0;
 
@@ -1177,7 +1204,8 @@ for(int i = 0; i < len(nums); i++) {
 float avg = sum/len(nums);
 print(avg);
 
-# printing an average of a list of ints using Viper conventions
+/* Printing an average of a list
+of ints using Viper conventions */
 int[] nums = [1, 2, 3, 4];
 int sum = 0;
 
@@ -1188,9 +1216,26 @@ for (num in nums) {
 float avg = sum/len(nums);
 print(avg);
 
-# printing an average of a list of ints using Viper standard library
+/* Printing an average of a list
+of ints using Viper standard library */
 int[] nums = [1,2,3,4];
 float avg = sum(nums)/len(nums);
 print(avg);
+```
+
+## `10.3` GCD Function
+```java
+int func recursiveGCD(int a, int b) {
+    
+    int func conditional (int x, int y) =>
+        x == 0 ? y : y == 0 ? x : nah;
+        
+    int func swappedGCD (int x, int y) => 
+        x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
+    
+    int check = conditional(a, b);
+
+    return check == nah ? swappedGCD(a, b) : check;
+}
 ```
 [↩️  Back to Contents 📌](#0-contents)
