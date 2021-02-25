@@ -955,14 +955,82 @@ float almost_whole_num = trunc(whee, 1); /* Returns 0.1 */
 float bad_bad_bad = trunc(0.99, 0); /* Throws an error */
 ```
 
-## `9.2` Type Casting Functions
-Viper's standard library provides methods for casting between types for ease of use and readability. Type Casting functions include:
-* `str(x)` - converts x to a `string`
-* `float(x)` - converts x to a `float`
-* `int(x)` - converts x to an `int`
-* `chr(x`) - converts x to a `char`
+## `9.2` Primitive Type Casting Functions
+Viper's standard library provides methods for casting between types for ease of use and readability. Type casting functions include:
 
-For more on type casting, see [Type System 🗃](#4-type-system).
+### `9.2.1` `chr()`
+`chr()` converts to `char`s. The input can be an `int` in range [0, 127], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. For empty strings, `chr()` returns an empty `char` (`''`). Passing any other types or `nah` to `chr()` results in an error.
+```java
+char int_chr = chr(36); /* Returns '$' */
+char str_char = chr(str(true)); /* Returns 't' */
+char no_dont_do_it = chr(33.4); /* Throws an error */
+``` 
+
+### `9.2.2` `int()`
+`int()` casts certain types to integer values. Given a `char`, `int()` returns the decimal value of the `char`'s ASCII code. Given a `float`, `int()` returns the result of truncating all decimal components. Given a `bool`, `int()` returns 0 for values of `false`, and 1 for values of `true`. Passing any other types or `nah` to `int()` results in an error.
+```java
+int chr_int = int('R'); /* Returns 82 */
+int str_int = int(7.999); /* Returns 7 */
+int zero = int(false); /* Returns 0 */
+int one = int(true); /* Returns 1 */
+``` 
+
+### `9.2.3` `float()`
+`float()` casts `int`s and `char`s to float values. Given an `int`, `float()` returns the `float` equivalent of that `int`, appending a decimal point and a single 0. Given a `char`, `float` does the same thing with the decimal value of the `char`'s ASCII code. Passing any other types or `nah` to `float()` results in an error.
+```java
+float int_float = float(333); /* Returns 333.0 */
+float char_float = float('&'); /* Returns 38.0 */
+float noooooo = float("if you smoke"); /* Returns an error */
+``` 
+
+### `9.2.4` `bool()`
+`bool()` converts any data type to either `true` or `false`, depending on the value. It's called implicitly when using a non-boolean type in a boolean expression For example, the following code implicitly calls `bool()` on `x`:
+```java
+int x = 0;
+if (x) {
+    print("Yes");
+}
+```
+See the below table for details on what values `bool()` maps to true and result in `true` and what values result in `false`:
+| Type | `true` values | `false` values |
+|-----|------|-----|
+| `char` | All `char`s but `'\0'` and `''` | `'\0'` and `''`
+| `int` | [-2<sup>31</sup>, -1], [1, 2<sup>31</sup> - 1] | 0
+| `float` | All `float`s but 0.0 | 0.0
+| `bool` | `true` | `false`
+| `string` | All non-empty `string`s | `""`
+| `nah` | n/a | `nah`   
+
+
+### `9.2.5` `str()`
+`str()` converts any type to a `string`, which is useful for printing. See the below examples for type-specific details.
+```java
+string char_str = str('z'); /* Returns "z" */
+string int_str = str(30); /* Returns "30" */
+string float_str = str(34.5); /* Returns "34.5" */
+string bool_str = str(false); /* Returns "false" */
+```
+
+### `9.2.6` `print()`
+`print()` prints the given `string` to a new line of standard output. It throws errors if it encounters a type other than `string`, and prints an empty new line if no inputs are given. To get around this, use the [str()](#925-str()) method with `string` concatenation (+).
+```java
+print("Hola Mundo");
+print();
+print(str('a'));
+print("I have " + str(388) + " bananas");
+float nose = -0.3;
+print(str(true) + str(nose));
+
+/* print(4999); Uncommenting this line throws an error */
+```
+stdout:
+```
+Hola Mundo
+
+a
+I have 388 bananas
+true-0.3
+```
 
 ## `9.3` Lists
 List functionality is provided through the standard library. List are dynamic array-like datatypes that provide an API to be used as a doubly-linked list, stack, queue, and more. 
