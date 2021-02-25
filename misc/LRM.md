@@ -131,6 +131,7 @@ Authors:
 10. [Sample Code 🧩](#10-sample-code)
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
+    3. [GCD Function](#103-gcd-function)
 
 # `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
