@@ -1,7 +1,9 @@
 # Viper  🐍
-### An amalgamation of all our favorite language quirks.  
-<br>
-By:  
+### An amalgamation of all our favorite language quirks.
+A hosted copy of this manual may be found [here](https://github.com/raghavmecheri/viper/blob/main/misc/LRM.md).
+<br><br>
+
+Authors:  
 
 - Mustafa Eyceoz (me2680)
 - Tommy Gomez (tjk2132)
