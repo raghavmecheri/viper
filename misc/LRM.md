@@ -246,7 +246,7 @@ Examples of invalid list literals:
 [↩️  Back to Contents 📌](#0-contents)
 
 # `3` Data Types  💾
-Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
+Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's [Standard Library 📚](#9-standard-library). 
 
 ## `3.1` Primitive Data Types
 The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
@@ -281,7 +281,7 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 ### `3.1.5` `string`
 The `string` type of Viper is implented as a `list` of `char`s. `string`s are defined with the standard double quote notation.  
 ```java
-string name = "Ghav"
+string name = "Ghav";
 ```
 Internally, a `string` is stored as a sequence of defined chars, followed by the null terminal character `'\0'`. The `string` "rat" is internally `['r', 'a', 't', '\0']`.
 
@@ -330,15 +330,16 @@ A `group` is a type-specified collection of data. Any number of types can be spe
 Elements of `group`s can be accessed and modified by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
 ```java
 (int, int) paws = (3, -2);
-int x = paws(1); /* Sets x to 3 */
-paws(2) = x;     /* Sets paws(2) to 3 */
+int x = paws[1]; /* Sets x to 3 */
+paws[2] = x;     /* Sets paws[2] to 3 */
 ```
 Elements of `groups` can also be named at creation. Named elements are then accessible and modifyable by using their names as indices.
 ```java
 (int r, int g, int b) color = (240, 130, 202);
-int red = color(r);
-color(b) = 112;
+int red = color[r];
+color[b] = 112;
 ```
+
 ### `3.2.3` `dict` 
 A `dict` is a mapping of key-value pairs. The types of both keys and values must be specified at creation, and keys must be unique. `dict` literals are defined with square brackets (`[]`), in which a colon (`:`) separates key and values, and commas separate key-value pairs.
 ```java
@@ -889,10 +890,18 @@ This will function in the same manner as expected with function definitions, con
 # `9` Standard Library 📚
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
-## `9.1` Built-in Functions
-Viper provides built-in methods for common operations inherit to everyday programming.
+## `9.1` Math Functions
+Viper provides built-in methods for common operations used in everyday programming.
 
-## `9.2` Type Casting
+### `9.1.1` `sqrt()`
+`sqrt()` returns the square root of the given `int`, `float`, `char` as a `float`. If a `char` is given, the decimal value of its ASCII symbol is used.
+```python
+float four = sqrt(16); /* Returns 4.0 */
+float two = sqrt(four); /* Returns 2.0 */
+float eight = sqrt('@'); /* Returns 8.0 */
+```
+
+## `9.2` Type Casting Functions
 Viper's standard library provides methods for casting between types for ease of use and readability. Type Casting functions include:
 * str(x) - converts x to a string
 * float(x) - converts x to a float
