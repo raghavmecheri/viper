@@ -172,8 +172,7 @@ dict_exp:
     ARROPEN dict_elems ARRCLOSE { DictLit($2) }
 
 dict_elems:
-    /* nothing */       { [] }
-    | dict_elem   { [$1] }
+    dict_elem   { [$1] }
     | dict_elem COMMA dict_elems  { $1 :: $3 }
 
 dict_elem:

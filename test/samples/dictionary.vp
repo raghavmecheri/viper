@@ -1,2 +1,12 @@
 [int: string] map;
 [int: string] map = [1: "one", 2: "two", 3: "three"];
+
+[char: [string: int]] wordmap = [
+        'a': ["add": 2, "and": 3],
+        'b': ["blob": 1, "bap": 14],
+        'd': ["doink": 1]];
+[string: int] b_words = wordmap['b'];
+
+b_words["bing"] = 4;
+int no_no = b_words["balloon"];
+int bad_idea = wordmap["a"];
