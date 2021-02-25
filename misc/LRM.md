@@ -125,6 +125,7 @@ Authors:
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
     3. [GCD Function](#103-gcd-function)
+    4. [Counting Characters in Strings](#104-counting-characters-in-strings)
 
 # `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
@@ -271,11 +272,7 @@ Examples of invalid list literals:
 
 [↩️  Back to Contents 📌](#0-contents)
 
-<<<<<<< HEAD
-# `3` Data Types  💾
-=======
 # `3` Data Types 💾
->>>>>>> 790a35bb3e5c60e0796ab3b5938b5bcd152e5ff5
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's [Standard Library 📚](#9-standard-library). 
 
 ## `3.1` Primitive Data Types
@@ -322,7 +319,7 @@ Internally, a `string` is stored as a sequence of defined chars, followed by the
 `nah` is Viper's `null` value. It can be used to initialize any other data type, and is a valid return value for any function, regardless of the expected return type. Functions with no return value are declared with type `nah`.  
 
 ## `3.2` Higher-Order Data Types  
-Viper also supports various higher-order data types, including `list`, `string`, `group`, and `dict`. More details can be found in the Standard Library section.
+Viper also supports various higher-order data types, including `list`, `group`, and `dict`. More details can be found in the Standard Library section.
 
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
@@ -359,7 +356,7 @@ int error = nums[3]; /* Throws an error */
 A `group` is an immutable type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared as lists and are auto-inferred:
 ```java
 (string, int) order = ["Chicken Katsu", 17];
-(float[2], string, bool) = [[0.1, 2.1], "boo", false];
+(float[], string, bool) = [[0.1, 2.1], "boo", false];
 ```
 Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
 ```java

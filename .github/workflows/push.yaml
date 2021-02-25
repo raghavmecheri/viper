@@ -19,11 +19,20 @@ jobs:
         with:
           ocaml-version: 4.11.1
           
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "10.0.0"
+          directory: ${{ runner.temp }}/llvm
+          icached: ${{ steps.cache-llvm.outputs.cache-hit }}
+          
       - name: Set up env
-        run: make setup-linux
+        run: opam install llvm ocamlfind ocamlbuild
 
       - name: Compile binaries
-        run: make
+        run: |
+          eval `opam config env`
+          make
 
       - name: Run test suite
         run: ./runtests.sh
