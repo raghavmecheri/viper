@@ -75,6 +75,7 @@ typ:
   | typ FUNC { Function($1) }
   | typ ARROPEN ARRCLOSE { Array($1) }
   | LPAREN type_list RPAREN { Tuple($2) }
+  | ARROPEN typ COLON typ ARRCLOSE { Dictionary($2, $4) }
 
 type_list:
     typ            { [$1] }
@@ -115,7 +116,8 @@ expr:
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
   | list_exp         { $1 }
-  
+  | dict_exp         { $1 }
+
   | expr PLUS   expr { Binop($1, Add,   $3) }
   | expr MINUS  expr { Binop($1, Sub,   $3) }
   | expr TIMES  expr { Binop($1, Mult,  $3) }
@@ -126,7 +128,7 @@ expr:
   | ID MINUS_ASSIGN expr { OpAssign($1, Sub, $3) }
   | ID TIMES_ASSIGN expr { OpAssign($1, Mult, $3) }
   | ID DIVIDE_ASSIGN expr { OpAssign($1, Div, $3) }
-
+ 
   | expr EQ     expr { Binop($1, Equal, $3) }
   | expr NEQ    expr { Binop($1, Neq,   $3) }
   | expr LT     expr { Binop($1, Less,  $3) }
@@ -165,6 +167,17 @@ pattern:
 c_pattern:
     expr COLON expr { [ConditionalPattern($1, $3)] }
   | expr COLON expr BAR c_pattern { ConditionalPattern($1, $3) :: $5 }
+
+dict_exp:
+    ARROPEN dict_elems ARRCLOSE { DictLit($2) }
+
+dict_elems:
+    /* nothing */       { [] }
+    | dict_elem   { [$1] }
+    | dict_elem COMMA dict_elems  { $1 :: $3 }
+
+dict_elem:
+    expr COLON expr { DictElem($1, $3) }
 
 list_exp:
   ARROPEN list_elems ARRCLOSE { ListLit($2) }

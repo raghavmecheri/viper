@@ -15,6 +15,7 @@ type typ =
   | Array of typ
   | Function of typ
   | Tuple of typ list
+  | Dictionary of typ * typ
 
 type bind = typ * string
 
@@ -25,6 +26,9 @@ type expr =
   | FloatLiteral of float
   | StringLiteral of string
   | ListLit of expr list
+
+  | DictElem of expr * expr
+  | DictLit of expr list
 
   | Id of string
   | Binop of expr * op * expr
@@ -107,6 +111,7 @@ let rec string_of_typ = function
   | Array(t) -> string_of_typ t ^ "[]"
   | Function(t) -> string_of_typ t ^ " func"
   | Tuple(t) -> "(" ^ String.concat ", " (List.map string_of_typ t) ^ ")"
+  | Dictionary(t1, t2) -> "[" ^ string_of_typ t1 ^ ":" ^ string_of_typ t2 ^ "]" 
 
 let rec string_of_expr = function
     IntegerLiteral(l) -> string_of_int l
@@ -115,7 +120,11 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | FloatLiteral(l) -> string_of_float l
   | StringLiteral(s) -> "\"" ^ s ^ "\""
+  
   | ListLit(lst) -> "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
+  | DictElem(e1, e2) -> string_of_expr e1 ^ " : " ^ string_of_expr e2 
+  | DictLit(lst) ->  "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
+
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
