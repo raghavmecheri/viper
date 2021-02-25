@@ -93,7 +93,6 @@ By:
         5. [Variable](#765-precedence-of-variable-operators)
 8. [Scope 👀](#8-scope)
 9. [Standard Library 📚](#9-standard-library)
-<<<<<<< HEAD
     1. [Math Functions](#91-math-functions)
         1. [sqrt()](#911-sqrt())
         2. [pow()](#912-pow())
@@ -120,16 +119,7 @@ By:
         5. [sub()](#945-sub())
     5. [Groups](#95-groups)
     6. [Dicts](#96-dicts)
-10. [Sample Code ⌨️](#10-sample-code)
-=======
-    1. [Built-in Functions](#91-built-in-functions)
-    2. [Type Casting](#92-type-casting)
-    3. [Lists](#93-lists)
-        1. [List API](#931-list-api)
-    4. [Groups](#94-groups)
-    5. [Dicts](#95-dicts)
 10. [Sample Code 🧩](#10-sample-code)
->>>>>>> 896c7ef23b73147495db24406b933791725ce345
     1. [Fizzbuzz](#101-fizzbuzz-examples)
     2. [Int list sum](#102-int-list-sum-examples)
 
@@ -278,13 +268,8 @@ Examples of invalid list literals:
 
 [↩️  Back to Contents 📌](#0-contents)
 
-<<<<<<< HEAD
 # `3` Data Types  💾
 Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's [Standard Library 📚](#9-standard-library). 
-=======
-# `3` Data Types 💾
-Viper supports the same primitive and higher-order data types as many modern languages. Primitive types are supported natively, while higher-order types are implemented in Viper's standard library. 
->>>>>>> 896c7ef23b73147495db24406b933791725ce345
 
 ## `3.1` Primitive Data Types
 The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `string` and `nah`. The table below summarizes their properties and declarations, with more details in the following sections.  
@@ -368,17 +353,6 @@ A `group` is an immutable type-specified collection of data. Any number of types
 ```
 Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
 ```java
-<<<<<<< HEAD
-(int, int) paws = (3, -2);
-int x = paws[1]; /* Sets x to 3 */
-paws[2] = x;     /* Sets paws[2] to 3 */
-```
-Elements of `groups` can also be named at creation. Named elements are then accessible and modifyable by using their names as indices.
-```java
-(int r, int g, int b) color = (240, 130, 202);
-int red = color[r];
-color[b] = 112;
-=======
 (int, int) paws = [3, -2];
 int x = paws[0]; /* Sets x to 3 */
 ```
@@ -387,7 +361,6 @@ Elements of `groups` can also be deconstructed into variables of their base type
 (int, int, int) t = [240, 130, 202];
 (int r, int g, int b) = t;
 print(r);
->>>>>>> 896c7ef23b73147495db24406b933791725ce345
 ```
 
 ### `3.2.3` `dict` 
@@ -931,13 +904,8 @@ This will function in the same manner as expected with function definitions, con
 # `9` Standard Library 📚
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
-<<<<<<< HEAD
 ## `9.1` Math Functions
 Viper provides built-in methods for common arithmetic operations.
-=======
-## `9.1` Built-in Functions
-Viper provides built-in methods for common operations inherent to everyday programming.
->>>>>>> 896c7ef23b73147495db24406b933791725ce345
 
 ### `9.1.1` `sqrt()`
 `sqrt()` returns the square root of the given `int`, `float`, or `char` as a `float`. If a `char` is given, the decimal value of its ASCII symbol is used.
@@ -1237,5 +1205,27 @@ int func recursiveGCD(int a, int b) {
 
     return check == nah ? swappedGCD(a, b) : check;
 }
+```
+
+## `10.4` Counting Characters in Strings
+```Java
+string problem = "H0w many z3r03s and thr33s ar3 in this string?";
+
+/* Standard, Java-like approach for counting the occurences of certain characters in a string: */
+int count = 0;
+for (int i = 0; i < len(problem); i++) {
+    char character = problem[i];
+    if (character == '0' or character == '3') {
+        count++;
+    }
+}
+print(count);
+
+/* Viper's concise approach using bool to int casting: */
+int count = 0;
+for (char character in problem) {
+    count += int(character == '0' or character =='3');
+}
+print(count);
 ```
 [↩️  Back to Contents 📌](#0-contents)
