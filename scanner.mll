@@ -55,6 +55,7 @@ rule token = parse
 | '?'      { QUESTION }
 | "??"     { MATCH }
 | '|'      { BAR }
+| '.'      { DOT }
 | ':'      { COLON }
 | ['0'-'9']+['.']['0'-'9']+ as lxm { FLOATLIT(float_of_string lxm) }
 | ['0'-'9']+ as lxm { INTLIT(int_of_string lxm) }
