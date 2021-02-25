@@ -39,6 +39,8 @@ By:
         3. [dict](#323-dict)
 4. [Type System 🗃](#4-type-system)
     1. [Explicit Types](#41-explicit-types)
+    2. [Explicit Type Conversion](#42-explicit-type-conversions)
+    3. [Implicit Type Conversion](#43-implicit-type-conversions)
 5. [Statements 🗣](#5-statements)
     1. [Selector Statements](#51-selector-statements)
         1. [if](#511-if-statement)
@@ -360,6 +362,7 @@ int bad_idea = wordmap["a"]; /* Error: key type is char, not string */
 Empty dicts can also be declared.
 ```python
 [string: int] rat = [];
+```
 
 [↩️  Back to Contents 📌](#0-contents)
 
