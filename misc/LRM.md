@@ -256,6 +256,7 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 | `int` | 8 bytes | Stores signed integer values | `int pos = 12;`<br>`int neg = -980;`<br>`int sum = 4 + 5;` |
 | `float` | 8 bytes | Stores signed floating-point numbers | `float pos = 3.2;`<br>`float neg = -29.7;`<br>`float dec = 0.003;`<br>`float whole_num = 2.0;` |
 | `bool` | 1 byte | Stores either `true` or `false` | `bool t = true;`<br>`bool f = false;`<br>`bool falsy = t and f;` |
+| `string` | varies | Stores a sequence of `char`s representing a word | `string s = "yeehaw"`<br>`string name = "mro";`
 | `nah`  | 1 byte | Viper's `null` value | `int nil = nah;`<br>`char empt = nah;`<br>`return nah;` |
 
 ### `3.1.1` `char`
@@ -891,7 +892,7 @@ This will function in the same manner as expected with function definitions, con
 Viper's standard library includes methods and functionalities that are used in nearly every program. This is to balance the tediousness of requiring numerous lines of imports and keeping compilation quick and program bloat low.
 
 ## `9.1` Math Functions
-Viper provides built-in methods for common operations used in everyday programming.
+Viper provides built-in methods for common arithmetic operations.
 
 ### `9.1.1` `sqrt()`
 `sqrt()` returns the square root of the given `int`, `float`, or `char` as a `float`. If a `char` is given, the decimal value of its ASCII symbol is used.
@@ -956,10 +957,10 @@ float bad_bad_bad = trunc(0.99, 0); /* Throws an error */
 
 ## `9.2` Type Casting Functions
 Viper's standard library provides methods for casting between types for ease of use and readability. Type Casting functions include:
-* str(x) - converts x to a string
-* float(x) - converts x to a float
-* int(x) - converts x to an int
-* chr(x) - converts x to a char
+* `str(x)` - converts x to a `string`
+* `float(x)` - converts x to a `float`
+* `int(x)` - converts x to an `int`
+* `chr(x`) - converts x to a `char`
 
 For more on type casting, see [Type System 🗃](#4-type-system).
 
