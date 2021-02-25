@@ -431,7 +431,7 @@ for (int num: nums) {
 }
 ```
 
-## 4.2) Explicit Type Conversions
+## `4.2` Explicit Type Conversions
 Viper utilizes casting functions available in the standard library to convert between types as needed. For example, casting up from an int to a float is a simple as wrapping an integer value expression in the _float_ function.
 
 Explicit type conversion functions include:
@@ -456,7 +456,7 @@ string xyz = str(x) + str(y) + str(z);
 Note:
 See Section 6 for more details on explicit type casting functions.
 
-## 4.3) Implicit Type Conversions
+## `4.3` Implicit Type Conversions
 As Viper is statically-typed, we can rely on user-specified types to infer the desired type of an output and convert values accordingly. This comes in handy for common programming tasks such as math operations and string concatenation.
 
 Examples of implicit type conversion:
