@@ -4,33 +4,61 @@ open Ast
 
 type sexpr = typ * sx
 and sx =
-    SLiteral of int
-  | SFliteral of string
-  | SBoolLit of bool
+    SIntegerLiteral of int
+  | SCharacterLiteral of char
+  | SBoolLiteral of bool
+  | SFloatLiteral of float
+  | SStringLiteral of string
+  | SListLiteral of sexpr list
+  | SDictElem of sexpr * sexpr
+  | SDictLiteral of sexpr list
+
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
+  | STernop of sexpr * sexpr * sexpr
+
   | SAssign of string * sexpr
+  | SDeconstruct of bind list * sexpr
+  | SOpAssign of string * op * sexpr
+  | SDecAssign of typ * string * sexpr
+  | SAccess of sexpr * sexpr
+  | SAccessAssign of sexpr * sexpr * sexpr
+
+  | SMatchPattern of sexpr list * expr
+  | SConditionalPattern of sexpr * sexpr
+  | SPatternMatch of string * sexpr
+  | DecPatternMatch of typ * string * sexpr
+
   | SCall of string * sexpr list
+  | SAttributeCall of sexpr * strinng * sexpr list
+
   | SNoexpr
 
 type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
+  | SDec of typ * string
   | SReturn of sexpr
+  | SSkip of sexpr
+  | SAbort of sexpr
+  | SPanic of sexpr
   | SIf of sexpr * sstmt * sstmt
   | SFor of sexpr * sexpr * sexpr * sstmt
+  | SForIter of string * sexpr * sstmt
+  | SDecForIter of typ * string * sexpr * stmt
+  | SDeconstForIter of bind list * sexpr * sstmt
   | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
     styp : typ;
     sfname : string;
     sformals : bind list;
-    slocals : bind list;
     sbody : sstmt list;
+    sautoreturn : bool;
   }
 
-type sprogram = bind list * sfunc_decl list
+type sprogram = sstmt list * sfunc_decl list
 
 (* Pretty-printing functions *)
 
