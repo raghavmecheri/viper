@@ -14,7 +14,7 @@ type typ =
   | String
   | Array of typ
   | Function of typ
-  | Tuple of typ list
+  | Group of typ list
   | Dictionary of typ * typ
 
 type bind = typ * string
@@ -110,7 +110,7 @@ let rec string_of_typ = function
   | String -> "string"
   | Array(t) -> string_of_typ t ^ "[]"
   | Function(t) -> string_of_typ t ^ " func"
-  | Tuple(t) -> "(" ^ String.concat ", " (List.map string_of_typ t) ^ ")"
+  | Group(t) -> "(" ^ String.concat ", " (List.map string_of_typ t) ^ ")"
   | Dictionary(t1, t2) -> "[" ^ string_of_typ t1 ^ ":" ^ string_of_typ t2 ^ "]" 
 
 let rec string_of_expr = function

@@ -74,7 +74,7 @@ typ:
   | STRING { String }
   | typ FUNC { Function($1) }
   | typ ARROPEN ARRCLOSE { Array($1) }
-  | LPAREN type_list RPAREN { Tuple($2) }
+  | LPAREN type_list RPAREN { Group($2) }
   | ARROPEN typ COLON typ ARRCLOSE { Dictionary($2, $4) }
 
 type_list:
