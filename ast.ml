@@ -119,9 +119,8 @@ let rec string_of_expr = function
   | BoolLit(false) -> "false"
   | FloatLiteral(l) -> string_of_float l
   | StringLiteral(s) -> "\"" ^ s ^ "\""
-  
   | ListLit(lst) -> "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
-  | DictElem(e1, e2) -> string_of_expr e1 ^ " : " ^ string_of_expr e2 
+  | DictElem(e1, e2) -> string_of_expr e1 ^ ": " ^ string_of_expr e2 
   | DictLit(lst) ->  "[" ^ String.concat ", " (List.map string_of_expr lst) ^ "]"
 
   | Id(s) -> s
