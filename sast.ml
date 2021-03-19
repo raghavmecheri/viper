@@ -51,12 +51,12 @@ type sstmt =
   | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
-    styp : typ;
-    sfname : string;
-    sformals : bind list;
-    sbody : sstmt list;
-    sautoreturn : bool;
-  }
+  styp : typ;
+  sfname : string;
+  sformals : bind list;
+  sbody : sstmt list;
+  sautoreturn : bool;
+}
 
 type sprogram = sstmt list * sfunc_decl list
 
