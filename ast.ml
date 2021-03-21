@@ -8,7 +8,7 @@ type uop = Neg | Not | Incr | Decr
 type typ = 
     Int 
   | Bool 
-  | Void 
+  | Nah 
   | Char
   | Float
   | String
@@ -103,7 +103,7 @@ let string_of_uop = function
 let rec string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
-  | Void -> "nah"
+  | Nah -> "nah"
   | Char -> "char"
   | Float -> "float"
   | String -> "string"

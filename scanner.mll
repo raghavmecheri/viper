@@ -45,7 +45,7 @@ rule token = parse
 | "bool"   { BOOL }
 | "float"  { FLOAT }
 | "string" { STRING }
-| "nah"    { VOID }
+| "nah"    { NAH }
 | "=>"     { ARROW }
 | "true"   { TRUE }
 | "false"  { FALSE }
