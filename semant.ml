@@ -66,19 +66,15 @@ let check (globals, functions) =
           (let rec comp_formals l1 l2 = match l1, l2 with
               [], [] -> make_err dup_err 
             | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 = typ2 -> comp_formals r1 r2
-            | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 != typ2 -> StringMap.add n fd map
-            | [], _ -> StringMap.add n fd map
-            | _, [] -> StringMap.add n fd map
+            | _ -> StringMap.add n fd map
           in comp_formals fd.formals dup_func.formals)
       | _ -> StringMap.add n fd map 
-  in
 
   (* Collect all function names into one symbol table *)
-  let function_decls = List.fold_left add_func built_in_func_decls functions
-  in
+  in let function_decls = List.fold_left add_func built_in_func_decls functions
   
   (* Return a function from our symbol table *)
-  let find_func s = 
+  in let find_func s = 
     try StringMap.find s function_decls
     with Not_found -> raise (Failure ("unrecognized function " ^ s))
   in
@@ -203,3 +199,4 @@ let check (globals, functions) =
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
   in (globals, List.map check_function functions)
+  
