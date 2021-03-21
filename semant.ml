@@ -13,14 +13,15 @@ module StringMap = Map.Make(String)
 let check (globals, functions) =
 
   (* Verify a list of bindings has no void types or duplicate names *)
+  (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
+     inside of check_stmts *)
   let check_binds (kind : string) (binds : bind list) =
     List.iter (function
-	(Void, b) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
+	      (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
       | _ -> ()) binds;
     let rec dups = function
         [] -> ()
-      |	((_,n1) :: (_,n2) :: _) when n1 = n2 ->
-	  raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
+      |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
       | _ :: t -> dups t
     in dups (List.sort (fun (_,a) (_,b) -> compare a b) binds)
   in
