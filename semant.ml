@@ -13,11 +13,21 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
-let check (globals, functions) =
+(* we need a function that parses through statement lists and finds the decs and decassign *)
+
+let check (statements, functions) =
 
   (* Verify a list of bindings has no void types or duplicate names *)
   (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
      inside of check_stmts *)
+  let check_decvoid declaration = 
+      match declaration with 
+        | (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
+        | _ -> ()
+  in 
+  (* let check_decdup declaration = (* how to check for duplicates when parsing through statements *)
+      match declaration with 
+        | ((_,n1) :: ) *) 
   let check_binds (kind : string) (binds : bind list) =
     List.iter (function
 	      (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
@@ -31,7 +41,7 @@ let check (globals, functions) =
 
   (**** Check global variables ****)
 
-  check_binds "global" globals;
+  (* check_binds "global" globals; *)
 
   (**** Check functions ****)
 
@@ -86,12 +96,12 @@ let check (globals, functions) =
     with Not_found -> raise (Failure ("unrecognized function " ^ s))
   in
 
-  let _ = find_func "main" in (* Ensure "main" is defined *)
+  (* let _ = find_func "main" in  Ensure "main" is defined *)
 
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
-    (*check_binds "local" func.locals;*)
+    (* check_binds "local" func.locals; *)
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
@@ -101,7 +111,7 @@ let check (globals, functions) =
 
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
-	                StringMap.empty (globals @ func.formals @ func.locals )
+	                StringMap.empty (globals @ func.formals @ func.locals ) (* how are we supposed to parse our statements to get variables we need *)
     in
 
     (* Return a variable from our local symbol table *)
