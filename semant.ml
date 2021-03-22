@@ -210,7 +210,6 @@ let check (statements, functions) =
     { styp = func.typ;
       sfname = func.fname;
       sformals = func.formals;
-      slocals  = func.locals;
       sbody = match check_stmt (Block func.body) with
 	SBlock(sl) -> sl
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
