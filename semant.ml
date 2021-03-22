@@ -73,18 +73,27 @@ let check (globals, functions) =
   (* Collect all function names into one symbol table *)
   in let function_decls = List.fold_left add_func built_in_func_decls functions
   
+  (* Where should this go? What should go in body/formals? *)
+  (* in let implicit_main =
+    try StringMap.find "main" function_decls
+    with Not_found -> (StringMap.add "main" {
+      typ = Nah;
+      fname = "main";
+      formals = [];
+      body = [];
+      autoreturn = true;
+    } function_decls) *)
+
   (* Return a function from our symbol table *)
   in let find_func s = 
     try StringMap.find s function_decls
     with Not_found -> raise (Failure ("unrecognized function " ^ s))
   in
 
-  let _ = find_func "main" in (* Ensure "main" is defined *)
-
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
-    (*check_binds "local" func.locals;*)
+    (* check_binds "local" func.locals; *)
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
@@ -104,10 +113,13 @@ let check (globals, functions) =
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
+    (* TODO: use viper AST types -> SAST types *)
     let rec expr = function
-        Literal  l -> (Int, SLiteral l)
-      | Fliteral l -> (Float, SFliteral l)
-      | BoolLit l  -> (Bool, SBoolLit l)
+        IntegerLiteral  l -> (Int, SIntegerLiteral l)
+      | CharacterLiteral l -> (Char, SCharacterLiteral l)
+      | BoolLit l  -> (Bool, SBoolLiteral l)
+      | FloatLiteral l -> (Float, SFloatLiteral l)
+      | StringLiteral l -> (String, SStringLiteral l)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
@@ -199,4 +211,3 @@ let check (globals, functions) =
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
   in (globals, List.map check_function functions)
-  
