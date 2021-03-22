@@ -31,7 +31,7 @@ and sx =
   | SDecPatternMatch of typ * string * sexpr
 
   | SCall of string * sexpr list
-  | SAttributeCall of sexpr * strinng * sexpr list
+  | SAttributeCall of sexpr * string * sexpr list
 
   | SNoexpr
 
