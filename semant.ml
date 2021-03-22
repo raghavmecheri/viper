@@ -1,5 +1,8 @@
 (* Semantic checking for the MicroC compiler *)
 
+let placeholderCheck ast = ast
+
+(*
 open Ast
 open Sast
 
@@ -42,9 +45,9 @@ let check (globals, functions) =
       autoreturn = false;
     } map in List.fold_left add_bind StringMap.empty [ 
       ("print", Nah);
-			("len", Int);
-			("char", Char);
-			("float", Float);
+      ("len", Int);
+      ("char", Char);
+      ("float", Float);
       ("int", Int);
       ("bool", Bool);
       ("str", String); ]
@@ -203,3 +206,6 @@ let check (globals, functions) =
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
   in (globals, List.map check_function functions)
+
+
+*)
