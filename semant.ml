@@ -34,56 +34,51 @@ let check ((statements : stmt list), functions) =
 
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_func_decls = 
-    let add_bind map (name, return_typ) = StringMap.add name [{
+    let add_bind map (name, return_typ) = StringMap.add name {
       typ = return_typ;
       fname = name; 
       formals = [];
       body = [];
       autoreturn = false;
-    }] map in List.fold_left add_bind StringMap.empty [ 
+    } map in List.fold_left add_bind StringMap.empty [ 
       ("print", Nah);
-			("len", Int);
-			("char", Char);
-			("float", Float);
+      ("len", Int);
+      ("char", Char);
+      ("float", Float);
       ("int", Int);
       ("bool", Bool);
-      ("str", String); ]
-  in
+      ("str", String) ]
+    in
 
-  (* Add functions to the symbol table *)
-  (* The table maps function names to a list of fdecls, allowing for overloaded functions *)
+  (* Add user-declared functions to the symbol table. *)
+  (* The table's keys are strings built from the function name and its parameters' types. 
+     By including parameter types in keys, the table can support overloaded functions. *)
   let add_func map fd = 
-    (* Printing for error messages *)
-    let rec params_to_string params = match params with
+    let rec string_of_params params = match params with
       (typ, _) :: [] -> string_of_typ typ ^ ")"
-    | (typ, _) :: p -> string_of_typ typ ^ ", " ^ params_to_string p
+    | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
+    | _             -> ")" 
+    and key_string name params = name ^ " (" ^ string_of_params params in
+    let key = key_string fd.fname fd.formals
     and built_in_err = "function " ^ fd.fname ^ " may not be defined"
     and dup_err = "function " ^ fd.fname ^ " is already defined with params ("
     and make_err er = raise (Failure er)
-    and n = fd.fname (* Name of the function *)
     in match fd with
       (* No redefinitions of built-in functions *)
-        _ when StringMap.mem n built_in_func_decls -> make_err built_in_err
+        _ when StringMap.mem fd.fname built_in_func_decls -> make_err built_in_err
       (* No duplicates, but allow for overloaded functions *)
-      | _ when StringMap.mem n map -> 
-        (* Get the list of overloaded functions to compare formals with *)
-        let dup_func_list = StringMap.find n map in
-          (* Compare the types of formals one by one, and throw an error all formals match *)
-          let rec comp_formals l1 l2 = match l1, l2 with
-              [], [] -> make_err (dup_err ^ params_to_string fd.formals)
-            | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 = typ2 -> comp_formals r1 r2
-            | _ -> () in
-            (* Iterate over all overloaded functions and compare formals *)
-            let rec dup_func_iter func_list = match func_list with
-               [] -> StringMap.add n (fd :: dup_func_list) map
-              | _ -> comp_formals fd.formals (List.hd func_list).formals; 
-                     dup_func_iter (List.tl func_list)
-        in dup_func_iter dup_func_list
-      | _ -> StringMap.add n [fd] map 
+      | _ when StringMap.mem key map -> make_err (dup_err ^ string_of_params fd.formals)
+      | _ -> StringMap.add key fd map 
 
   (* Collect all function names into one symbol table *)
   in let function_decls = List.fold_left add_func built_in_func_decls functions
-
+(*)
+  (* Return a function from our symbol table *)
+  in let find_func n params = 
+    try 
+      let funcs = StringMap.find s function_decls in 
+    with Not_found -> raise (Failure ("unrecognized function " ^ s))
+*)
   (* Keep this b/c it allows compilation *)
   in (statements, functions) 
   
@@ -97,13 +92,8 @@ let check ((statements : stmt list), functions) =
       body = [];
       autoreturn = true;
     } function_decls) *)
-  (*
-  (* Return a function from our symbol table *)
-  in let find_func s = 
-    try StringMap.find s function_decls
-    with Not_found -> raise (Failure ("unrecognized function " ^ s))
-  in
 
+  (*
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
