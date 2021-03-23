@@ -13,6 +13,7 @@ for i in *.vp; do
     ../../viper.native $i > a.out
     output=$(lli a.out)
     expectedoutput=$(cat "${i}.out")
+    rm a.out
     if [ $verbose -eq 1 ];
     then
         echo "Output: ${output}"
