@@ -8,27 +8,9 @@ module StringMap = Map.Make(String)
 (* Semantic checking of the AST. Returns an SAST if successful,
    throws an exception if something is wrong.
 
-   Check each global variable, then check each function *)
+   Check each functionless statement, then check each function *)
 
-let check ((statements : stmt list), functions) =
-
-  (* Verify a list of bindings has no void types or duplicate names *)
-  (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
-     inside of check_stmts *)
-  (* let check_binds (kind : string) (binds : stmt list) =
-    List.iter (function
-	      (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
-      | _ -> ()) binds;
-    let rec dups = function
-        [] -> ()
-      |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
-      | _ :: t -> dups t
-    in dups (List.sort (fun (_,a) (_,b) -> compare a b) binds)
-  in
-
-  (**** Check global variables ****)
-
-  check_binds "global" globals; *)
+let check (statements, functions) =
 
   (**** Check functions ****)
 
@@ -56,12 +38,11 @@ let check ((statements : stmt list), functions) =
       ("int", Int);
       ("bool", Bool);
       ("str", String) ]
-    in
 
   (* Add user-declared functions to the symbol table. *)
   (* The table's keys are strings built from the function name and its parameters' types. 
      By including parameter types in keys, the table can support overloaded functions. *)
-  let add_func map fd = 
+  in let add_func map fd = 
     let key = key_string fd.fname fd.formals
     and built_in_err = "function " ^ fd.fname ^ " may not be defined"
     and dup_err = "function " ^ fd.fname ^ " is already defined with params ("
@@ -80,32 +61,32 @@ let check ((statements : stmt list), functions) =
   in let find_func name params = 
     try StringMap.find (key_string name params) function_decls
     with Not_found -> raise (Failure ("function " ^ name ^ " with parameters " ^ string_of_params params ^ " does not exist"))
-  (* Keep this b/c it allows compilation *)
-  in (statements, functions) 
   
-  (* Where should this go? What should go in body/formals? *)
-  (* in let implicit_main =
-    try StringMap.find "main" function_decls
-    with Not_found -> (StringMap.add "main" {
-      typ = Nah;
-      fname = "main";
-      formals = [];
-      body = [];
-      autoreturn = true;
-    } function_decls) *)
-
-  (*
-  let check_function func =
-    (* Make sure no formals or locals are void or duplicates *)
-    check_binds "formal" func.formals;
-    (* check_binds "local" func.locals; *)
-
+  (* Verify a list of declarations has no void types or duplicate names *)
+  (* This is used to check function parameters and free-standing variable declarations *)
+  in let check_decs kind decs =
+    List.iter (function
+        (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
+      | _ -> ()) decs;
+    let rec dups = function
+        [] -> ()
+      |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
+      | _ :: t -> dups t
+    in dups (List.sort (fun (_,a) (_,b) -> compare a b) decs)
+  
+  in let check_function func =
+    (* Make sure no function formals are void or duplicates *)
+    check_decs "formal" func.formals;
+  
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
-    let check_assign lvaluet rvaluet err =
-       if lvaluet = rvaluet then lvaluet else raise (Failure err)
-    in   
+    (* May make more sense to move this down into check_expr *)
+    in let check_assign lvaluet rvaluet err =
+      if lvaluet = rvaluet then lvaluet else raise (Failure err)  
 
+  (* Keep this b/c it allows compilation *)
+  in (statements, functions)
+(*)
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
 	                StringMap.empty (globals @ func.formals @ func.locals )
