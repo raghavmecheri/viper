@@ -1,3 +1,4 @@
+#!/bin/bash
 verbose=0
 
 while getopts v: flag
