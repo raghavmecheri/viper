@@ -24,11 +24,12 @@ let _ =
   in
   let lexbuf = Lexing.from_channel channel in
   let ast = Parser.program Scanner.token lexbuf in
-  let sast = Semant.placeholderCheck ast in
+  (* this is sast, currently not used so replace _ with sast when used *)
+  let _ = Semant.placeholderCheck ast in
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
   | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast))
-  | _ -> print_string("Not supported")
   | Compile -> let m = Codegen.translate ast in 
     Llvm_analysis.assert_valid_module m;
     print_string (Llvm.string_of_llmodule m)
+  | _ -> print_string("Not supported")
