@@ -32,9 +32,17 @@ let check ((statements : stmt list), functions) =
 
   (**** Check functions ****)
 
+  (* Generate keys for functions in the symbol table.
+     For user-defined functions, these unique keys allow for function overloading. *)
+  let rec string_of_params params = match params with
+     (typ, _) :: [] -> string_of_typ typ ^ ")"
+   | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
+   | _             -> ")" 
+  and key_string name params = name ^ " (" ^ string_of_params params in
+
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_func_decls = 
-    let add_bind map (name, return_typ) = StringMap.add name {
+    let add_bind map (name, return_typ) = StringMap.add (key_string name []) {
       typ = return_typ;
       fname = name; 
       formals = [];
@@ -54,11 +62,6 @@ let check ((statements : stmt list), functions) =
   (* The table's keys are strings built from the function name and its parameters' types. 
      By including parameter types in keys, the table can support overloaded functions. *)
   let add_func map fd = 
-    let rec string_of_params params = match params with
-      (typ, _) :: [] -> string_of_typ typ ^ ")"
-    | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
-    | _             -> ")" 
-    and key_string name params = name ^ " (" ^ string_of_params params in
     let key = key_string fd.fname fd.formals
     and built_in_err = "function " ^ fd.fname ^ " may not be defined"
     and dup_err = "function " ^ fd.fname ^ " is already defined with params ("
