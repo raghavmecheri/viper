@@ -70,7 +70,7 @@ let translate (statements, functions) =
   and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
 
   (* iterate over statments to add to main function *)
-  let rec build_main (st :: sts) = match st with
+  let build_main st = match st with
     (* match a print statement *)
     | (Expr (Call ("print", exp_list) ) ) -> 
       (* TODO: recurse over statements here *)
@@ -82,13 +82,14 @@ let translate (statements, functions) =
           L.build_call printbig_func [| L.const_int i32_t num |] "printbig" builder
           *)
         | _ -> raise (Error "print passed non-integer literal")
+        (* TODO: allow multiple parameters to print function *)
       in call_print (List.hd exp_list) builder
 
     | Expr (IntegerLiteral(num)) -> raise (Error "matched the integer expression")
     | _ -> raise (Error "First statement must be expression")
 
   (* build a main function from top-level statements and return the_module *)
-  in let _ = build_main statements ; L.build_ret (L.const_int i32_t 0) builder in
+  in let _ = List.map build_main (List.rev statements) ; L.build_ret (L.const_int i32_t 0) builder in
   the_module
 
 (* from MicroC: Create a map of global variables after creating each *)
