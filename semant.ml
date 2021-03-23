@@ -75,13 +75,11 @@ let check ((statements : stmt list), functions) =
 
   (* Collect all function names into one symbol table *)
   in let function_decls = List.fold_left add_func built_in_func_decls functions
-(*)
+
   (* Return a function from our symbol table *)
-  in let find_func n params = 
-    try 
-      let funcs = StringMap.find s function_decls in 
-    with Not_found -> raise (Failure ("unrecognized function " ^ s))
-*)
+  in let find_func name params = 
+    try StringMap.find (key_string name params) function_decls
+    with Not_found -> raise (Failure ("function " ^ name ^ " with parameters " ^ string_of_params params ^ " does not exist"))
   (* Keep this b/c it allows compilation *)
   in (statements, functions) 
   
