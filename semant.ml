@@ -10,7 +10,7 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
-let check ((globals : stmt list), functions) =
+let check ((statements : stmt list), functions) =
 
   (* Verify a list of bindings has no void types or duplicate names *)
   (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
@@ -85,7 +85,7 @@ let check ((globals : stmt list), functions) =
   in let function_decls = List.fold_left add_func built_in_func_decls functions
 
   (* Keep this b/c it allows compilation *)
-  in (globals, functions) 
+  in (statements, functions) 
   
   (* Where should this go? What should go in body/formals? *)
   (* in let implicit_main =
