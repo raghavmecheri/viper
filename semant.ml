@@ -10,12 +10,12 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
-let check (globals, functions) =
+let check ((globals : stmt list), functions) =
 
   (* Verify a list of bindings has no void types or duplicate names *)
   (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
      inside of check_stmts *)
-  let check_binds (kind : string) (binds : bind list) =
+  (* let check_binds (kind : string) (binds : stmt list) =
     List.iter (function
 	      (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
       | _ -> ()) binds;
@@ -28,19 +28,19 @@ let check (globals, functions) =
 
   (**** Check global variables ****)
 
-  check_binds "global" globals;
+  check_binds "global" globals; *)
 
   (**** Check functions ****)
 
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_func_decls = 
-    let add_bind map (name, return_typ) = StringMap.add name {
+    let add_bind map (name, return_typ) = StringMap.add name [{
       typ = return_typ;
       fname = name; 
       formals = [];
       body = [];
       autoreturn = false;
-    } map in List.fold_left add_bind StringMap.empty [ 
+    }] map in List.fold_left add_bind StringMap.empty [ 
       ("print", Nah);
 			("len", Int);
 			("char", Char);
@@ -50,10 +50,15 @@ let check (globals, functions) =
       ("str", String); ]
   in
 
-  (* Add function name to symbol table *)
+  (* Add functions to the symbol table *)
+  (* The table maps function names to a list of fdecls, allowing for overloaded functions *)
   let add_func map fd = 
-    let built_in_err = "function " ^ fd.fname ^ " may not be defined"
-    and dup_err = "function " ^ fd.fname ^ " is already defined"
+    (* Printing for error messages *)
+    let rec params_to_string params = match params with
+      (typ, _) :: [] -> string_of_typ typ ^ ")"
+    | (typ, _) :: p -> string_of_typ typ ^ ", " ^ params_to_string p
+    and built_in_err = "function " ^ fd.fname ^ " may not be defined"
+    and dup_err = "function " ^ fd.fname ^ " is already defined with params ("
     and make_err er = raise (Failure er)
     and n = fd.fname (* Name of the function *)
     in match fd with
@@ -61,17 +66,26 @@ let check (globals, functions) =
         _ when StringMap.mem n built_in_func_decls -> make_err built_in_err
       (* No duplicates, but allow for overloaded functions *)
       | _ when StringMap.mem n map -> 
-        let dup_func = StringMap.find n map in
-          (* Checks for duplicate parameters, allowing overloaded functions *)
-          (let rec comp_formals l1 l2 = match l1, l2 with
-              [], [] -> make_err dup_err 
+        (* Get the list of overloaded functions to compare formals with *)
+        let dup_func_list = StringMap.find n map in
+          (* Compare the types of formals one by one, and throw an error all formals match *)
+          let rec comp_formals l1 l2 = match l1, l2 with
+              [], [] -> make_err (dup_err ^ params_to_string fd.formals)
             | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 = typ2 -> comp_formals r1 r2
-            | _ -> StringMap.add n fd map
-          in comp_formals fd.formals dup_func.formals)
-      | _ -> StringMap.add n fd map 
+            | _ -> () in
+            (* Iterate over all overloaded functions and compare formals *)
+            let rec dup_func_iter func_list = match func_list with
+               [] -> StringMap.add n (fd :: dup_func_list) map
+              | _ -> comp_formals fd.formals (List.hd func_list).formals; 
+                     dup_func_iter (List.tl func_list)
+        in dup_func_iter dup_func_list
+      | _ -> StringMap.add n [fd] map 
 
   (* Collect all function names into one symbol table *)
   in let function_decls = List.fold_left add_func built_in_func_decls functions
+
+  (* Keep this b/c it allows compilation *)
+  in (globals, functions) 
   
   (* Where should this go? What should go in body/formals? *)
   (* in let implicit_main =
@@ -83,7 +97,7 @@ let check (globals, functions) =
       body = [];
       autoreturn = true;
     } function_decls) *)
-
+  (*
   (* Return a function from our symbol table *)
   in let find_func s = 
     try StringMap.find s function_decls
@@ -211,3 +225,4 @@ let check (globals, functions) =
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
   in (globals, List.map check_function functions)
+*)
