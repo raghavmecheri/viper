@@ -46,11 +46,11 @@ let translate (statements, _) =
   let printf_func : L.llvalue = 
     L.declare_function "printf" printf_t the_module in
 
-  (* define our main, TODO: make this optional if main is provided *)
+  (* define a main function around top-level statements *)
   let main_t = L.function_type i32_t [| |] in
   let main_f = L.define_function "main" main_t the_module in
 
-  (* main builder *)
+  (* main function builder *)
   let builder = L.builder_at_end context (L.entry_block main_f) in
 
   (* format characters for printf *)
@@ -65,11 +65,12 @@ let translate (statements, _) =
   (* iterate over statments to add to main function *)
   let build_main st = match st with
     (* match a print statement *)
-    | (Expr (Call ("print", exp_list) ) ) -> 
-      (* TODO: allow multiple parameters to print function *)
+    | (Expr (Call ("print", exp_list) ) ) ->
+      (* TODO: move expression/statement evaluation to seperate functions *)
       let call_print e b = match e with
-        | IntegerLiteral(num) -> 
-          L.build_call printf_func [| int_format_str ; L.const_int i32_t num |]
+        | IntegerLiteral(num) ->
+          let num = L.const_int i32_t num in
+          L.build_call printf_func [| int_format_str ; num |]
             "printf" b
         | StringLiteral(str) -> 
           let str = L.build_global_stringptr str "str" builder in 
