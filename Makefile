@@ -23,7 +23,7 @@ clean :
 
 # More detailed: build using ocamlc/ocamlopt + ocamlfind to locate LLVM
 
-OBJS = ast.cmx parser.cmx scanner.cmx viper.cmx
+OBJS = ast.cmx parser.cmx scanner.cmx viper.cmx semant.cmx
 
 viper : $(OBJS)
 	ocamlfind ocamlopt -linkpkg -package llvm -package llvm.analysis $(OBJS) -o viper
@@ -52,4 +52,6 @@ parser.cmo : ast.cmo parser.cmi
 parser.cmx : ast.cmx parser.cmi
 scanner.cmo : parser.cmi
 scanner.cmx : parser.cmx
+semant.cmo : ast.cmo
+semant.cmx : ast.cmx
 parser.cmi : ast.cmo

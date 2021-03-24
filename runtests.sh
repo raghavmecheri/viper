@@ -1,3 +1,4 @@
+#!/bin/bash
 verbose=0
 
 while getopts v: flag
@@ -7,16 +8,19 @@ do
     esac
 done
 
-cd test/samples
+cd test/tests
 for i in *.vp; do
     echo "Running test on: $i"
+    ../../viper.native $i > a.ll
+    output=$(lli a.ll)
+    expectedoutput=$(cat "${i}.out")
+    rm a.ll
     if [ $verbose -eq 1 ];
     then
-        ../../viper.native -a $i
-    else
-        ../../viper.native -a $i >/dev/null 2>&1
+        echo "Output: ${output}"
+        echo "Expected Output: ${expectedoutput}"
     fi
-    if [ $? -eq 0 ]
+    if [[ "$output" == "$expectedoutput" ]]
     then
         echo "PASSED"
     else

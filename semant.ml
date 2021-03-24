@@ -1,5 +1,8 @@
 (* Semantic checking for the MicroC compiler *)
 
+let placeholderCheck ast = ast
+
+(*
 open Ast
 open Sast
 
@@ -13,14 +16,15 @@ module StringMap = Map.Make(String)
 let check (globals, functions) =
 
   (* Verify a list of bindings has no void types or duplicate names *)
+  (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
+     inside of check_stmts *)
   let check_binds (kind : string) (binds : bind list) =
     List.iter (function
-	(Void, b) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
+	      (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
       | _ -> ()) binds;
     let rec dups = function
         [] -> ()
-      |	((_,n1) :: (_,n2) :: _) when n1 = n2 ->
-	  raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
+      |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
       | _ :: t -> dups t
     in dups (List.sort (fun (_,a) (_,b) -> compare a b) binds)
   in
@@ -32,32 +36,48 @@ let check (globals, functions) =
   (**** Check functions ****)
 
   (* Collect function declarations for built-in functions: no bodies *)
-  let built_in_decls = 
-    let add_bind map (name, ty) = StringMap.add name {
-      typ = Void;
+  let built_in_func_decls = 
+    let add_bind map (name, return_typ) = StringMap.add name {
+      typ = return_typ;
       fname = name; 
-      formals = [(ty, "x")];
-      locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int);
-			                         ("printb", Bool);
-			                         ("printf", Float);
-			                         ("printbig", Int) ]
+      formals = [];
+      body = [];
+      autoreturn = false;
+    } map in List.fold_left add_bind StringMap.empty [ 
+      ("print", Nah);
+      ("len", Int);
+      ("char", Char);
+      ("float", Float);
+      ("int", Int);
+      ("bool", Bool);
+      ("str", String); ]
   in
 
   (* Add function name to symbol table *)
   let add_func map fd = 
     let built_in_err = "function " ^ fd.fname ^ " may not be defined"
-    and dup_err = "duplicate function " ^ fd.fname
+    and dup_err = "function " ^ fd.fname ^ " is already defined"
     and make_err er = raise (Failure er)
     and n = fd.fname (* Name of the function *)
-    in match fd with (* No duplicate functions or redefinitions of built-ins *)
-         _ when StringMap.mem n built_in_decls -> make_err built_in_err
-       | _ when StringMap.mem n map -> make_err dup_err  
-       | _ ->  StringMap.add n fd map 
+    in match fd with
+      (* No redefinitions of built-in functions *)
+        _ when StringMap.mem n built_in_func_decls -> make_err built_in_err
+      (* No duplicates, but allow for overloaded functions *)
+      | _ when StringMap.mem n map -> 
+        let dup_func = StringMap.find n map in
+          (* Checks for duplicate parameters, allowing overloaded functions *)
+          (let rec comp_formals l1 l2 = match l1, l2 with
+              [], [] -> make_err dup_err 
+            | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 = typ2 -> comp_formals r1 r2
+            | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 != typ2 -> StringMap.add n fd map
+            | [], _ -> StringMap.add n fd map
+            | _, [] -> StringMap.add n fd map
+          in comp_formals fd.formals dup_func.formals)
+      | _ -> StringMap.add n fd map 
   in
 
   (* Collect all function names into one symbol table *)
-  let function_decls = List.fold_left add_func built_in_decls functions
+  let function_decls = List.fold_left add_func built_in_func_decls functions
   in
   
   (* Return a function from our symbol table *)
@@ -71,7 +91,7 @@ let check (globals, functions) =
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
-    check_binds "local" func.locals;
+    (*check_binds "local" func.locals;*)
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
@@ -186,3 +206,6 @@ let check (globals, functions) =
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
   in (globals, List.map check_function functions)
+
+
+*)
