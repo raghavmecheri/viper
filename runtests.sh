@@ -11,10 +11,10 @@ done
 cd test/tests
 for i in *.vp; do
     echo "Running test on: $i"
-    ../../viper.native $i > a.out
-    output=$(lli a.out)
+    ../../viper.native $i > a.ll
+    output=$(lli a.ll)
     expectedoutput=$(cat "${i}.out")
-    rm a.out
+    rm a.ll
     if [ $verbose -eq 1 ];
     then
         echo "Output: ${output}"
