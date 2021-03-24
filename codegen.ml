@@ -54,9 +54,9 @@ let translate (statements, _) =
   let builder = L.builder_at_end context (L.entry_block main_f) in
 
   (* format characters for printf *)
-  let char_format_str = L.build_global_stringptr "%c" "fmt" builder
+  let char_format_str = L.build_global_stringptr "%c\n" "fmt" builder
   and int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
-  and str_format_str = L.build_global_stringptr "%s" "fmt" builder
+  and str_format_str = L.build_global_stringptr "%s\n" "fmt" builder
   (*
   and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder
   *)
