@@ -8,10 +8,14 @@ do
     esac
 done
 
-cd test/tests
+cd src
+make clean
+make
+
+cd ../test/tests
 for i in *.vp; do
     echo "Running test on: $i"
-    ../../viper.native $i > a.ll
+    ../../src/viper.native $i > a.ll
     output=$(lli a.ll)
     expectedoutput=$(cat "${i}.out")
     rm a.ll
