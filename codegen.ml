@@ -23,21 +23,12 @@ let translate (statements, _) =
   and float_t    = L.double_type context
   in
 
-  (*
-  and void_t     = L.void_type   context
-  and i64_t      = L.i64_type    context
-  and i1_t       = L.i1_type     context
-  in
-  *)
-
   (* Return the LLVM type for a Viper primitive type *)
   let ltype_of_typ = function
       Int   -> i64_t
     | Char  -> i16_t
     | Float -> float_t
-    (* | A.Bool  -> i1_t
-       | A.Nah   -> void_t *)
-    | _     -> raise (Error "Argument is not an Viper type")
+    | _     -> raise (Error "Argument is not implemented or is not a Viper type")
   in
 
   (* Define built-in functions at top of every file *)  
@@ -123,3 +114,13 @@ let global_vars : L.llvalue StringMap.t =
       let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
       and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
     *)
+
+(* | A.Bool  -> i1_t
+   | A.Nah   -> void_t *)
+
+(*
+   and void_t     = L.void_type   context
+   and i64_t      = L.i64_type    context
+   and i1_t       = L.i1_type     context
+   in
+   *)
