@@ -62,26 +62,38 @@ let translate (statements, _) =
   *)
   in
 
+        (*
+    | Call ("print", [e]) ->
+      L.build_call printf_func [| int_format_str ; (expr builder e) |]
+        "printf" builder
+    | Call ("printf", [e]) -> 
+      L.build_call printf_func [| float_format_str ; (expr builder e) |]
+        "printf" builder
+        *)
+
+  let rec expr builder e = match e with
+      IntegerLiteral(num)      -> L.const_int i32_t num
+    | StringLiteral(str)       -> L.build_global_stringptr str "str" builder
+    | CharacterLiteral(ch)     -> L.const_int i8_t (Char.code ch)
+    | _ -> raise (Error "Expression not implemented") 
+  in
+
   (* iterate over statments to add to main function *)
   let build_main st = match st with
     (* match a print statement *)
-    | (Expr (Call ("print", exp_list) ) ) ->
+    | (Expr (Call ("print", params) ) ) ->
       (* TODO: move expression/statement evaluation to seperate functions *)
-      let call_print e b = match e with
-        | IntegerLiteral(num) ->
-          let num = L.const_int i32_t num in
-          L.build_call printf_func [| int_format_str ; num |]
-            "printf" b
-        | StringLiteral(str) -> 
-          let str = L.build_global_stringptr str "str" builder in 
-          L.build_call printf_func [| str_format_str ; str |] "printf" builder
-        | CharacterLiteral(c) ->
-          let ch = L.const_int i8_t (Char.code c) in
-          L.build_call printf_func [| char_format_str ; ch |] "printf" builder 
-        | _ -> raise (Error "print passed non-integer literal")
-      in call_print (List.hd exp_list) builder
-    | Expr (IntegerLiteral(_)) -> L.undef void_t 
-    | _ -> raise (Error "First statement must be expression")
+      (* get format string from type *)
+      let call_print builder e = match e with
+        | IntegerLiteral(_) ->
+          L.build_call printf_func [| int_format_str ; (expr builder e) |] "printf" builder
+        | StringLiteral(_) -> 
+          L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
+        | CharacterLiteral(_) ->
+          L.build_call printf_func [| char_format_str ; (expr builder e) |] "printf" builder
+        | _ -> raise (Error "print passed invalid literal")
+      in call_print builder (List.hd params)
+    | _ -> raise (Error "Statement not implemented")
 
   (* build a main function from top-level statements, add a return statement, and return the_module *)
   in let _ = List.map build_main (List.rev statements)
