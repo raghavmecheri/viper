@@ -32,4 +32,3 @@ let _ =
   | Compile -> let m = Codegen.translate ast in 
     Llvm_analysis.assert_valid_module m;
     print_string (Llvm.string_of_llmodule m)
-  | _ -> print_string("Not supported")
