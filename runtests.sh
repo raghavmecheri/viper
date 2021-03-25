@@ -8,6 +8,10 @@ do
     esac
 done
 
+cd src
+make all
+cd ..
+
 cd test/tests
 for i in *.vp; do
     echo "Running test on: $i"
