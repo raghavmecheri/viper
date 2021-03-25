@@ -16,7 +16,9 @@ let translate (statements, _) =
   let the_module = L.create_module context "Viper" in
 
   (* Get types from the context *)
-  let i32_t      = L.i32_type    context
+  let i64_t      = L.i64_type    context
+  and i32_t      = L.i32_type    context
+  and i16_t      = L.i16_type    context
   and i8_t       = L.i8_type     context 
   and float_t    = L.double_type context
   in
@@ -24,21 +26,19 @@ let translate (statements, _) =
   (*
   and void_t     = L.void_type   context
   and i64_t      = L.i64_type    context
-  and i16_t      = L.i16_type    context
   and i1_t       = L.i1_type     context
   in
   *)
 
   (* Return the LLVM type for a Viper primitive type *)
-  (*
   let ltype_of_typ = function
-      A.Int   -> i64_t
-    | A.Char  -> i16_t
-    | A.Bool  -> i1_t
-    | A.Float -> float_t
-    | A.Nah   -> void_t
+      Int   -> i64_t
+    | Char  -> i16_t
+    | Float -> float_t
+    (* | A.Bool  -> i1_t
+       | A.Nah   -> void_t *)
+    | _     -> raise (Error "Argument is not an Viper type")
   in
-  *)
 
   (* Define built-in functions at top of every file *)  
   let printf_t : L.lltype = 
@@ -71,11 +71,11 @@ let translate (statements, _) =
 
   (* expression evaluation function *)
   let rec expr builder e = match e with
-      IntegerLiteral(num)      -> L.const_int i32_t num
+      IntegerLiteral(num)      -> L.const_int (ltype_of_typ Int) num
     | StringLiteral(str)       -> L.build_global_stringptr str "str" builder
-    | CharacterLiteral(chr)    -> L.const_int i8_t (Char.code chr)
-    | FloatLiteral(flt)        -> L.const_float float_t flt
-    | Call ("print", [params])   -> L.build_call printf_func [| (get_format_str params) ; (expr builder params) |] "printf" builder
+    | CharacterLiteral(chr)    -> L.const_int (ltype_of_typ Char) (Char.code chr)
+    | FloatLiteral(flt)        -> L.const_float (ltype_of_typ Float) flt
+    | Call ("print", [params]) -> L.build_call printf_func [| (get_format_str params) ; (expr builder params) |] "printf" builder
     | _ -> raise (Error "Expression not implemented") 
   in
 
