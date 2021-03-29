@@ -11,6 +11,7 @@ all : viper.native
 viper.native :
 	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4 \
 		viper.native
+	cp viper.native ../viper.native
 
 # "make clean" removes all generated files
 
