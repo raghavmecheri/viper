@@ -17,9 +17,9 @@ let check (statements, functions) =
   (* Generate keys for functions in the symbol table.
      For user-defined functions, these unique keys allow for function overloading. *)
   let rec string_of_params params = match params with
-     (typ, _) :: [] -> string_of_typ typ ^ ")"
-   | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
-   | _             -> ")" 
+      (typ, _) :: [] -> string_of_typ typ ^ ")"
+    | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
+    | _             -> ")" 
   and key_string name params = name ^ " (" ^ string_of_params params in
 
   (* Collect function declarations for built-in functions: no bodies *)
@@ -64,11 +64,27 @@ let check (statements, functions) =
   
   (* Verify a list of declarations has no void types or duplicate names *)
   (* This is used to check function parameters and free-standing variable declarations *)
+
+  (* Globally defined symbol table type (possible sol to duplicate variable checking)
+  map variable name -> Ast.typ
+  kill two birbs with one stone:
+    1) duplicate var names
+    2) valid types
+
+  type symbol_table = {
+    vars: ty StringMap.t;
+    parent: symbol_table option;
+  }
+  
+  *)
+
   in let check_decs kind decs =
     List.iter (function
         (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
       | _ -> ()) decs;
     let rec dups = function
+      (* Problem: need to compare both dec and decassign, which are different types *)
+      (* Possible solution: global set of string variables *)
         [] -> ()
       |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
       | _ :: t -> dups t
@@ -186,6 +202,7 @@ let check (statements, functions) =
             | s :: ss         -> check_stmt s :: check_stmt_list ss
             | []              -> []
           in SBlock(check_stmt_list sl)
+          | Dec -> check_dec dec
 
     in (* body of check_function *)
     { styp = func.typ;
