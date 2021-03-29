@@ -19,3 +19,6 @@ let rec find_variable name (scope : symbol_table) =
     match scope.parent with
       Some(parent) -> find_variable name parent
       _ -> raise Not_found
+in
+
+let check_decs = "hi"
