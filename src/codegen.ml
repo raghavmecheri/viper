@@ -66,7 +66,8 @@ let translate (statements, _) =
   in
 
   (* determines appropriate printf format string for given literal *)
-  let get_format_str e = match e with
+  (* TODO: type inference for which print format string to use*)
+  let get_format_str params = match params with
       IntegerLiteral(_) -> int_format_str
     | StringLiteral(_) -> str_format_str
     | CharacterLiteral(_) -> char_format_str
@@ -82,8 +83,29 @@ let translate (statements, _) =
     | CharacterLiteral(chr)    -> L.const_int (ltype_of_typ Char) (Char.code chr)
     | FloatLiteral(flt)        -> L.const_float (ltype_of_typ Float) flt
     | BoolLit(bln)             -> L.const_int i1_t (if bln then 1 else 0)
-    | Call ("print", [params]) -> L.build_call printf_func [| (get_format_str params) ; (get_print_value builder params) |] "printf" builder
+    | Binop (e1, op, e2) ->
+      let e1' = expr builder e1
+      and e2' = expr builder e2 in
+      (match op with
+         Add     -> L.build_add
+       | Sub     -> L.build_sub
+       | Mult    -> L.build_mul
+       | Div     -> L.build_sdiv
+       | And     -> L.build_and
+       | Or      -> L.build_or
+       | Equal   -> L.build_icmp L.Icmp.Eq
+       | Neq     -> L.build_icmp L.Icmp.Ne
+       | Less    -> L.build_icmp L.Icmp.Slt
+       | Leq     -> L.build_icmp L.Icmp.Sle
+       | Greater -> L.build_icmp L.Icmp.Sgt
+       | Geq     -> L.build_icmp L.Icmp.Sge
+       | Mod     -> raise (Error "Mod not implemented")
+       | Has     -> raise (Error "Has not implemented")
+      ) e1' e2' "tmp" builder
+    | Call ("print", [params]) -> let print_value = (get_print_value builder params)
+      in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
     | _ -> raise (Error "Expression not implemented")
+
   and
     get_print_value b e = match e with
       BoolLit(bln) -> let strlit = (StringLiteral (if bln then "true" else "false"))
