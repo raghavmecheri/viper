@@ -14,7 +14,7 @@ llvm_tests() {
     cd test/tests
     echo "Beginning LLVM tests"
     for i in *.vp; do
-        if [ ! -e "{i}.out" ]
+        if [ ! -e "${i}.out" ]
         then
             echo "Skipping test as no file found for: ${i}.out in ${PWD}"
             continue;
