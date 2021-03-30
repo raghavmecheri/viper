@@ -1,0 +1,15 @@
+nah func something(int i){
+    i + i;
+}
+
+int[] listo = [1,2,3,4,5];
+for (int i in listo){
+    if (listo has i){
+        something(i);
+    }
+}
+
+int i;
+for (i in listo){
+    i + i;
+}
