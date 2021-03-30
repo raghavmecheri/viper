@@ -1,0 +1,3 @@
+int a;
+int b = 4;
+int b2 = "hi";
