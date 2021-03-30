@@ -62,6 +62,12 @@ ast_tests() {
     done
 }
 
+cd src
+make clean
+make
+mv ./viper.native ../viper.native
+cd ..
+
 echo "Test type: ${type}"
 echo "Verbose enabled: ${verbose}"
 
