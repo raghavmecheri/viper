@@ -10,7 +10,8 @@ Code samples for common Viper programs may be found under `examples/`
 Viper runs integration tests in order to ensure that nothing's horribly broken.
 
 ### Running Tests
-* `./runtests.sh` for a general overview of tests
+* `./runtests.sh` for a general overview of LLVM tests
+* `./runtests.sh -t ast` for tests that specifically check AST generation
 * `./runtests.sh -v 1` for verbose outputs
 
 ### Case Creation

@@ -32,4 +32,10 @@ jobs:
       - name: Compile binaries & run test suite
         run: |
           eval `opam config env`
-          ./runtests.sh
+          make
+
+      - name: Run AST tests
+        run: ./runtests.sh -t ast 
+
+      - name: Run LLVM tests
+        run: ./runtests.sh
