@@ -25,22 +25,24 @@ let add_symbol name ty scope =
     parent = scope.parent;
   } else scope (* Never enters else clause, but still needed to avoid type error *)
 
-let rec get_expr_decs expr scope = 
+let rec get_expr_decs scope expr = 
   match expr with
     DecAssign(ty, name, _) -> add_symbol name ty scope
   | _ -> scope
 
-let rec get_stmt_decs stmt scope =
+let rec get_stmt_decs scope stmt =
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
   } in 
   match stmt with
     Block(stmt_list) -> 
-      let _ = List.fold_left (fun t s -> get_stmt_decs s t) new_scope stmt_list in scope
-  | Expr(e) -> get_expr_decs e scope
+      let _ = List.fold_left (get_stmt_decs) new_scope stmt_list in scope
+  | Expr(e) -> get_expr_decs scope e
   | Dec(ty, name) -> add_symbol name ty scope
-  | If(cond, then_stmt, else_stmt) -> scope
+  | If(cond, then_stmt, else_stmt) -> 
+      let cond_scope = get_expr_decs new_scope cond in
+      let _ = (get_stmt_decs cond_scope then_stmt, get_stmt_decs cond_scope else_stmt) in scope
   | _ -> scope
 
 let check_decs (stmts, funcs) = 
@@ -48,5 +50,5 @@ let check_decs (stmts, funcs) =
     variables = StringMap.empty;
     parent = None;
   } 
-  in let symbs = List.fold_left (fun t s -> get_stmt_decs s t) globals stmts
-  in (stmts, funcs)
+  in let globals = List.fold_left (get_stmt_decs) globals (List.rev stmts)
+  in let names = globals.variables in StringMap.iter (fun a b -> print_endline ("glob " ^ a)) names; (stmts, funcs)

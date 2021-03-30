@@ -1,6 +1,13 @@
-{ 
-    int c;
+int a = 1;
+if (int b = 1) { 
+    int c = 2;
+} else {
+    int d = 2;
     {
-        int c;
+        int p = 4;
     }
+}
+
+{
+    int k = 2;
 }
