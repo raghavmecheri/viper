@@ -19,11 +19,12 @@ let rec not_dup_var name scope =
       Some(parent) -> print_endline name; not_dup_var name parent
     | _ -> print_endline (name ^ " not found"); true
 
-let add_symbol name ty scope = 
-  if not_dup_var name scope then {
-    variables = StringMap.add name ty scope.variables;
-    parent = scope.parent;
-  } else scope (* Never enters else clause, but still needed to avoid type error *)
+let add_symbol name ty scope = match ty with
+    Nah -> raise (Failure ("Error: variable " ^ " declared with type nah"))
+  | _  -> if not_dup_var name scope then {
+            variables = StringMap.add name ty scope.variables;
+            parent = scope.parent;
+          } else scope (* Never enters else clause, but still needed to avoid type error *)
 
 let rec get_expr_decs scope expr = 
   match expr with
