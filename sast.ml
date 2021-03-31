@@ -16,20 +16,20 @@ and sx =
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
-  | STernop of sexpr * sexpr * sexpr
-
+  (*| STernop of sexpr * sexpr * sexpr
+*)
   | SAssign of string * sexpr
   | SDeconstruct of bind list * sexpr
   | SOpAssign of string * op * sexpr
   | SDecAssign of typ * string * sexpr
   | SAccess of sexpr * sexpr
   | SAccessAssign of sexpr * sexpr * sexpr
-
+(*
   | SMatchPattern of sexpr list * sexpr
   | SConditionalPattern of sexpr * sexpr
   | SPatternMatch of string * sexpr
   | SDecPatternMatch of typ * string * sexpr
-
+*)
   | SCall of string * sexpr list
   | SAttributeCall of sexpr * string * sexpr list
 
