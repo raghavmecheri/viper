@@ -30,10 +30,8 @@ jobs:
         run: opam install llvm ocamlfind ocamlbuild
 
       - name: Compile binaries & run test suite
-        run: eval `opam config env`
+        run: |
+          eval `opam config env`
+          ./runtests.sh -t ast
+          ./runtests.sh
 
-      - name: Run AST tests
-        run: ./runtests.sh -t ast 
-
-      - name: Run LLVM tests
-        run: ./runtests.sh
