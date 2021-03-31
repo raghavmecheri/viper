@@ -24,7 +24,7 @@
      in
      let lexbuf = Lexing.from_channel channel in
      let ast = Parser.program Scanner.token lexbuf in
-     let decs = Decs.check_decs ast in
+     let decs = Decs.get_decs ast in
      let sast = Semant.check decs in
      match !action with
        Ast -> print_string (Ast.string_of_program ast)

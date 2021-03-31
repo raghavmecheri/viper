@@ -1,6 +1,6 @@
 (* * * * *
   This file semantically checks all variable declarations in the AST.
-  Duplicate variables, nah declarations, and declarations in illegal places all throw errors.
+  Duplicate variables and nah declarations throw errors.
   A scoped symbol table mapping variable names to their types is returned.
 * * * * *)
 
@@ -12,16 +12,16 @@ type symbol_table = {
   parent : symbol_table option;
 }
 
-let rec not_dup_var name scope = 
+let rec is_valid_dec name scope = 
   if StringMap.mem name scope.variables then
-    raise (Failure ("Error: " ^ name ^ " is already defined"))
+    raise (Failure ("Error: variable " ^ name ^ " is already defined"))
   else match scope.parent with
-      Some(parent) -> print_endline name; not_dup_var name parent
+      Some(parent) -> print_endline name; is_valid_dec name parent
     | _ -> print_endline (name ^ " not found"); true
 
 let add_symbol name ty scope = match ty with
-    Nah -> raise (Failure ("Error: variable " ^ " declared with type nah"))
-  | _  -> if not_dup_var name scope then {
+    Nah -> raise (Failure ("Error: variable " ^ name ^ " declared with type nah"))
+  | _  -> if is_valid_dec name scope then {
             variables = StringMap.add name ty scope.variables;
             parent = scope.parent;
           } else scope (* Never enters else clause, but still needed to avoid type error *)
@@ -54,7 +54,7 @@ let rec get_stmt_decs scope stmt =
       let _ = get_stmt_decs while_scope s in scope
   | _ -> scope
 
-let check_decs (stmts, funcs) = 
+let get_decs (stmts, funcs) = 
   let globals = {
     variables = StringMap.empty;
     parent = None;
