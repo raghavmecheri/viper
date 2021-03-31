@@ -37,12 +37,15 @@ let rec get_stmt_decs scope stmt =
   } in 
   match stmt with
     Block(stmt_list) -> 
-      let _ = List.fold_left (get_stmt_decs) new_scope stmt_list in scope
+      let _ = List.fold_left get_stmt_decs new_scope stmt_list in scope
   | Expr(e) -> get_expr_decs scope e
   | Dec(ty, name) -> add_symbol name ty scope
   | If(cond, then_stmt, else_stmt) -> 
       let cond_scope = get_expr_decs new_scope cond in
       let _ = (get_stmt_decs cond_scope then_stmt, get_stmt_decs cond_scope else_stmt) in scope
+  | For(e1, e2, e3, s) -> let expr_list = [e1; e2; e3] in
+      let for_scope = List.fold_left get_expr_decs new_scope expr_list in
+      let _ = get_stmt_decs for_scope s in scope
   | _ -> scope
 
 let check_decs (stmts, funcs) = 
@@ -50,5 +53,5 @@ let check_decs (stmts, funcs) =
     variables = StringMap.empty;
     parent = None;
   } 
-  in let globals = List.fold_left (get_stmt_decs) globals (List.rev stmts)
+  in let globals = List.fold_left get_stmt_decs globals (List.rev stmts)
   in let names = globals.variables in StringMap.iter (fun a b -> print_endline ("glob " ^ a)) names; (stmts, funcs)
