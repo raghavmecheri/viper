@@ -1,7 +1,10 @@
-int w = 1;
+int bla = (int a2 = 8) * (int bbbbbbb = 7);
+int boo = true ? string a13 = 3 : string a14 = 2;
 while (bool b = false) {
+    int a3;
+    a3 = int a4 = 4;
     if (bool test = (b == true)) {
-        int p = 2;
+        int new = 2;
         test = false;
     } else {
         return int useless = 0;
@@ -22,4 +25,5 @@ if (int b = 1) {
         int e = i + e;
     }
 }
+int a22 = 1;
 int i = 2;
