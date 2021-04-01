@@ -16,7 +16,6 @@ and sx =
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
-  | STernop of sexpr * sexpr * sexpr
 
   | SAssign of string * sexpr
   | SDeconstruct of bind list * sexpr
