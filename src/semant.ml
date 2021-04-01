@@ -1,9 +1,28 @@
 (* Semantic checking for the MicroC compiler *)
 
+open Ast
 let placeholderCheck ast = ast
 
+let rec clean_expression expr = match expr with
+    Ternop(e1, e2, e3) -> ()
+  | PatternMatch(s, e) -> ()
+  | DecPatternMatch(t, s, e) -> ()
+
+let rec clean_statements stmts = match stmts with
+    Block(stmts) -> Block(List.map clean_statements stmts)
+  | Expr(expr) -> clean_expression expr
+  | For(e1, e2, e3, s) -> ()
+  | ForIter(name, e2, s) -> ()
+  | DecForIter(t, name, e2, s) -> ()
+  | DeconstForIter(p, expr, s) -> ()
+
+let reshape_arrow_function fdecl = fdecl
+
+let clean_function fdecl = (if fdecl.autoreturn then reshape_arrow_function fdecl else fdecl)
+
+let desugar (stmts, functions) = (clean_statements stmts, (List.map clean_function functions))
+
 (*
-open Ast
 open Sast
 
 module StringMap = Map.Make(String)
