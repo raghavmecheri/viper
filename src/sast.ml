@@ -25,11 +25,6 @@ and sx =
   | SAccess of sexpr * sexpr
   | SAccessAssign of sexpr * sexpr * sexpr
 
-  | SMatchPattern of sexpr list * sexpr
-  | SConditionalPattern of sexpr * sexpr
-  | SPatternMatch of string * sexpr
-  | SDecPatternMatch of typ * string * sexpr
-
   | SCall of string * sexpr list
   | SAttributeCall of sexpr * string * sexpr list
 
@@ -44,10 +39,6 @@ type sstmt =
   | SAbort of sexpr
   | SPanic of sexpr
   | SIf of sexpr * sstmt * sstmt
-  | SFor of sexpr * sexpr * sexpr * sstmt
-  | SForIter of string * sexpr * sstmt
-  | SDecForIter of typ * string * sexpr * sstmt
-  | SDeconstForIter of bind list * sexpr * sstmt
   | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
@@ -55,7 +46,6 @@ type sfunc_decl = {
   sfname : string;
   sformals : bind list;
   sbody : sstmt list;
-  sautoreturn : bool;
 }
 
 type sprogram = sstmt list * sfunc_decl list
