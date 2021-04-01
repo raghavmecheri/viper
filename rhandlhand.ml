@@ -22,6 +22,7 @@ let rec get_stmt_decs stmt  =
       let _ = List.iter (get_stmt_decs) stmt_list
   | Expr(e) -> get_expr_decs e
   | If(cond, then_stmt, else_stmt) -> List.iter (get_stmt_decs) then_stmt ; List.iter (get_stmt_decs) else_stmt 
+  | While(cond, stmtb) -> List.iter (get_stmt_decs) stmtb 
   | _ -> ()
 
 let check_decs (stmts, funcs) = 
