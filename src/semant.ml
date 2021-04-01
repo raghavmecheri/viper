@@ -19,7 +19,7 @@ let rec clean_statements stmts = match stmts with
 
 let reshape_arrow_function fdecl = ignore (fdecl.body = Return(List.hd fdecl.body)); ignore (fdecl.autoreturn = false); fdecl
 
-let clean_function fdecl = (if fdecl.autoreturn then reshape_arrow_function fdecl else fdecl)
+let clean_function fdecl = if fdecl.autoreturn then reshape_arrow_function fdecl else (ignore(fdecl.body = clean_statements fdecl.body); fdecl)
 
 let desugar (stmts, functions) = (clean_statements stmts, (List.map clean_function functions))
 
