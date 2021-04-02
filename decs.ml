@@ -26,6 +26,9 @@ let add_symbol name ty scope = match ty with
             parent = scope.parent;
           } else scope (* Never enters else clause, but still needed to avoid type error *)
 
+let get_bind_decs scope bind = 
+  let ty, name = bind in add_symbol name ty scope
+          
 let rec get_expr_decs scope expr = 
   let new_scope = {
     variables = StringMap.empty;
@@ -36,10 +39,19 @@ let rec get_expr_decs scope expr =
   | Unop(_, e) -> get_expr_decs scope e
   | Ternop(e1, e2, e3) -> 
       let expr_list = [e1; e2; e3] in List.fold_left get_expr_decs scope expr_list
+  | OpAssign(_, _, e)
   | Assign(_, e) -> get_expr_decs scope e
-  | Deconstruct(b_list, e) -> (* TODO: add case for binds/bind lists *) scope
   | DecAssign(ty, name, e) -> 
       let updated_scope = get_expr_decs scope e in add_symbol name ty updated_scope
+  | Deconstruct(b_list, e) -> 
+      let updated_scope = List.fold_left get_bind_decs scope b_list in get_expr_decs updated_scope e
+  | Access(arr, index) ->
+      let expr_list = [arr; index] in List.fold_left get_expr_decs scope expr_list
+  | AccessAssign(e1, e2, e3) ->
+      let expr_list = [e1; e2; e3] in List.fold_left get_expr_decs scope expr_list
+  | Call(_, expr_list) -> List.fold_left get_expr_decs scope expr_list
+  | AttributeCall(e1, _, e_list) -> 
+      let expr_list = e1 :: e_list in List.fold_left (get_expr_decs) scope expr_list
   | _ -> scope
 
 let rec get_stmt_decs scope stmt =
