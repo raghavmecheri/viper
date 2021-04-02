@@ -1,15 +1,17 @@
 (* * * * *
-  This file semantically checks all variable declarations in the AST.
-  Duplicate variables and nah declarations throw errors.
-  A scoped symbol table mapping variable names to their types is returned.
+  This file semantically checks all variable and function declarations in the AST.
+  Duplicate variables, nah variable declarations, and function declarations
+  with the same parameters throw errors.
+  A scoped symbol table mapping variable names to their types is returned, along with  
+  a mapping of functions to their scoped formal and local variables.
 * * * * *)
 
 open Ast
 
 module StringMap = Map.Make(String)
-type symbol_table = {
+type scope_table = {
   variables : typ StringMap.t;
-  parent : symbol_table option;
+  parent : scope_table option;
 }
 
 let rec is_valid_dec name scope = 
