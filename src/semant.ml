@@ -3,10 +3,17 @@
 open Ast
 let placeholderCheck ast = ast
 
-let clean_pattern_match s e = ()
+let rec clean_pattern_rec s e base = match e with
+    ConditionalPattern(cond, exp) :: tail -> If(cond, Assign(s, exp), clean_pattern_rec tail)
+  | ConditionalPattern(cond, exp) :: [] -> If(cond, Assign(s, exp), Assign(s, base))
+  | _ -> ()
+
+let clean_pattern s e = match e with
+    MatchPattern(pattern, base) -> clean_pattern_rec s pattern base
+  | _ -> ()
 
 let rec clean_expression expr = match expr with
-  | PatternMatch(s, e) -> clean_pattern_match s e
+  | PatternMatch(s, e) -> clean_pattern s e
   | DecPatternMatch(t, s, e) -> Block([ Dec(t, s); clean_pattern_match s e;  ])
 
 let rec clean_statements stmts = match stmts with
