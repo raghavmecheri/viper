@@ -20,9 +20,7 @@ let rec clean_statements stmts = match stmts with
     Block(stmts) -> Block(List.map clean_statements stmts)
   | Expr(expr) -> clean_expression expr
   | For(e1, e2, e3, s) -> Block([ Expr(e1); While(e2, Block([ s; e3;  ]))  ])
-  | ForIter(name, e2, s) -> ()
-  | DecForIter(t, name, e2, s) -> ()
-  | DeconstForIter(p, expr, s) -> ()
+  | _ -> stmts
 
 let reshape_arrow_function fdecl = ignore (fdecl.body = Return(List.hd fdecl.body)); ignore (fdecl.autoreturn = false); fdecl
 
