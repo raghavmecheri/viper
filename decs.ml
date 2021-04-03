@@ -97,19 +97,18 @@ let get_func_table (func_dec : func_decl) global_scope =
   let formals_scope = List.fold_left get_bind_decs {
     variables = StringMap.empty;
     parent = None;
-  } func_dec.formals in 
+  } func_dec.formals in
+  let updated_scope = { 
+    variables = formals_scope.variables;
+    parent = Some(global_scope); } in
   let locals_scope = List.fold_left get_stmt_decs {
     variables = StringMap.empty;
-    parent = Some(formals_scope);
+    parent = Some(updated_scope);
   } func_dec.body in
-  let ty = func_dec.typ 
-  and updated_scope = { 
-    variables = formals_scope.variables;
-    parent = Some(global_scope); } 
-  in {
+  {
     formals = updated_scope;
     locals = locals_scope;
-    ret_typ = ty;
+    ret_typ = func_dec.typ;
   }
 
 let get_decs (s_list, f_list) = 
