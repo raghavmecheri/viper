@@ -14,6 +14,18 @@ type scope_table = {
   parent : scope_table option;
 }
 
+type func_table = {
+  formals : scope_table;
+  locals : scope_table;
+  ret_typ : typ;
+}
+
+let rec string_of_params params = match params with
+  (typ, _) :: [] -> string_of_typ typ ^ ")"
+  | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
+  | _             -> ")" 
+and key_string name params = name ^ " (" ^ string_of_params params 
+
 let rec is_valid_dec name scope = 
   if StringMap.mem name scope.variables then
     raise (Failure ("Error: variable " ^ name ^ " is already defined"))
@@ -81,10 +93,41 @@ let rec get_stmt_decs scope stmt =
       let _ = get_stmt_decs while_scope s in scope
   | _ -> scope
 
-let get_decs (stmts, funcs) = 
-  let globals = {
+let get_func_table (func_dec : func_decl) global_scope = 
+  let formals_scope = List.fold_left get_bind_decs {
     variables = StringMap.empty;
     parent = None;
-  } 
-  in let globals = List.fold_left get_stmt_decs globals (List.rev stmts)
-  in let names = globals.variables in StringMap.iter (fun a b -> print_endline ("glob " ^ a)) names; (stmts, funcs)
+  } func_dec.formals in 
+  let locals_scope = List.fold_left get_stmt_decs {
+    variables = StringMap.empty;
+    parent = Some(formals_scope);
+  } func_dec.body in
+  let ty = func_dec.typ 
+  and updated_scope = { 
+    variables = formals_scope.variables;
+    parent = Some(global_scope); } 
+  in {
+    formals = updated_scope;
+    locals = locals_scope;
+    ret_typ = ty;
+  }
+
+let get_decs (s_list, f_list) = 
+
+  let get_vars stmts = 
+    List.fold_left get_stmt_decs {
+      variables = StringMap.empty;
+      parent = None;
+    } stmts in
+
+  (* TODO : major cleanup, duplicate checking for overloaded funcs *)
+
+  let globals = get_vars (List.rev s_list) in
+  let add_func_dec map func_dec global_scope = 
+    let key = key_string func_dec.fname func_dec.formals
+    and func_table = get_func_table func_dec global_scope
+    in StringMap.add key func_table map
+  in let get_funcs fd_list globs = 
+    List.fold_left (fun map fd -> add_func_dec map fd globs) StringMap.empty fd_list
+
+in let _ = (globals, get_funcs f_list globals) in (s_list, f_list)

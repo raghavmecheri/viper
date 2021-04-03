@@ -40,5 +40,6 @@ int a22 = 1;
 int i = 2;
 
 int func foo(int a, int b) {
+    int i;
     return 0;
 }
