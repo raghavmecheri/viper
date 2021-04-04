@@ -3,26 +3,34 @@
 open Ast
 let placeholderCheck ast = ast
 
+exception SemanticException of string
+
 let rec clean_pattern_rec s e base = match e with
-    ConditionalPattern(cond, exp) :: tail -> If(cond, Assign(s, exp), clean_pattern_rec tail)
-  | ConditionalPattern(cond, exp) :: [] -> If(cond, Assign(s, exp), Assign(s, base))
-  | _ -> ()
+    ConditionalPattern(cond, exp) :: tail -> If(cond, Expr(Assign(s, exp)), clean_pattern_rec s tail base)
+  | ConditionalPattern(cond, exp) :: [] -> If(cond, Expr(Assign(s, exp)), Expr(Assign(s, base)))
 
 let clean_pattern s e = match e with
     MatchPattern(pattern, base) -> clean_pattern_rec s pattern base
-  | _ -> ()
+  | _ -> Expr(Noexpr)
 
-let rec clean_expression expr = match expr with
-  | PatternMatch(s, e) -> clean_pattern s e
-  | DecPatternMatch(t, s, e) -> Block([ Dec(t, s); clean_pattern_match s e;  ])
+let clean_expression expr = match expr with
+    PatternMatch(s, e) -> clean_pattern s e
+  | DecPatternMatch(t, s, e) -> Block([ Dec(t, s); clean_pattern s e;  ])
+  | _ -> Expr(Noexpr)
 
-let rec clean_statements stmts = match stmts with
-    Block(stmts) -> Block(List.map clean_statements stmts)
-  | Expr(expr) -> clean_expression expr
-  | For(e1, e2, e3, s) -> Block([ Expr(e1); While(e2, Block([ s; e3;  ]))  ])
-  | _ -> stmts
+let clean_statements stmts = 
+    let rec clean_statement stmt = match stmt with
+        Block(s) -> Block(List.map clean_statement s)
+      | Expr(expr) -> clean_expression expr
+      | For(e1, e2, e3, s) -> Block( [ Expr(e1); While(e2, Block([ s; Expr(e3); ]))  ])
+      | _ -> stmts
+    in
+    (List.map clean_statement stmts) 
 
-let reshape_arrow_function fdecl = ignore (fdecl.body = Return(List.hd fdecl.body)); ignore (fdecl.autoreturn = false); fdecl
+let reshape_arrow_function fdecl = ignore (fdecl.body = (match List.hd fdecl.body with
+    Expr(e) -> [Return(e)]
+  | _ -> [Return(Noexpr)]
+  )); ignore (fdecl.autoreturn = false); fdecl
 
 let clean_function fdecl = if fdecl.autoreturn then reshape_arrow_function fdecl else (ignore(fdecl.body = clean_statements fdecl.body); fdecl)
 
