@@ -39,11 +39,28 @@ if (int b = 1) {
 int a22 = 1;
 int j = 2;
 
-int func foo(int a, int b, int j) {
-    int c;
+int func foo(int a, int[] b, int j) {
+    int functest;
     for (int i = 0; i < 5; i++) {
         string x = "for";
         int array2;
     }
     return 0;
+}
+
+int func foo(int a, int b, int j) {
+    int functest;
+    return 0;
+}
+
+int func foo() {
+    return 4;
+}
+
+string func woo() {
+    return "";
+}
+
+string func woo(float a) {
+    return "wow";
 }
