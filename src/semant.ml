@@ -23,7 +23,7 @@ let clean_statements stmts =
         Block(s) -> Block(List.map clean_statement s)
       | Expr(expr) -> clean_expression expr
       | For(e1, e2, e3, s) -> Block( [ Expr(e1); While(e2, Block([ s; Expr(e3); ]))  ])
-      | _ -> stmts
+      | _ -> stmt
     in
     (List.map clean_statement stmts) 
 
