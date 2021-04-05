@@ -6,8 +6,9 @@ let placeholderCheck ast = ast
 exception SemanticException of string
 
 let rec clean_pattern_rec s e base = match e with
-    ConditionalPattern(cond, exp) :: tail -> If(cond, Expr(Assign(s, exp)), clean_pattern_rec s tail base)
-  | ConditionalPattern(cond, exp) :: [] -> If(cond, Expr(Assign(s, exp)), Expr(Assign(s, base)))
+    ConditionalPattern(cond, exp) :: [] -> If(cond, Expr(Assign(s, exp)), Expr(Assign(s, base)))
+  | ConditionalPattern(cond, exp) :: tail -> If(cond, Expr(Assign(s, exp)), clean_pattern_rec s tail base)
+  | _ -> Expr(Noexpr)
 
 let clean_pattern s e = match e with
     MatchPattern(pattern, base) -> clean_pattern_rec s pattern base
