@@ -17,7 +17,7 @@ let clean_pattern s e = match e with
 let clean_expression expr = match expr with
     PatternMatch(s, e) -> clean_pattern s e
   | DecPatternMatch(t, s, e) -> Block([ Dec(t, s); clean_pattern s e;  ])
-  | _ -> Expr(Noexpr)
+  | _ -> Expr(expr)
 
 let clean_statements stmts = 
     let rec clean_statement stmt = match stmt with
