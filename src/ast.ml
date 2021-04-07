@@ -53,6 +53,7 @@ type expr =
 
 type stmt =
     Block of stmt list
+  | PretendBlock of stmt list
   | Expr of expr
   | Dec of typ * string
   | Return of expr
@@ -149,6 +150,7 @@ let rec string_of_expr = function
 let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
+  | PretendBlock(stmts) -> "\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "\n" 
   | Expr(expr) -> string_of_expr expr ^ ";\n";
   | Dec(t, v) -> string_of_typ t ^ " " ^ v ^ ";\n";
   | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
