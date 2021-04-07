@@ -25,10 +25,11 @@ let _ =
   let lexbuf = Lexing.from_channel channel in
   let ast = Parser.program Scanner.token lexbuf in
   (* this is sast, currently not used so replace _ with sast when used *)
-  let _ = Semant.placeholderCheck ast in
+  let desugared = Semant.desugar ast in
+  let _ = Semant.placeholderCheck desugared in
   match !action with
-    Ast -> print_string (Ast.string_of_program ast)
-  | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate ast))
-  | Compile -> let m = Codegen.translate ast in 
+    Ast -> print_string (Ast.string_of_program desugared)
+  | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate desugared))
+  | Compile -> let m = Codegen.translate desugared in 
     Llvm_analysis.assert_valid_module m;
     print_string (Llvm.string_of_llmodule m)
