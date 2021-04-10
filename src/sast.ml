@@ -39,7 +39,6 @@ type sstmt =
   | SPanic of sexpr
   | SIf of sexpr * sstmt * sstmt
   | SForIter of string * sexpr * sstmt
-  | SDecForIter of typ * string * sexpr * sstmt
   | SDeconstForIter of bind list * sexpr * sstmt
   | SWhile of sexpr * sstmt
 
