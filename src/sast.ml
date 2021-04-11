@@ -38,7 +38,6 @@ type sstmt =
   | SAbort of sexpr
   | SPanic of sexpr
   | SIf of sexpr * sstmt * sstmt
-  | SForIter of string * sexpr * sstmt
   | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
