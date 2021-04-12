@@ -155,6 +155,70 @@ char* access_str(struct list* inlist, int index){
     return str;
 }
 
+int contains_int(struct list* inlist, int tocheck){
+    if(strcmp(inlist->type, "int")){
+        printf("Can only check membership for %s, not int\n", inlist->type);
+        return 0;
+    }
+
+    int i;
+    for(i = 0; i < inlist->size; i++){
+        int* num = (int*) access(inlist, i);
+        if(*num == tocheck){
+            return 1;
+        }   
+    }
+    return 0;
+}
+
+int contains_char(struct list* inlist, char tocheck){
+    if(strcmp(inlist->type, "char")){
+        printf("Can only check membership for %s, not char\n", inlist->type);
+        return 0;
+    }
+
+    int i;
+    for(i = 0; i < inlist->size; i++){
+        char* chr = (char*) access(inlist, i);
+        if(*chr == tocheck){
+            return 1;
+        }   
+    }
+    return 0;
+}
+
+int contains_float(struct list* inlist, float tocheck){
+    if(strcmp(inlist->type, "float")){
+        printf("Can only check membership for %s, not float\n", inlist->type);
+        return 0;
+    }
+
+    int i;
+    for(i = 0; i < inlist->size; i++){
+        float* flt = (float*) access(inlist, i);
+        if(*flt == tocheck){
+            return 1;
+        }   
+    }
+    return 0;
+}
+
+int contains_str(struct list* inlist, char* tocheck){
+    if(strcmp(inlist->type, "string")){
+        printf("Can only check membership for %s, not string\n", inlist->type);
+        return 0;
+    }
+
+    int i;
+    for(i = 0; i < inlist->size; i++){
+        char* str = (char*) access(inlist, i);
+        if(!strcmp(str, tocheck)){
+            return 1;
+        }   
+    }
+    return 0;
+}
+
 struct list* access_list(struct list* inlist, int index){
     if(strcmp(inlist->type, "list")){
         printf("Can only access %s, not list\n", inlist->type);
@@ -245,4 +309,7 @@ int main(void){
 
     struct list* accessed = access_list(otherlist, 0);
     printf("@ index 5: %d\n", access_int(accessed, 5));
+
+    printf("contains_int(mylist, 5): %d\n", contains_int(mylist, 5));
+    printf("contains_int(mylist, 10): %d\n", contains_int(mylist, 10));
 }
