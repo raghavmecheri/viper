@@ -51,7 +51,7 @@ let rec expr scope deepscope = function
 |   Unop(uop, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with
-            Neg when t = Int || t = Float -> t
+            Neg | Incr | Decr when t = Int || t = Float -> t
           | Not when t = Bool -> Bool
           | _ -> raise (Failure ("illegal unary operator " ^ 
                                  string_of_uop op ^ string_of_typ t ^
