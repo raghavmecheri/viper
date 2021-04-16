@@ -1,0 +1,18 @@
+TODO:
+
+ListLit
+DictElem
+DictLit
+Deconstruct
+OpAssign
+Access
+AccessAssign
+Call
+AttributeCall
+
+
+
+
+Complication: Declarations in while and for loops will not work. Scoping issue which may be too hard to fix at this point. This also affects for loops since
+the initializer is a declaration.
+

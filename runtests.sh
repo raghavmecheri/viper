@@ -7,7 +7,7 @@ do
     esac
 done
 
-cd test/samples
+cd test/semantsamples 
 for i in *.vp; do
     echo "Running test on: $i"
     if [ $verbose -eq 1 ];
