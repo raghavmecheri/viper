@@ -61,15 +61,15 @@ let rec expr scope deepscope = function
           in (check_assign lt rt, SAssign(s, (rt, e')))
 |   Deconstruct(l, e) -> (Int, SDeconstruct(l, expr scope deepscope e)) 
 |   OpAssign(s, op, e) -> (Int, SOpAssign(s, op, expr scope deepscope e)) 
-|   DecAssign(ty, l, expr1) -> if deepscope then (add_symbol l ty scope ; check_decassign ty l (expr expr1)) else check_decassign ty l (expr expr1)
-|   Access(e1, e2) -> (Int, SIntegerLiteral e1)  
-|   AccessAssign(e1, e2, e3) -> (Int, SIntegerLiteral e1) 
-|   Call(s, l) -> (Int, SIntegerLiteral l) 
-|   AttributeCall(e, s, l) -> (Int, SIntegerLiteral l)  
+|   DecAssign(ty, l, expr1) -> if deepscope then (ignore (add_symbol l ty scope) ; check_decassign ty l (expr scope deepscope expr1)) else check_decassign ty l (expr scope deepscope expr1) 
+|   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
+|   AccessAssign(e1, e2, e3) -> (Int, SAccessAssign( expr scope deepscope e1, expr scope deepscope e2, expr scope deepscope e3)) 
+|   Call(s, l) -> (Int, SCall(s, List.map (expr scope deepscope) l )) 
+|   AttributeCall(e, s, l) -> (Int, SAttributeCall(expr scope deepscope e, s, List.map (expr scope deepscope) l ))  
 
 in 
 
-let rec check_stmt scope deepscope = 
+let rec check_stmt scope deepscope  = 
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
@@ -80,11 +80,7 @@ let rec check_stmt scope deepscope =
 |   Panic e -> SPanic (expr scope deepscope e) 
 |   If(p, b1, b2) -> SIf(check_bool (expr scope deepscope p), check_stmt scope deepscope b1, check_stmt scope deepscope b2) 
 |   While(p, s) -> SWhile(check_bool (expr scope deepscope p), check_stmt new_scope true s) 
-|   Return e -> let (t, e') = expr scope deepscope e in 
-    if t = fd.typ then SReturn (t, e') 
-    else raise (
-	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
-		   string_of_typ func.typ ^ " in " ^ string_of_expr e)) 
+|   Return e -> raise (Failure "return outside a function")
 |   Block sl -> 
           let rec check_stmt_list = function
               [Return _ as s] -> [check_stmt new_scope deepscope s]
@@ -93,16 +89,46 @@ let rec check_stmt scope deepscope =
             | s :: ss         -> check_stmt new_scope deepscope s :: check_stmt_list ss
             | []              -> []
           in SBlock(check_stmt_list sl)
-|   PretendBlock sl -> List.map (check_stmt scope false) sl 
+|   PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
 
 |   Dec(ty, l) -> if deepscope then (add_symbol l ty scope ; SDec(ty, l)) else SDec(ty, l)
 
  in
 
+ let rec check_stmt_func scope deepscope ret = 
+  let new_scope = {
+    variables = StringMap.empty;
+    parent = Some(scope);
+  } in function 
+    Expr e -> SExpr (expr scope deepscope e) 
+|   Skip e -> SSkip (expr scope deepscope e) 
+|   Abort e -> SAbort (expr scope deepscope e) 
+|   Panic e -> SPanic (expr scope deepscope e) 
+|   If(p, b1, b2) -> SIf(check_bool (expr scope deepscope p), check_stmt_func scope deepscope ret b1, check_stmt_func scope deepscope ret b2) 
+|   While(p, s) -> SWhile(check_bool (expr scope deepscope p), check_stmt_func new_scope true ret s) 
+|   Return e -> let (t, e') = expr scope deepscope e in 
+    if t = ret then SReturn (t, e') 
+    else raise (
+	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
+		   string_of_typ ret ^ " in " ^ string_of_expr e)) 
+|   Block sl -> 
+          let rec check_stmt_list = function
+              [Return _ as s] -> [check_stmt_func new_scope deepscope ret s]
+            | Return _ :: _   -> raise (Failure "nothing may follow a return")
+            | Block sl :: ss  -> check_stmt_list (sl @ ss) (* Flatten blocks *)
+            | s :: ss         -> check_stmt_func new_scope deepscope ret s :: check_stmt_list ss
+            | []              -> []
+          in SBlock(check_stmt_list sl)
+|   PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
+
+|   Dec(ty, l) -> if deepscope then (add_symbol l ty scope ; SDec(ty, l)) else SDec(ty, l)
+
+in
+
  let check_function ( fd : func_decl ) = 
     let key_func = key_string fd.fname fd.formals in 
       let current_function = StringMap.find key_func function_scopes in
-        List.map (check_stmt current_function.locals false) fd.locals 
+        List.map (check_stmt_func current_function.locals false fd.typ) fd.body 
 
 in 
 
