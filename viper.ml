@@ -24,8 +24,9 @@
      in
      let lexbuf = Lexing.from_channel channel in
      let ast = Parser.program Scanner.token lexbuf in
-    (* let (var_decs, func_decs) = Decs.get_decs ast in
-     let sast = Semantdriver.check ast in*)
+    (* let (var_decs, func_decs) = Decs.get_decs ast in*)
+     let desugared = Desugar.desugar ast in 
+     let sast = Semantdriver.check desugared in
      match !action with
        Ast -> print_string (Ast.string_of_program ast)
       | _  -> print_string("Not supported")
