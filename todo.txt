@@ -10,6 +10,9 @@ AccessAssign
 Call
 AttributeCall
 Built-in fdecls in dec.ml 
+skip 
+abort
+panic
 
 
 
