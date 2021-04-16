@@ -12,12 +12,14 @@ let global_scope = fst symbol_table;
 
 let function_scopes = snd symbol_table;
 
-(*
 let check_function ( fd : func_decl ) = 
     let key_func = key_string fd.fname fd.formals in 
       let current_function = StringMap.find key_func symbol_table in
-        let 
-*)
+        List.map (check_stmt current_function.locals false) fd.locals 
+
+ 
+
+in
 
 let rec expr scope deepscope = function 
     IntegerLiteral l -> (Int, SIntegerLiteral l)
@@ -58,19 +60,21 @@ let rec expr scope deepscope = function
                                  " in " ^ string_of_expr ex))
           in (ty, SUnop(op, (t, e')))
 |   Assign(s, e) -> ()
-|   Deconstruct -> ()
-|   OpAssign -> ()
-|   DecAssign(ty, l, expr1) -> if deepscope then add_symbol l ty scope ; check_assign ty string (expr expr1) else check_assign ty string (expr expr1)
-|   Access -> () 
-|   AccessAssign -> () 
-|   Call -> ()
-|   AttributeCall -> () 
+|   Deconstruct(l, e) -> ()
+|   OpAssign(s, op, e) -> ()
+|   DecAssign(ty, l, expr1) -> if deepscope then (add_symbol l ty scope ; check_assign ty string (expr expr1)) else check_assign ty string (expr expr1)
+|   Access(e1, e2) -> () 
+|   AccessAssign(e1, e2, e3) -> () 
+|   Call(s, l) -> ()
+|   AttributeCall(e, s, l) -> () 
 
-let rec check_stmt scope deepscope = function
+in 
+
+let rec check_stmt scope deepscope = 
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
-  } in match stmt with
+  } in function 
     Expr e -> SExpr (expr scope deepscope e) 
 |   Skip e -> SSkip (expr scope deepscope e) 
 |   Abort e -> SAbort (expr scope deepscope e) 
@@ -90,7 +94,10 @@ let rec check_stmt scope deepscope = function
             | s :: ss         -> check_stmt new_scope deepscope s :: check_stmt_list ss
             | []              -> []
           in SBlock(check_stmt_list sl)
+|   PretendBlock sl -> List.map (check_stmt scope false) sl 
 
-|   Dec(ty, l) -> if deepscope then add_symbol l ty scope ; SDec(ty, l) else SDec(ty, l)
+|   Dec(ty, l) -> if deepscope then (add_symbol l ty scope ; SDec(ty, l)) else SDec(ty, l)
 
-in (List.map (check_stmt global_scope false) statements, List.map check_function functions)
+ in
+
+let check(statements, functions) = (List.map (check_stmt global_scope false) statements, List.map check_function functions)
