@@ -3,38 +3,32 @@ open Sast
 open Boolcheck
 open Rhandlhand 
 open Decs 
-open Typeof 
-
-
-let symbol_table = get_decs (statements, functions);
-
-let global_scope = fst symbol_table;
-
-let function_scopes = snd symbol_table;
-
-let check_function ( fd : func_decl ) = 
-    let key_func = key_string fd.fname fd.formals in 
-      let current_function = StringMap.find key_func symbol_table in
-        List.map (check_stmt current_function.locals false) fd.locals 
-
  
+let check(statements, functions) = 
 
-in
+let symbol_table = get_decs (statements, functions) in
+
+
+let global_scope = fst symbol_table in
+
+
+let function_scopes = snd symbol_table in
+
 
 let rec expr scope deepscope = function 
     IntegerLiteral l -> (Int, SIntegerLiteral l)
 |   CharacterLiteral l -> (Char, SCharacterLiteral l)
-|   BoolLit l -> (Bool, SBoolLit l) 
+|   BoolLit l -> (Bool, SBoolLiteral l) 
 |   FloatLiteral l -> (Float, SFloatLiteral l)
 |   StringLiteral l -> (String, SStringLiteral l) 
 |   Noexpr -> (Nah, SNoexpr)
-|   ListLit l -> ()
-|   DictElem(l, s) -> ()
-|   DictLit l -> () 
+|   ListLit l -> (Int, SListLiteral (List.map (expr scope deepscope) l)) 
+|   DictElem(l, s) -> (Int, SDictElem(expr scope deepscope l, expr scope deepscope s)) 
+|   DictLit l -> (Int, SDictLiteral (List.map (expr scope deepscope) l)) 
 |   Id l -> (toi scope l, SId l)
 |   Binop(e1, op, e2) as e -> 
-          let (t1, e1') = expr e1 
-          and (t2, e2') = expr e2 in
+          let (t1, e1') = expr scope deepscope e1 
+          and (t2, e2') = expr scope deepscope e2 in
           (* All binary operators require operands of the same type *)
           let same = t1 = t2 in
           (* Determine expression type based on operator and operand types *)
@@ -51,22 +45,27 @@ let rec expr scope deepscope = function
                        string_of_typ t2 ^ " in " ^ string_of_expr e))
           in (ty, SBinop((t1, e1'), op, (t2, e2')))
 |   Unop(uop, e) as ex -> 
-          let (t, e') = expr e in
-          let ty = match op with
+          let (t, e') = expr scope deepscope e in
+          let ty = match uop with
             Neg | Incr | Decr when t = Int || t = Float -> t
           | Not when t = Bool -> Bool
           | _ -> raise (Failure ("illegal unary operator " ^ 
-                                 string_of_uop op ^ string_of_typ t ^
+                                 string_of_uop uop ^ string_of_typ t ^
                                  " in " ^ string_of_expr ex))
-          in (ty, SUnop(op, (t, e')))
-|   Assign(s, e) -> ()
-|   Deconstruct(l, e) -> ()
-|   OpAssign(s, op, e) -> ()
-|   DecAssign(ty, l, expr1) -> if deepscope then (add_symbol l ty scope ; check_assign ty string (expr expr1)) else check_assign ty string (expr expr1)
-|   Access(e1, e2) -> () 
-|   AccessAssign(e1, e2, e3) -> () 
-|   Call(s, l) -> ()
-|   AttributeCall(e, s, l) -> () 
+          in (ty, SUnop(uop, (t, e')))
+|   Assign(s, e) as ex -> 
+          let lt = toi scope s 
+          and (rt, e') = expr scope deepscope e in
+          let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
+            string_of_typ rt ^ " in " ^ string_of_expr ex
+          in (check_assign lt rt, SAssign(s, (rt, e')))
+|   Deconstruct(l, e) -> (Int, SDeconstruct(l, expr scope deepscope e)) 
+|   OpAssign(s, op, e) -> (Int, SOpAssign(s, op, expr scope deepscope e)) 
+|   DecAssign(ty, l, expr1) -> if deepscope then (add_symbol l ty scope ; check_decassign ty l (expr expr1)) else check_decassign ty l (expr expr1)
+|   Access(e1, e2) -> (Int, SIntegerLiteral e1)  
+|   AccessAssign(e1, e2, e3) -> (Int, SIntegerLiteral e1) 
+|   Call(s, l) -> (Int, SIntegerLiteral l) 
+|   AttributeCall(e, s, l) -> (Int, SIntegerLiteral l)  
 
 in 
 
@@ -79,8 +78,8 @@ let rec check_stmt scope deepscope =
 |   Skip e -> SSkip (expr scope deepscope e) 
 |   Abort e -> SAbort (expr scope deepscope e) 
 |   Panic e -> SPanic (expr scope deepscope e) 
-|   If(p, b1, b2) -> SIf(check_bool p, check_stmt scope deepscope b1, check_stmt scope deepscope b2) 
-|   While(p, s) -> SWhile(check_bool p, check_stmt new_scope true s) 
+|   If(p, b1, b2) -> SIf(check_bool (expr scope deepscope p), check_stmt scope deepscope b1, check_stmt scope deepscope b2) 
+|   While(p, s) -> SWhile(check_bool (expr scope deepscope p), check_stmt new_scope true s) 
 |   Return e -> let (t, e') = expr scope deepscope e in 
     if t = fd.typ then SReturn (t, e') 
     else raise (
@@ -100,4 +99,11 @@ let rec check_stmt scope deepscope =
 
  in
 
-let check(statements, functions) = (List.map (check_stmt global_scope false) statements, List.map check_function functions)
+ let check_function ( fd : func_decl ) = 
+    let key_func = key_string fd.fname fd.formals in 
+      let current_function = StringMap.find key_func function_scopes in
+        List.map (check_stmt current_function.locals false) fd.locals 
+
+in 
+
+(List.map (check_stmt global_scope false) statements, List.map check_function functions)

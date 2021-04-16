@@ -67,7 +67,6 @@ let rec string_of_sexpr (t, e) =
   | SUnop(o, e) -> string_of_uop o ^ string_of_sexpr e
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
-  | STernop(e1, e2, e3) -> string_of_sexpr e1 ^ " ? " ^ string_of_sexpr e2 ^ " : " ^ string_of_sexpr e3
   | SOpAssign(v, o, e) -> v ^ " " ^ string_of_op o ^ "= " ^ string_of_sexpr e
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
   | SAccess(e, l) -> string_of_sexpr e ^ "[" ^ string_of_sexpr l ^ "]"
@@ -75,10 +74,8 @@ let rec string_of_sexpr (t, e) =
   | SDecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_sexpr e
   | SDeconstruct(v, e) -> "(" ^ String.concat ", " (List.map snd v) ^ ") = " ^ string_of_sexpr e
 
-  | SConditionalPattern(c, r) -> string_of_sexpr c ^ " : " ^ string_of_sexpr r
-  | SMatchPattern(c, b) -> "?? " ^ String.concat " | " (List.map string_of_sexpr c) ^ " ?? " ^ string_of_sexpr b
-  | SPatternMatch(s, e) -> s ^ " = " ^ string_of_sexpr e
-  | SDecPatternMatch(t, s, e) -> string_of_typ t ^ " " ^ s ^ " = " ^ string_of_sexpr e
+  
+  
 
   | SCall(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SAttributeCall(e, f, el) -> string_of_sexpr e ^ "." ^ f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
@@ -96,20 +93,12 @@ let rec string_of_sstmt = function
   | SPanic(expr) -> "panic " ^ string_of_sexpr expr ^ ";\n"
   | SIf(e, s, SBlock([])) -> "if (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
-  | SFor(e1, e2, e3, s) ->
-      "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
-      string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
-  | SForIter(name, e2, s) -> "for (" ^ name ^ " in " ^ string_of_sexpr e2 ^ ") " ^ string_of_sstmt s
-  | SDecForIter(t, name, e2, s) -> "for (" ^ string_of_typ t ^ " " ^ name ^ " in " ^
-      string_of_sexpr e2 ^ ") " ^ string_of_sstmt s
-  | SDeconstForIter(p, expr, s) -> "for ((" ^ String.concat ", " (List.map snd p) ^ ") in " ^ 
-      string_of_sexpr expr ^ ") " ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.styp ^ " " ^
   fdecl.sfname ^ "(" ^ String.concat ", " (List.map snd fdecl.sformals) ^
-  ")\n{\n" ^ (if fdecl.sautoreturn then "return " else "") ^
+  ")\n{\n" ^ 
   String.concat "" (List.map string_of_sstmt fdecl.sbody) ^
   "}\n"
 

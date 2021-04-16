@@ -20,6 +20,13 @@ type func_table = {
   ret_typ : typ;
 }
 
+let rec toi scope s =
+    if StringMap.mem s scope.variables then
+      StringMap.find s scope.variables 
+    else match scope.parent with
+      Some(parent) -> toi parent s 
+    | _ -> raise (Failure "Variable not found") 
+
 let rec string_of_params params = match params with
     (typ, _) :: [] -> string_of_typ typ
   | (typ, _) ::  p -> string_of_typ typ ^ ", " ^ string_of_params p
