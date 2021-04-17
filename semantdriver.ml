@@ -15,14 +15,14 @@ let global_scope = fst symbol_table in
 let function_scopes = snd symbol_table in
 
 let check_expr_scope scope = function 
-    DecAssign(ty, s, _) -> add_symbol s ty scope 
+    DecAssign(ty, s, _) -> add_symbol_driver s ty scope 
 |   _ -> scope 
 
 in 
 
 let check_stmt_scope scope = function 
     Expr(e) -> check_expr_scope scope e 
-|   Dec(ty, s) -> add_symbol s ty scope 
+|   Dec(ty, s) -> add_symbol_driver s ty scope 
 |   _ -> scope 
 
 in

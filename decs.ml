@@ -47,6 +47,13 @@ let add_symbol name ty scope = match ty with
             parent = scope.parent;
           } else scope (* Never enters else clause, but still needed to avoid type error *)
 
+let add_symbol_driver name ty scope = match ty with
+    Nah -> raise (Failure ("Error: variable " ^ name ^ " declared with type nah"))
+  | _  ->  {
+            variables = StringMap.add name ty scope.variables;
+            parent = scope.parent;
+          } 
+
 let get_bind_decs scope bind = 
   let ty, name = bind in add_symbol name ty scope
           
@@ -129,6 +136,7 @@ let get_decs (s_list, f_list) =
     variables = StringMap.empty;
     parent = None;
   } (List.rev s_list) in
+  
 
   let get_funcs f_list = 
     List.fold_left (fun m f -> build_func_table globals f m) StringMap.empty f_list

@@ -1,3 +1,6 @@
 int func tester(){
- int a; 
+  int d; 
+  int c = 3;
+  c = c + 3;
+  return 42; 
 }

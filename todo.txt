@@ -1,7 +1,6 @@
 TODO:
 
-Functions: Declarations and return not working. Decs.ml say that dec already exists, and return type of functions have an erroneous func following it.
-Seems like statement list has the declarations within functions as well. 
+Functions: Return types are tacking on a func, int func instead of just int. 
 
 ListLit
 DictElem
