@@ -1,0 +1,10 @@
+int func factorial(int target) {
+    return ??
+        target == 1 : target
+      | true : target * factorial(target - 1); 
+}
+
+int func arrowFactorial(int target) => target == 1 ? target : (target * factorial(target - 1));
+
+print(factorial(10));
+print(arrowFactorial(10));
