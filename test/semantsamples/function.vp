@@ -1,0 +1,5 @@
+int func tester(){
+  int d; 
+  int c = 3;
+  c = c + 3;
+}

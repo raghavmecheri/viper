@@ -1,0 +1,8 @@
+int a = 5; 
+int d;
+while(a>3){
+  a = a - 1;  
+  int c;
+  c = 5; 
+  c = c + 5; 
+}
