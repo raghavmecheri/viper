@@ -1,0 +1,14 @@
+int func gcd(int a, int b) {
+    
+    int func conditional (int x, int y) =>
+        x == 0 ? y : y == 0 ? x : nah;
+        
+    int func swappedGCD (int x, int y) => 
+        x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
+    
+    int check = conditional(a, b);
+
+    return check == nah ? swappedGCD(a, b) : check;
+}
+
+print(gcd(100, 10));
