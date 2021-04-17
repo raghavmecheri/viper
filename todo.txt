@@ -1,0 +1,18 @@
+TODO:
+
+
+ListLit
+DictElem
+DictLit
+Deconstruct
+OpAssign
+Access
+AccessAssign
+Call
+AttributeCall
+Built-in fdecls in dec.ml 
+skip 
+abort
+panic
+
+Fix warnings 
