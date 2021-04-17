@@ -15,4 +15,6 @@ skip
 abort
 panic
 
+Need to check that a function declaration with any return type other than nah has a return statement. 
+
 Fix warnings 
