@@ -1,0 +1,3 @@
+int func tester(){
+  return 42; 
+}

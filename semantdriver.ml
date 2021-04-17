@@ -124,16 +124,16 @@ let rec check_stmt scope deepscope  =
 	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
 		   string_of_typ ret ^ " in " ^ string_of_expr e)) 
 |   Block sl -> 
-          let rec check_stmt_list = function
-              [Return _ as s] -> [check_stmt_func new_scope deepscope ret s]
+          let rec check_stmt_list blockscope = function
+              [Return _ as s] -> [check_stmt_func blockscope deepscope ret s]
             | Return _ :: _   -> raise (Failure "nothing may follow a return")
-            | Block sl :: ss  -> check_stmt_list (sl @ ss) (* Flatten blocks *)
-            | s :: ss         -> check_stmt_func new_scope deepscope ret s :: check_stmt_list ss
+            | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
+            | s :: ss         -> check_stmt_func blockscope deepscope ret s :: check_stmt_list blockscope ss
             | []              -> []
-          in SBlock(check_stmt_list sl)
+          in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
 |   PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
 
-|   Dec(ty, l) -> if deepscope then (add_symbol l ty scope ; SDec(ty, l)) else SDec(ty, l)
+|   Dec(ty, l) -> SDec(ty, l)
 
 in
 
