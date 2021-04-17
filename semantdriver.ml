@@ -138,13 +138,14 @@ let rec check_stmt scope deepscope  =
 in
 
  let check_function ( fd : func_decl ) = 
+ 
     let key_func = key_string fd.fname fd.formals in 
-      let current_function = StringMap.find key_func function_scopes in
+      let current_function = StringMap.find key_func function_scopes in 
       { styp = fd.typ;
         sfname = fd.fname;
         sformals = fd.formals;
         sbody = match check_stmt_func current_function.locals false fd.typ (Block fd.body) with
-	SBlock(sl) -> sl
+	    SBlock(sl) -> sl
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
         (*List.map (check_stmt_func current_function.locals false fd.typ) fd.body *)

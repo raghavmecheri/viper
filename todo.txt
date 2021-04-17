@@ -1,6 +1,6 @@
 TODO:
 
-Functions are not working!!
+Functions: Declarations and return not working. Decs.ml say that dec already exists, and return type of functions have an erroneous func following it. 
 
 ListLit
 DictElem
