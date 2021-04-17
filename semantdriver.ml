@@ -14,6 +14,18 @@ let global_scope = fst symbol_table in
 
 let function_scopes = snd symbol_table in
 
+let check_expr_scope scope = function 
+    DecAssign(ty, s, _) -> add_symbol s ty scope 
+|   _ -> scope 
+
+in 
+
+let check_stmt_scope scope = function 
+    Expr(e) -> check_expr_scope scope e 
+|   Dec(ty, s) -> add_symbol s ty scope 
+|   _ -> scope 
+
+in
 
 let rec expr scope deepscope = function 
     IntegerLiteral l -> (Int, SIntegerLiteral l)
@@ -61,7 +73,7 @@ let rec expr scope deepscope = function
           in (check_assign lt rt, SAssign(s, (rt, e')))
 |   Deconstruct(l, e) -> (Int, SDeconstruct(l, expr scope deepscope e)) 
 |   OpAssign(s, op, e) -> (Int, SOpAssign(s, op, expr scope deepscope e)) 
-|   DecAssign(ty, l, expr1) -> if deepscope then (ignore (add_symbol l ty scope) ; check_decassign ty l (expr scope deepscope expr1)) else check_decassign ty l (expr scope deepscope expr1) 
+|   DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
 |   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
 |   AccessAssign(e1, e2, e3) -> (Int, SAccessAssign( expr scope deepscope e1, expr scope deepscope e2, expr scope deepscope e3)) 
 |   Call(s, l) -> (Int, SCall(s, List.map (expr scope deepscope) l )) 
@@ -82,16 +94,16 @@ let rec check_stmt scope deepscope  =
 |   While(p, s) -> SWhile(check_bool (expr scope deepscope p), check_stmt new_scope true s) 
 |   Return e -> raise (Failure "return outside a function")
 |   Block sl -> 
-          let rec check_stmt_list = function
-              [Return _ as s] -> [check_stmt new_scope deepscope s]
+          let rec check_stmt_list blockscope = function
+              [Return _ as s] -> [check_stmt blockscope deepscope s]
             | Return _ :: _   -> raise (Failure "nothing may follow a return")
-            | Block sl :: ss  -> check_stmt_list (sl @ ss) (* Flatten blocks *)
-            | s :: ss         -> check_stmt new_scope deepscope s :: check_stmt_list ss
+            | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
+            | s :: ss         -> check_stmt blockscope deepscope s :: check_stmt_list blockscope ss
             | []              -> []
-          in SBlock(check_stmt_list sl)
+          in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
 |   PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
 
-|   Dec(ty, l) -> if deepscope then (add_symbol l ty scope ; SDec(ty, l)) else SDec(ty, l)
+|   Dec(ty, l) -> SDec(ty, l)
 
  in
 
