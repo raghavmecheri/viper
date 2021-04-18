@@ -1,0 +1,20 @@
+TODO:
+
+
+ListLit
+DictElem
+DictLit
+Deconstruct
+OpAssign
+Access
+AccessAssign
+Call
+AttributeCall
+Built-in fdecls in dec.ml 
+skip 
+abort
+panic
+
+Need to check that a function declaration with any return type other than nah has a return statement. 
+
+Fix warnings 

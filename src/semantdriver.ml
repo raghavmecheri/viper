@@ -136,7 +136,12 @@ let rec check_stmt scope deepscope  =
 |   Dec(ty, l) -> SDec(ty, l)
 
 in
+ let return_func = function 
+      Function(e) -> e 
+  |   _           -> raise (Failure "function return type is flawed") 
 
+  in 
+  
  let check_function ( fd : func_decl ) = 
  
     let key_func = key_string fd.fname fd.formals in 
@@ -144,7 +149,7 @@ in
       { styp = fd.typ;
         sfname = fd.fname;
         sformals = fd.formals;
-        sbody = match check_stmt_func current_function.locals false fd.typ (Block fd.body) with
+        sbody = match check_stmt_func current_function.locals false (return_func fd.typ) (Block fd.body) with
 	    SBlock(sl) -> sl
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
