@@ -1,1 +1,3 @@
-skip; 
+while(true){
+  skip; 
+} 

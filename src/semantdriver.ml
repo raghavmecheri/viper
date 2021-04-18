@@ -27,16 +27,30 @@ let check_stmt_scope scope = function
 
 in
 
-let rec expr scope deepscope = function 
+let rec expr scope deepscope  = function 
     IntegerLiteral l -> (Int, SIntegerLiteral l)
 |   CharacterLiteral l -> (Char, SCharacterLiteral l)
 |   BoolLit l -> (Bool, SBoolLiteral l) 
 |   FloatLiteral l -> (Float, SFloatLiteral l)
 |   StringLiteral l -> (String, SStringLiteral l) 
 |   Noexpr -> (Nah, SNoexpr)
-|   ListLit l -> (Int, SListLiteral (List.map (expr scope deepscope) l)) 
-|   DictElem(l, s) -> (Int, SDictElem(expr scope deepscope l, expr scope deepscope s)) 
-|   DictLit l -> (Int, SDictLiteral (List.map (expr scope deepscope) l)) 
+|   ListLit l -> let eval_list = List.map (expr scope deepscope) l in 
+                 let rec check_types = function
+                    (t1, _) :: [] -> (Array(t1), SListLiteral(eval_list))
+                  |	((t1,_) :: (t2,_) :: _) when t1 != t2 ->
+	                raise (Failure "List types are inconsistent")
+                  | _ :: t -> check_types t
+                  in check_types eval_list 
+|   DictElem(l, s) -> let (t1, e1) = expr scope deepscope l in 
+                      let (t2, e2) = expr scope deepscope s in 
+                      (Group([t1; t2]), SDictElem((t1, e1), (t2, e2)))
+|   DictLit l -> let eval_list = List.map (expr scope deepscope) l in 
+                 let rec check_types = function
+                    (Group([t1; t2]), _) :: [] -> (Dictionary(t1, t2), SDictLiteral(eval_list))
+                  |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when t1 != t3 || t2 != t4 ->
+	                raise (Failure "Dictionary types are inconsistent")
+                  | _ :: t -> check_types t
+                  in check_types eval_list  
 |   Id l -> (toi scope l, SId l)
 |   Binop(e1, op, e2) as e -> 
           let (t1, e1') = expr scope deepscope e1 
@@ -81,24 +95,24 @@ let rec expr scope deepscope = function
 
 in 
 
-let rec check_stmt scope deepscope  = 
+let rec check_stmt scope inloop  = 
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
   } in function 
-    Expr e -> SExpr (expr scope deepscope e) 
-|   Skip e -> SSkip (expr scope deepscope e) 
-|   Abort e -> SAbort (expr scope deepscope e) 
-|   Panic e -> SPanic (expr scope deepscope e) 
-|   If(p, b1, b2) -> SIf(check_bool (expr scope deepscope p), check_stmt scope deepscope b1, check_stmt scope deepscope b2) 
-|   While(p, s) -> SWhile(check_bool (expr scope deepscope p), check_stmt new_scope true s) 
+    Expr e -> SExpr (expr scope inloop e) 
+|   Skip e -> if inloop then SSkip (expr scope inloop e) else raise (Failure "skip not in a loop")  
+|   Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop")  
+|   Panic e -> SPanic (expr scope inloop e) 
+|   If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt scope inloop b1, check_stmt scope inloop b2) 
+|   While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s) 
 |   Return e -> raise (Failure "return outside a function")
 |   Block sl -> 
           let rec check_stmt_list blockscope = function
-              [Return _ as s] -> [check_stmt blockscope deepscope s]
+              [Return _ as s] -> [check_stmt blockscope inloop s]
             | Return _ :: _   -> raise (Failure "nothing may follow a return")
             | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
-            | s :: ss         -> check_stmt blockscope deepscope s :: check_stmt_list blockscope ss
+            | s :: ss         -> check_stmt blockscope inloop s :: check_stmt_list blockscope ss
             | []              -> []
           in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
 |   PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
@@ -107,28 +121,28 @@ let rec check_stmt scope deepscope  =
 
  in
 
- let rec check_stmt_func scope deepscope ret = 
+ let rec check_stmt_func scope inloop ret = 
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
   } in function 
-    Expr e -> SExpr (expr scope deepscope e) 
-|   Skip e -> SSkip (expr scope deepscope e) 
-|   Abort e -> SAbort (expr scope deepscope e) 
-|   Panic e -> SPanic (expr scope deepscope e) 
-|   If(p, b1, b2) -> SIf(check_bool (expr scope deepscope p), check_stmt_func scope deepscope ret b1, check_stmt_func scope deepscope ret b2) 
-|   While(p, s) -> SWhile(check_bool (expr scope deepscope p), check_stmt_func new_scope true ret s) 
-|   Return e -> let (t, e') = expr scope deepscope e in 
+    Expr e -> SExpr (expr scope inloop e) 
+|   Skip e -> if inloop then SSkip (expr scope inloop e) else raise (Failure "skip not in a loop") 
+|   Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop") 
+|   Panic e -> SPanic (expr scope inloop e) 
+|   If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt_func scope inloop ret b1, check_stmt_func scope inloop ret b2) 
+|   While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt_func new_scope true ret s) 
+|   Return e -> let (t, e') = expr scope inloop e in 
     if t = ret then SReturn (t, e') 
     else raise (
 	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
 		   string_of_typ ret ^ " in " ^ string_of_expr e)) 
 |   Block sl -> 
           let rec check_stmt_list blockscope = function
-              [Return _ as s] -> [check_stmt_func blockscope deepscope ret s]
+              [Return _ as s] -> [check_stmt_func blockscope inloop ret s]
             | Return _ :: _   -> raise (Failure "nothing may follow a return")
             | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
-            | s :: ss         -> check_stmt_func blockscope deepscope ret s :: check_stmt_list blockscope ss
+            | s :: ss         -> check_stmt_func blockscope inloop ret s :: check_stmt_list blockscope ss
             | []              -> []
           in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
 |   PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
@@ -141,7 +155,7 @@ in
   |   _           -> raise (Failure "function return type is flawed") 
 
   in 
-  
+
  let check_function ( fd : func_decl ) = 
  
     let key_func = key_string fd.fname fd.formals in 
