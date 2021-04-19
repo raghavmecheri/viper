@@ -81,7 +81,19 @@ let rec expr scope deepscope = function
 |   OpAssign(s, op, e) -> (Int, SOpAssign(s, op, expr scope deepscope e)) 
 |   DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
 |   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
-|   AccessAssign(e1, e2, e3) -> (Int, SAccessAssign( expr scope deepscope e1, expr scope deepscope e2, expr scope deepscope e3)) 
+|   AccessAssign(e1, e2, e3) -> 
+      let (t1, e1') = expr scope deepscope e1
+      and (t2, e2') = expr scope deepscope e2
+      and (t3, e3') = expr scope deepscope e3 in
+      (match t1 with
+          Array(_ as t) when t = t3 -> 
+            if t2 = Int then (t3, SAccessAssign((t1, e1'), (t2, e2'), (t3, e3')))
+            else raise (Failure ("Error: integer expected for array access, but " ^ string_of_typ t2 ^ 
+                                 "given in expression " ^ string_of_expr e2))
+        | Array(_) -> raise (Failure ("Error: type " ^ string_of_typ t3 ^ " cannot be included in array " ^ string_of_expr e1 ^ 
+                                      "with type " ^ string_of_typ t1))
+        | _ -> raise (Failure ("Error: expression " ^ string_of_expr e1 ^ " has type " ^ string_of_typ t1 ^
+                                ", expected type Array")))
 |   Call(s, l) -> (Int, SCall(s, List.map (expr scope deepscope) l )) 
 |   AttributeCall(e, s, l) -> (Int, SAttributeCall(expr scope deepscope e, s, List.map (expr scope deepscope) l ))  
 
