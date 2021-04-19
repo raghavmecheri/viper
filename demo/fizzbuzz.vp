@@ -1,0 +1,12 @@
+/* fizzbuzz for-loop with pattern-matching
+valid, short, and easily comprehensible solution */
+
+for (int i = 0; i <= 100; i++) {
+    string output = ??
+        i % 15 == 0 : "fizzbuzz"
+        | i % 3 == 0 : "fizz"
+        | i % 5 == 0 : "buzz"
+        ?? i;
+
+    print(output);
+}

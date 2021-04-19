@@ -2,5 +2,5 @@ int func tester(){
   int d; 
   int c = 3;
   c = c + 3;
-  return 42; 
+  return 42;
 }

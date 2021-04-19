@@ -29,10 +29,9 @@ jobs:
       - name: Set up env
         run: opam install llvm ocamlfind ocamlbuild
 
-      - name: Compile binaries
+      - name: Compile binaries & run test suite
         run: |
           eval `opam config env`
-          make
+          ./runtests.sh -t ast
+          ./runtests.sh
 
-      - name: Run test suite
-        run: ./runtests.sh

@@ -1,19 +1,10 @@
 TODO:
 
-Functions: Return types are tacking on a func, int func instead of just int. 
 
-ListLit
-DictElem
-DictLit
 Deconstruct
-OpAssign
 Access
-AccessAssign
-Call
+AccessAssign (Needs to be implemented for dictionaries) 
 AttributeCall
-Built-in fdecls in dec.ml 
-skip 
-abort
-panic
 
-Fix warnings 
+
+Note: The warnings that are currently appearing can be ignored (type directed disambiguation is fine) 
