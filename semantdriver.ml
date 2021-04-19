@@ -86,12 +86,18 @@ let rec expr scope deepscope = function
       and (t2, e2') = expr scope deepscope e2
       and (t3, e3') = expr scope deepscope e3 in
       (match t1 with
-          Array(_ as t) when t = t3 -> 
+          Dictionary((key_t, val_t)) when t3 = val_t ->
+            if t2 = key_t then (t3, SAccessAssign((t1, e1'), (t2, e2'), (t3, e3')))
+            else raise (Failure ("Error: key type " ^ string_of_typ key_t ^ " expected for Dictionary access, but " ^
+                                 string_of_typ t2 ^ " given in expression " ^ string_of_expr e2))
+        | Dictionary((_, val_t)) -> raise (Failure ("Error: value type " ^ string_of_typ t3 ^ " cannot be included in Dictionary " ^ 
+                                            string_of_expr e1 ^ " with value type " ^ string_of_typ val_t))
+        | Array(t) when t = t3 -> 
             if t2 = Int then (t3, SAccessAssign((t1, e1'), (t2, e2'), (t3, e3')))
             else raise (Failure ("Error: integer expected for array access, but " ^ string_of_typ t2 ^ 
                                  "given in expression " ^ string_of_expr e2))
-        | Array(_) -> raise (Failure ("Error: type " ^ string_of_typ t3 ^ " cannot be included in array " ^ string_of_expr e1 ^ 
-                                      "with type " ^ string_of_typ t1))
+        | Array(t) -> raise (Failure ("Error: type " ^ string_of_typ t3 ^ " cannot be included in Array " ^ string_of_expr e1 ^ 
+                                      "with type " ^ string_of_typ t))
         | _ -> raise (Failure ("Error: expression " ^ string_of_expr e1 ^ " has type " ^ string_of_typ t1 ^
                                 ", expected type Array")))
 |   Call(s, l) -> (Int, SCall(s, List.map (expr scope deepscope) l )) 
