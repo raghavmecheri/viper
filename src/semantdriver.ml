@@ -102,7 +102,15 @@ let rec expr scope deepscope  = function
 |   OpAssign(s, op, e) -> let (t, e1) = expr scope deepscope e in 
                           if t = (toi scope s) then (t, SOpAssign(s, op, (t, e1))) else raise (Failure "types not the same") 
 |   DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
-|   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
+|   Access(e1, e2) -> 
+      let (t1, e1') = expr scope deepscope e1
+      and (t2, e2') = expr scope deepscope e2 in 
+      (match t1 with
+          Array(t) when t2 = Int -> (t, SAccess((t1, e1'), (t2, e2')))
+        | Array(_) -> raise (Failure ("Error: Integer required for Array access, given type " ^ string_of_typ t2))
+        | Dictionary((key_t, _)) when t2 = key_t -> (key_t, SAccess((t1, e1'), (t2, e2')))
+        | Dictionary((key_t, _)) -> raise (Failure ("Error: " ^ string_of_typ key_t ^ " required for Dictionary access, given type " ^ string_of_typ t2))
+        | _ -> raise (Failure ("Error: access not invalid for type " ^ string_of_typ t1)))
 |   AccessAssign(e1, e2, e3) ->       
       let (t1, e1') = expr scope deepscope e1
       and (t2, e2') = expr scope deepscope e2
