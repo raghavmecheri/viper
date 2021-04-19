@@ -1,0 +1,5 @@
+int a = 1;
+
+int func blen(string c) {
+    return 3;
+}
