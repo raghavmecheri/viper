@@ -58,10 +58,7 @@ let get_bind_decs scope bind =
   let ty, name = bind in add_symbol name ty scope
           
 let rec get_expr_decs scope expr = 
-  let new_scope = {
-    variables = StringMap.empty;
-    parent = Some(scope);
-  } in match expr with
+   match expr with
       Binop(e1, _, e2) -> 
         let expr_list = [e1; e2] in List.fold_left get_expr_decs scope expr_list
     | Unop(_, e) -> get_expr_decs scope e

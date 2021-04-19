@@ -40,6 +40,7 @@ let rec expr scope deepscope  = function
                   |	((t1,_) :: (t2,_) :: _) when t1 != t2 ->
 	                raise (Failure "List types are inconsistent")
                   | _ :: t -> check_types t
+                  | [] -> raise (Failure "listlit became empty") 
                   in check_types eval_list 
 |   DictElem(l, s) -> let (t1, e1) = expr scope deepscope l in 
                       let (t2, e2) = expr scope deepscope s in 
@@ -50,6 +51,7 @@ let rec expr scope deepscope  = function
                   |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when t1 != t3 || t2 != t4 ->
 	                raise (Failure "Dictionary types are inconsistent")
                   | _ :: t -> check_types t
+                  | []     -> raise (Failure "dictlit became empty") 
                   in check_types eval_list  
 |   Id l -> (toi scope l, SId l)
 |   Binop(e1, op, e2) as e -> 
@@ -79,12 +81,10 @@ let rec expr scope deepscope  = function
                                  string_of_uop uop ^ string_of_typ t ^
                                  " in " ^ string_of_expr ex))
           in (ty, SUnop(uop, (t, e')))
-|   Assign(s, e) as ex -> 
+|   Assign(s, e) -> 
           let lt = toi scope s 
           and (rt, e') = expr scope deepscope e in
-          let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
-            string_of_typ rt ^ " in " ^ string_of_expr ex
-          in (check_assign lt rt, SAssign(s, (rt, e')))
+          (check_assign lt rt, SAssign(s, (rt, e')))
 |   Deconstruct(l, e) -> (Int, SDeconstruct(l, expr scope deepscope e)) 
 |   OpAssign(s, op, e) -> let (t, e1) = expr scope deepscope e in 
                           if t = (toi scope s) then (t, SOpAssign(s, op, (t, e1))) else raise (Failure "types not the same") 
@@ -105,7 +105,8 @@ let rec expr scope deepscope  = function
                   in 
                   let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
                   in (fd.ret_typ, SCall(fname, args')) 
-|   AttributeCall(e, s, l) -> (Int, SAttributeCall(expr scope deepscope e, s, List.map (expr scope deepscope) l ))  
+|   AttributeCall(e, s, l) -> (Int, SAttributeCall(expr scope deepscope e, s, List.map (expr scope deepscope) l )) 
+|   _  -> raise (Failure "expression is not an expression")  
 
 in 
 
@@ -120,7 +121,7 @@ let rec check_stmt scope inloop  =
 |   Panic e -> SPanic (expr scope inloop e) 
 |   If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt scope inloop b1, check_stmt scope inloop b2) 
 |   While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s) 
-|   Return e -> raise (Failure "return outside a function")
+|   Return _ -> raise (Failure "return outside a function")
 |   Block sl -> 
           let rec check_stmt_list blockscope = function
               [Return _ as s] -> [check_stmt blockscope inloop s]
@@ -132,6 +133,7 @@ let rec check_stmt scope inloop  =
 |   PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
 
 |   Dec(ty, l) -> SDec(ty, l)
+|   _  -> raise (Failure "statement is not a statement") 
 
  in
 
@@ -162,6 +164,7 @@ let rec check_stmt scope inloop  =
 |   PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
 
 |   Dec(ty, l) -> SDec(ty, l)
+|   _  -> raise (Failure "statement is not a statement")
 
 in
  let return_func = function 
