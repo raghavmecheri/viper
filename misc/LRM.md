@@ -126,6 +126,7 @@ Authors:
     2. [Int list sum](#102-int-list-sum-examples)
     3. [GCD Function](#103-gcd-function)
     4. [Counting Characters in Strings](#104-counting-characters-in-strings)
+11. [Language Grammar](#11-language-grammar)
 
 # `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
@@ -1236,4 +1237,141 @@ for (char character in problem) {
 }
 print(count);
 ```
+
+# `11` Language Grammar
+```
+program -> decls | EOF
+
+decls ->
+  ''
+| decls fdecl
+| decls stmt
+
+fdecl ->
+  typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
+| typ ID LPAREN formals_opt RPAREN ARROW stmt
+
+formals_opt ->
+  ''
+| formal_list
+
+formal_list ->
+  typ ID
+| formal_list COMMA typ ID
+
+typ ->
+  INT
+| BOOL
+| NAH
+| CHAR
+| FLOAT
+| STRING
+| typ FUNC
+| typ ARROPEN ARRCLOSE
+| LPAREN type_list RPAREN
+| ARROPEN typ COLON typ ARRCLOSE
+
+type_list ->
+  typ
+| typ COMMA type_list
+
+stmt_list ->
+  ''
+| stmt_list stmt
+
+stmt ->
+  expr SEMI
+| typ ID SEMI
+| RETURN SEMI
+| RETURN expr SEMI
+| SKIP SEMI
+| ABORT SEMI
+| PANIC expr SEMI
+| LBRACE stmt_list RBRACE
+| IF LPAREN expr RPAREN stmt %prec NOELSE
+| IF LPAREN expr RPAREN stmt ELSE stmt
+| FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
+| FOR LPAREN ID IN expr RPAREN stmt
+| FOR LPAREN typ ID IN expr RPAREN stmt
+| FOR LPAREN LPAREN formal_list RPAREN IN expr RPAREN stmt
+| WHILE LPAREN expr RPAREN stmt
+
+expr_opt ->
+  ''
+| expr
+
+expr -> 
+  INTLIT
+| CHARLIT
+| FLOATLIT
+| STRLIT
+| TRUE
+| FALSE
+| ID
+| list_exp
+| dict_exp
+| expr PLUS   expr
+| expr MINUS  expr
+| expr TIMES  expr
+| expr DIVIDE expr
+| expr MODULO expr
+| ID PLUS_ASSIGN expr
+| ID MINUS_ASSIGN expr
+| ID TIMES_ASSIGN expr
+| ID DIVIDE_ASSIGN expr
+| expr EQ     expr
+| expr NEQ    expr
+| expr LT     expr
+| expr LEQ    expr
+| expr GT     expr
+| expr GEQ    expr
+| expr AND    expr
+| expr OR     expr
+| expr HAS     expr
+| expr QUESTION expr COLON expr
+| MINUS expr %prec NEG
+| NOT expr
+| expr PLUS PLUS %prec INCR
+| expr MINUS MINUS %prec DECR
+| typ ID ASSIGN expr
+| ID ASSIGN expr
+| LPAREN formal_list RPAREN ASSIGN expr
+| expr ARROPEN expr ARRCLOSE
+| expr ARROPEN expr ARRCLOSE ASSIGN expr
+| typ ID ASSIGN MATCH pattern
+| ID ASSIGN MATCH pattern
+| ID LPAREN actuals_opt RPAREN
+| expr DOT ID LPAREN actuals_opt RPAREN
+| LPAREN expr RPAREN
+
+pattern -> c_pattern MATCH expr
+
+c_pattern -> 
+  expr COLON expr
+| expr COLON expr BAR c_pattern
+
+dict_exp -> ARROPEN dict_elems ARRCLOSE
+
+dict_elems ->
+  dict_elem
+| dict_elem COMMA dict_elems
+
+dict_elem -> expr COLON expr
+
+list_exp -> ARROPEN list_elems ARRCLOSE
+
+list_elems ->
+  ''
+| expr
+| expr COMMA list_elems
+
+actuals_opt ->
+  ''
+| actuals_list
+
+actuals_list ->
+  expr
+| actuals_list COMMA expr
+```
+
 [↩️  Back to Contents 📌](#0-contents)
