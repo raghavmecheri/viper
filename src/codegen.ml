@@ -34,18 +34,6 @@ let translate (statements, _) =
     | _     -> raise (Error "Argument is not implemented or is not a Viper type")
   in
 
-  (* Create a map of global variables after creating each *)
-  (*
-  let global_vars : L.llvalue StringMap.t =
-    let global_var m (t, n) = 
-      let init = match t with
-          A.Float -> L.const_float (ltype_of_typ t) 0.0
-        | _ -> L.const_int (ltype_of_typ t) 0
-      in StringMap.add n (L.define_global n init the_module) m in
-    List.fold_left global_var StringMap.empty globals 
-  in
-  *)
-
   (* Define built-in functions at top of every file *)  
   let printf_t : L.lltype = 
     L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
@@ -77,6 +65,30 @@ let translate (statements, _) =
     | _ -> raise (Error "print passed an invalid/unimplemented literal")
   in
 
+  (* Create a map of global variables *)
+  let global_vars : L.llvalue StringMap.t = StringMap.empty in
+
+  (* function to retrieve a global variable*)
+  let global_lookup n = StringMap.find n global_vars in
+
+  (* function to initialize a global variable to 0 on declaration *)
+  let global_init m (t, n) = match t with
+      A.Float   -> L.const_float (ltype_of_typ t) 0.0
+    | A.Int     -> L.const_int (ltype_of_typ t) 0
+    | _         -> raise (Error "Variable type init not defined") 
+  in
+
+  (* function to assign a new value to global variable on declaration *)
+  (* let global_assign = 
+     in *)
+
+  (* let global_var m (t, n) = 
+     let init = match t with
+        A.Float -> L.const_float (ltype_of_typ t) 0.0
+      | _ -> L.const_int (ltype_of_typ t) 0
+     in StringMap.add n (L.define_global n init the_module) m in
+     List.fold_left global_var StringMap.empty globals in *)
+
   (* expression evaluation function *)
   let rec expr builder ((_, e) : sexpr) = match e with
       SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
@@ -84,8 +96,12 @@ let translate (statements, _) =
     | SBoolLiteral(bln)         -> L.const_int i1_t (if bln then 1 else 0)
     | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
     | SStringLiteral(str)       -> L.build_global_stringptr str "str" builder
-    (* | SId s                     -> L.build_load (lookup s) s builder *)
-    (* TODO: SListLiteral, SDictElem, SDictLiteral, SAssign *)
+    | SId s                     -> L.build_load (global_lookup s) s builder
+    | SAssign (s, e) -> let e' = expr builder e in
+      ignore(L.build_store e' (global_lookup s) builder); e'
+    | SDecAssign (t, s, e) -> let e' = expr builder e in
+      ignore(L.build_store e' (global_lookup s) builder); e'
+    (* TODO: SListLiteral, SDictElem, SDictLiteral *)
     | SUnop(op, ((t, _) as e)) ->
       let e' = expr builder e in
       (match op with
