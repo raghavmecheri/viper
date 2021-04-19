@@ -71,7 +71,13 @@ let rec expr scope deepscope = function
           let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
             string_of_typ rt ^ " in " ^ string_of_expr ex
           in (check_assign lt rt, SAssign(s, (rt, e')))
-|   Deconstruct(l, e) -> (Int, SDeconstruct(l, expr scope deepscope e)) 
+|   Deconstruct(l, e) -> (****** Work in progress, discrepancy between group and list literals ******)
+      let (e_typ, e') = expr scope deepscope e in
+      let group_typs = match e_typ with
+          Group(typs) -> typs
+        | _ -> raise (Failure ("Error: deconstruct requires a Group, but was given " ^ string_of_typ e_typ ^ " " ^ string_of_expr e))
+      in 
+        (Int, SDeconstruct(l, expr scope deepscope e)) 
 |   OpAssign(s, op, e) -> (Int, SOpAssign(s, op, expr scope deepscope e)) 
 |   DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
 |   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
