@@ -3,8 +3,8 @@ TODO:
 
 Deconstruct
 Access
+AccessAssign (Needs to be implemented for dictionaries) 
 AttributeCall
 
-Need to check that a function declaration with any return type other than nah has a return statement. 
 
 Note: The warnings that are currently appearing can be ignored (type directed disambiguation is fine) 

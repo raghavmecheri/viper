@@ -14,6 +14,13 @@ let global_scope = fst symbol_table in
 
 let function_scopes = snd symbol_table in
 
+let rec check_return slist ret = match slist with 
+    Return _ :: ss -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
+  | _ :: ss -> check_return ss ret 
+  | [] -> raise (Failure "Function does not have a return statement at its highest level") 
+
+in 
+
 let check_expr_scope scope = function 
     DecAssign(ty, s, _) -> add_symbol_driver s ty scope 
 |   _ -> scope 
@@ -174,7 +181,7 @@ in
   in 
 
  let check_function ( fd : func_decl ) = 
- 
+  if check_return fd.body (return_func fd.typ)  then 
     let key_func = key_string fd.fname fd.formals in 
       let current_function = StringMap.find key_func function_scopes in 
       { styp = fd.typ;
@@ -184,6 +191,7 @@ in
 	    SBlock(sl) -> sl
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
+    else raise (Failure "there is not return statement at the highest level of the function")
         (*List.map (check_stmt_func current_function.locals false fd.typ) fd.body *)
 
 in 
