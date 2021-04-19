@@ -1,5 +1,6 @@
 module L = Llvm
-open Ast
+module A = Ast
+open Sast
 
 exception Error of string
 
@@ -26,10 +27,10 @@ let translate (statements, _) =
 
   (* Return the LLVM type for a Viper primitive type *)
   let ltype_of_typ = function
-      Int   -> i64_t
-    | Char  -> i16_t
-    | Float -> float_t
-    | Bool  -> i1_t
+      A.Int   -> i64_t
+    | A.Char  -> i16_t
+    | A.Float -> float_t
+    | A.Bool  -> i1_t
     | _     -> raise (Error "Argument is not implemented or is not a Viper type")
   in
 
@@ -67,56 +68,66 @@ let translate (statements, _) =
 
   (* determines appropriate printf format string for given literal *)
   (* TODO: type inference for which print format string to use*)
-  let get_format_str params = match params with
-      IntegerLiteral(_) -> int_format_str
-    | StringLiteral(_) -> str_format_str
-    | CharacterLiteral(_) -> char_format_str
-    | FloatLiteral(_) -> float_format_str
-    | BoolLit(_) -> str_format_str
+  let get_format_str (_, params) = match params with
+      SIntegerLiteral(_) -> int_format_str
+    | SStringLiteral(_) -> str_format_str
+    | SCharacterLiteral(_) -> char_format_str
+    | SFloatLiteral(_) -> float_format_str
+    | SBoolLiteral(_) -> str_format_str
     | _ -> raise (Error "print passed an invalid/unimplemented literal")
   in
 
   (* expression evaluation function *)
-  let rec expr builder e = match e with
-      IntegerLiteral(num)      -> L.const_int (ltype_of_typ Int) num
-    | StringLiteral(str)       -> L.build_global_stringptr str "str" builder
-    | CharacterLiteral(chr)    -> L.const_int (ltype_of_typ Char) (Char.code chr)
-    | FloatLiteral(flt)        -> L.const_float (ltype_of_typ Float) flt
-    | BoolLit(bln)             -> L.const_int i1_t (if bln then 1 else 0)
-    | Binop (e1, op, e2) ->
+  let rec expr builder ((_, e) : sexpr) = match e with
+      SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
+    | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
+    | SBoolLiteral(bln)         -> L.const_int i1_t (if bln then 1 else 0)
+    | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
+    | SStringLiteral(str)       -> L.build_global_stringptr str "str" builder
+    (* | SId s                     -> L.build_load (lookup s) s builder *)
+    (* TODO: SListLiteral, SDictElem, SDictLiteral, SAssign *)
+    | SUnop(op, ((t, _) as e)) ->
+      let e' = expr builder e in
+      (match op with
+         A.Neg when t = A.Float -> L.build_fneg 
+       | A.Neg                  -> L.build_neg
+       | A.Not                  -> L.build_not) e' "tmp" builder
+    (* TODO: Unop: Incr, Decr *)
+    | SBinop (e1, op, e2) ->
       let e1' = expr builder e1
       and e2' = expr builder e2 in
       (match op with
-         Add     -> L.build_add
-       | Sub     -> L.build_sub
-       | Mult    -> L.build_mul
-       | Div     -> L.build_sdiv
-       | And     -> L.build_and
-       | Or      -> L.build_or
-       | Equal   -> L.build_icmp L.Icmp.Eq
-       | Neq     -> L.build_icmp L.Icmp.Ne
-       | Less    -> L.build_icmp L.Icmp.Slt
-       | Leq     -> L.build_icmp L.Icmp.Sle
-       | Greater -> L.build_icmp L.Icmp.Sgt
-       | Geq     -> L.build_icmp L.Icmp.Sge
-       | Mod     -> raise (Error "Mod not implemented")
-       | Has     -> raise (Error "Has not implemented")
+         A.Add     -> L.build_add
+       | A.Sub     -> L.build_sub
+       | A.Mult    -> L.build_mul
+       | A.Div     -> L.build_sdiv
+       | A.And     -> L.build_and
+       | A.Or      -> L.build_or
+       | A.Equal   -> L.build_icmp L.Icmp.Eq
+       | A.Neq     -> L.build_icmp L.Icmp.Ne
+       | A.Less    -> L.build_icmp L.Icmp.Slt
+       | A.Leq     -> L.build_icmp L.Icmp.Sle
+       | A.Greater -> L.build_icmp L.Icmp.Sgt
+       | A.Geq     -> L.build_icmp L.Icmp.Sge
+       | A.Mod     -> raise (Error "Mod not implemented")
+       | A.Has     -> raise (Error "Has not implemented")
       ) e1' e2' "tmp" builder
-    | Call ("print", [params]) -> let print_value = (get_print_value builder params)
+    | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
       in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
+    (* TODO: SCall for general function calls *)
     | _ -> raise (Error "Expression not implemented")
 
   and
-    get_print_value b e = match e with
-      BoolLit(bln) -> let strlit = (StringLiteral (if bln then "true" else "false"))
-      in expr b strlit
-    | _ -> expr b e
+    get_print_value builder (t, e) = match e with
+      SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
+      in expr builder (A.Bool, strlit)
+    | _ -> expr builder (t, e)
   in
 
 
   (* iterate over statments to add to main function, builder must be returned *)
   let build_main st = match st with
-    | Expr e -> ignore(expr builder e); builder
+    | SExpr e -> ignore(expr builder e); builder
     | _ -> raise (Error "Statement not implemented")
   in 
 
