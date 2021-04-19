@@ -17,7 +17,7 @@ let function_scopes = snd symbol_table in
 let rec check_return slist ret = match slist with 
     Return _ :: ss -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
   | _ :: ss -> check_return ss ret 
-  | [] -> raise (Failure "Function does not have a return statement at its highest level") 
+  | [] -> if ret = Nah then true else raise (Failure "Function does not have a return statement at its highest level") 
 
 in 
 
