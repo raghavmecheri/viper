@@ -91,7 +91,20 @@ let rec expr scope deepscope  = function
 |   DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
 |   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
 |   AccessAssign(e1, e2, e3) -> (Int, SAccessAssign( expr scope deepscope e1, expr scope deepscope e2, expr scope deepscope e3)) 
-|   Call(s, l) -> (Int, SCall(s, List.map (expr scope deepscope) l )) 
+|   Call(fname, args) -> 
+                  let eval_list = List.map (expr scope deepscope) args in 
+                  let key_func = key_string fname eval_list in  
+                  let fd = StringMap.find key_func function_scopes in
+                  let param_length = StringMap.cardinal fd.formals.variables in
+                  if List.length args != param_length then
+                  raise (Failure ("expecting " ^ string_of_int param_length ^ 
+                            " arguments in function call" ))
+                  else let check_call (_, ft) e = 
+                  let (et, e') = expr scope deepscope e in 
+                  (check_assign ft et, e')
+                  in 
+                  let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
+                  in (fd.ret_typ, SCall(fname, args')) 
 |   AttributeCall(e, s, l) -> (Int, SAttributeCall(expr scope deepscope e, s, List.map (expr scope deepscope) l ))  
 
 in 

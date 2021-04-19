@@ -3,7 +3,6 @@ TODO:
 
 Deconstruct
 Access
-Call
 AttributeCall
 
 Need to check that a function declaration with any return type other than nah has a return statement. 
