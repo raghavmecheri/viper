@@ -73,33 +73,23 @@ module StringMap = Map.Make(String)
 (* Semantic checking of the AST. Returns an SAST if successful,
    throws an exception if something is wrong.
 
-   Check each global variable, then check each function *)
+   Check each functionless statement, then check each function *)
 
-let check (globals, functions) =
-
-  (* Verify a list of bindings has no void types or duplicate names *)
-  (* Since a program in Viper consists of stmt and func decls, it may make more sense to move check_binds
-     inside of check_stmts *)
-  let check_binds (kind : string) (binds : bind list) =
-    List.iter (function
-	      (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
-      | _ -> ()) binds;
-    let rec dups = function
-        [] -> ()
-      |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
-      | _ :: t -> dups t
-    in dups (List.sort (fun (_,a) (_,b) -> compare a b) binds)
-  in
-
-  (**** Check global variables ****)
-
-  check_binds "global" globals;
+let check (statements, functions) =
 
   (**** Check functions ****)
 
+  (* Generate keys for functions in the symbol table.
+     For user-defined functions, these unique keys allow for function overloading. *)
+  let rec string_of_params params = match params with
+      (typ, _) :: [] -> string_of_typ typ ^ ")"
+    | (typ, _) :: p -> string_of_typ typ ^ ", " ^ string_of_params p
+    | _             -> ")" 
+  and key_string name params = name ^ " (" ^ string_of_params params in
+
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_func_decls = 
-    let add_bind map (name, return_typ) = StringMap.add name {
+    let add_bind map (name, return_typ) = StringMap.add (key_string name []) {
       typ = return_typ;
       fname = name; 
       formals = [];
@@ -112,55 +102,72 @@ let check (globals, functions) =
       ("float", Float);
       ("int", Int);
       ("bool", Bool);
-      ("str", String); ]
-  in
+      ("str", String) ]
 
-  (* Add function name to symbol table *)
-  let add_func map fd = 
-    let built_in_err = "function " ^ fd.fname ^ " may not be defined"
-    and dup_err = "function " ^ fd.fname ^ " is already defined"
+  (* Add user-declared functions to the symbol table. *)
+  (* The table's keys are strings built from the function name and its parameters' types. 
+     By including parameter types in keys, the table can support overloaded functions. *)
+  in let add_func map fd = 
+    let key = key_string fd.fname fd.formals
+    and built_in_err = "function " ^ fd.fname ^ " may not be defined"
+    and dup_err = "function " ^ fd.fname ^ " is already defined with params ("
     and make_err er = raise (Failure er)
-    and n = fd.fname (* Name of the function *)
     in match fd with
       (* No redefinitions of built-in functions *)
-        _ when StringMap.mem n built_in_func_decls -> make_err built_in_err
+        _ when StringMap.mem fd.fname built_in_func_decls -> make_err built_in_err
       (* No duplicates, but allow for overloaded functions *)
-      | _ when StringMap.mem n map -> 
-        let dup_func = StringMap.find n map in
-          (* Checks for duplicate parameters, allowing overloaded functions *)
-          (let rec comp_formals l1 l2 = match l1, l2 with
-              [], [] -> make_err dup_err 
-            | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 = typ2 -> comp_formals r1 r2
-            | (typ1, _) :: r1, (typ2, _) :: r2 when typ1 != typ2 -> StringMap.add n fd map
-            | [], _ -> StringMap.add n fd map
-            | _, [] -> StringMap.add n fd map
-          in comp_formals fd.formals dup_func.formals)
-      | _ -> StringMap.add n fd map 
-  in
+      | _ when StringMap.mem key map -> make_err (dup_err ^ string_of_params fd.formals)
+      | _ -> StringMap.add key fd map 
 
   (* Collect all function names into one symbol table *)
-  let function_decls = List.fold_left add_func built_in_func_decls functions
-  in
-  
+  in let function_decls = List.fold_left add_func built_in_func_decls functions
+
   (* Return a function from our symbol table *)
-  let find_func s = 
-    try StringMap.find s function_decls
-    with Not_found -> raise (Failure ("unrecognized function " ^ s))
-  in
+  in let find_func name params = 
+    try StringMap.find (key_string name params) function_decls
+    with Not_found -> raise (Failure ("function " ^ name ^ " with parameters " ^ string_of_params params ^ " does not exist"))
+  
+  (* Verify a list of declarations has no void types or duplicate names *)
+  (* This is used to check function parameters and free-standing variable declarations *)
 
-  let _ = find_func "main" in (* Ensure "main" is defined *)
+  (* Globally defined symbol table type (possible sol to duplicate variable checking)
+  map variable name -> Ast.typ
+  kill two birbs with one stone:
+    1) duplicate var names
+    2) valid types
 
-  let check_function func =
-    (* Make sure no formals or locals are void or duplicates *)
-    check_binds "formal" func.formals;
-    (*check_binds "local" func.locals;*)
+  type symbol_table = {
+    vars: ty StringMap.t;
+    parent: symbol_table option;
+  }
+  
+  *)
 
+  in let check_decs kind decs =
+    List.iter (function
+        (Nah, b) -> raise (Failure ("illegal nah " ^ kind ^ " " ^ b))
+      | _ -> ()) decs;
+    let rec dups = function
+      (* Problem: need to compare both dec and decassign, which are different types *)
+      (* Possible solution: global set of string variables *)
+        [] -> ()
+      |	((_,n1) :: (_,n2) :: _) when n1 = n2 -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
+      | _ :: t -> dups t
+    in dups (List.sort (fun (_,a) (_,b) -> compare a b) decs)
+  
+  in let check_function func =
+    (* Make sure no function formals are void or duplicates *)
+    check_decs "formal" func.formals;
+  
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
-    let check_assign lvaluet rvaluet err =
-       if lvaluet = rvaluet then lvaluet else raise (Failure err)
-    in   
+    (* May make more sense to move this down into check_expr *)
+    in let check_assign lvaluet rvaluet err =
+      if lvaluet = rvaluet then lvaluet else raise (Failure err)  
 
+  (* Keep this b/c it allows compilation *)
+  in (statements, functions)
+(*)
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
 	                StringMap.empty (globals @ func.formals @ func.locals )
@@ -173,10 +180,13 @@ let check (globals, functions) =
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
+    (* TODO: use viper AST types -> SAST types *)
     let rec expr = function
-        Literal  l -> (Int, SLiteral l)
-      | Fliteral l -> (Float, SFliteral l)
-      | BoolLit l  -> (Bool, SBoolLit l)
+        IntegerLiteral  l -> (Int, SIntegerLiteral l)
+      | CharacterLiteral l -> (Char, SCharacterLiteral l)
+      | BoolLit l  -> (Bool, SBoolLiteral l)
+      | FloatLiteral l -> (Float, SFloatLiteral l)
+      | StringLiteral l -> (String, SStringLiteral l)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
@@ -257,6 +267,7 @@ let check (globals, functions) =
             | s :: ss         -> check_stmt s :: check_stmt_list ss
             | []              -> []
           in SBlock(check_stmt_list sl)
+          | Dec -> check_dec dec
 
     in (* body of check_function *)
     { styp = func.typ;
@@ -270,4 +281,4 @@ let check (globals, functions) =
   in (globals, List.map check_function functions)
 
 
-*)
+*) *)

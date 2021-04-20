@@ -1,0 +1,6 @@
+int[] a = [1, 2, 3, 4];
+
+a[0] = 0;
+
+[string : int] d = ["zero" : 0, "zero" : 1];
+d["two"] = 2;
