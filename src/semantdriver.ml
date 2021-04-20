@@ -15,7 +15,7 @@ let global_scope = fst symbol_table in
 let function_scopes = snd symbol_table in
 
 let rec check_return slist ret = match slist with 
-    Return _ :: ss -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
+    Return _ :: _ -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
   | _ :: ss -> check_return ss ret 
   | [] -> if ret = Nah then true else raise (Failure "Function does not have a return statement at its highest level") 
 
@@ -93,8 +93,8 @@ let rec expr scope deepscope  = function
           and (rt, e') = expr scope deepscope e in
           (check_assign lt rt, SAssign(s, (rt, e')))
 |   Deconstruct(l, e) -> (****** Work in progress, discrepancy between group and list literals ******)
-      let (e_typ, e') = expr scope deepscope e in
-      let group_typs = match e_typ with
+      let (e_typ, _) = expr scope deepscope e in
+      let _ = match e_typ with
           Group(typs) -> typs
         | _ -> raise (Failure ("Error: deconstruct requires a Group, but was given " ^ string_of_typ e_typ ^ " " ^ string_of_expr e))
       in 

@@ -2,8 +2,6 @@ TODO:
 
 
 Deconstruct
-Access
-AccessAssign (Needs to be implemented for dictionaries) 
 
 
 Note: The warnings that are currently appearing can be ignored (type directed disambiguation is fine) 
