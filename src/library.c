@@ -233,6 +233,86 @@ struct list* access_list(struct list* inlist, int index){
     return lst;
 }
 
+int assign_int(struct list* inlist, int index, int toAssign){
+    if(strcmp(inlist->type, "int")){
+        printf("Can only access %s, not int\n", inlist->type);
+        return 0;
+    }
+
+    if(index >= inlist->size || index < 0){
+        printf("Illegal index accessed\n");
+        return 0;
+    }
+
+    *((int*) inlist->data[index]) = toAssign;
+
+    return toAssign;
+}
+
+char assign_char(struct list* inlist, int index, char toAssign){
+    if(strcmp(inlist->type, "char")){
+        printf("Can only access %s, not char\n", inlist->type);
+        return 0;
+    }
+
+    if(index >= inlist->size || index < 0){
+        printf("Illegal index accessed\n");
+        return 0;
+    }
+
+    *((char*) inlist->data[index]) = toAssign;
+
+    return toAssign;
+}
+
+float assign_float(struct list* inlist, int index, float toAssign){
+    if(strcmp(inlist->type, "float")){
+        printf("Can only access %s, not float\n", inlist->type);
+        return 0;
+    }
+
+    if(index >= inlist->size || index < 0){
+        printf("Illegal index accessed\n");
+        return 0;
+    }
+
+    *((float*) inlist->data[index]) = toAssign;
+
+    return toAssign;
+}
+
+char* assign_str(struct list* inlist, int index, char* toAssign){
+    if(strcmp(inlist->type, "string")){
+        printf("Can only access %s, not string\n", inlist->type);
+        return 0;
+    }
+
+    if(index >= inlist->size || index < 0){
+        printf("Illegal index accessed\n");
+        return 0;
+    }
+
+    inlist->data[index] = toAssign;
+
+    return toAssign;
+}
+
+struct list* assign_list(struct list* inlist, int index, struct list* toAssign){
+    if(strcmp(inlist->type, "list")){
+        printf("Can only access %s, not list\n", inlist->type);
+        return 0;
+    }
+
+    if(index >= inlist->size || index < 0){
+        printf("Illegal index accessed\n");
+        return 0;
+    }
+
+    inlist->data[index] = toAssign;
+
+    return toAssign;
+}
+
 char* get_type(struct list* inlist){
     return inlist->type;
 }
@@ -312,4 +392,18 @@ int main(void){
 
     printf("contains_int(mylist, 5): %d\n", contains_int(mylist, 5));
     printf("contains_int(mylist, 10): %d\n", contains_int(mylist, 10));
+
+    int test = assign_int(mylist, 1, 7);
+    printf("Test assign return val: %d\n", test);
+    printf("@ index 1: %d\n", access_int(mylist, 1));
+    printf("contains_int(mylist, 1): %d\n", contains_int(mylist, 1));
+
+    struct list* evillist = create_list("int");
+    append_int(evillist, 100);
+    append_int(evillist, 200);
+    append_int(evillist, 300);
+    struct list* testo = assign_list(otherlist, 0, evillist);
+    printf("Test assign return list: %d\n", access_int(evillist, 0));
+    struct list* sameto = access_list(otherlist, 0);
+    printf("Test accessed list: %d\n", access_int(evillist, 1));
 }
