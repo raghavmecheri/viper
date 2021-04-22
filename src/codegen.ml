@@ -47,17 +47,6 @@ let translate (statements, functions) =
   let main_t = L.function_type i32_t [| |] in
   let main_f = L.define_function "main" main_t the_module in
 
-  (* Define each function (arguments and return type) so we can 
-     call it even before we've created its body *)
-  (* let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
-     let function_decl m fdecl =
-      let name = fdecl.sfname
-      and formal_types = 
-        Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.sformals)
-      in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
-      StringMap.add name (L.define_function name ftype the_module, fdecl) m in
-     List.fold_left function_decl StringMap.empty functions in *)
-
   (* main function builder *)
   let builder = L.builder_at_end context (L.entry_block main_f) in
 
@@ -79,7 +68,8 @@ let translate (statements, functions) =
     | _ -> raise (Error "print passed an invalid/unimplemented literal")
   in
 
-  (* expression evaluation function *)
+  (*TODO: duplicate code here*)
+
   let rec expr builder ((_, e) : sexpr) = match e with
       SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
     | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
@@ -143,12 +133,85 @@ let translate (statements, functions) =
     | _ -> expr builder (t, e)
   in
 
-  let build_main st = match st with 
-    | SExpr e -> ignore(expr builder e); builder
-    | _ -> raise (Error "Statement match not implemented")
+  (* let build_main st = match st with 
+     | SExpr e -> ignore(expr builder e); builder
+     | _ -> raise (Error "Statement match not implemented")
+     in  *)
+
+  let rec build_main st = function
+    | SBlock sl                               -> raise (Error "Block statement not implemented") (* List.fold_left build_main sl *)
+    | SExpr e                                 -> ignore(expr builder e); builder
+    | SDec (t, v)                             -> raise (Error "Dec statement not implemented")
+    | SReturn e                               -> raise (Error "Return statement not implemented")
+    | SSkip expr                              -> raise (Error "Skip statement not implemented")
+    | SAbort expr                             -> raise (Error "Abort statement not implemented")
+    | SPanic expr                             -> raise (Error "Panic statement not implemented")
+    | SIf (predicate, then_stmt, else_stmt)   -> raise (Error "If statement not implemented")
+    | SWhile (predicate, body)                -> raise (Error "While statement not implemented")
+    | _ -> raise (Error "Statement match not implemented for stmt builder")
   in 
 
-  (* MAIN BUILDING CODE (statements)*)
+  (* Define each function (arguments and return type) so we can 
+     call it even before we've created its body *)
+  let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
+    let function_decl m fdecl =
+      let name = fdecl.sfname
+      and formal_types = 
+        Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.sformals)
+      in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
+      StringMap.add name (L.define_function name ftype the_module, fdecl) m in
+    List.fold_left function_decl StringMap.empty functions in
+
+  (* FUNCTION BUILDING CODE (functions)*)
+
+  (* Fill in the body of the given function *)
+  let build_function_body fdecl =
+    let (the_function, _) = StringMap.find fdecl.sfname function_decls in
+    let builder = L.builder_at_end context (L.entry_block the_function) in
+
+    (* TODO: local variables code goes here *)
+
+    (* NOTE: Expression evaluation function goes here if needed *)
+
+    (* LLVM insists each basic block end with exactly one "terminator" 
+       instruction that transfers control.  This function runs "instr builder"
+       if the current block does not already have a terminator.  Used,
+       e.g., to handle the "fall off the end of the function" case. *)
+    let add_terminal builder instr =
+      match L.block_terminator (L.insertion_block builder) with
+        Some _ -> ()
+      | None -> ignore (instr builder) in
+
+    let rec stmt builder = function
+      | SBlock sl                               -> List.fold_left stmt builder sl
+      | SExpr e                                 -> ignore(expr builder e); builder
+      | SDec (t, v)                             -> raise (Error "Dec statement not implemented")
+      | SReturn e -> ignore(match fdecl.styp with
+          (* Special "return nothing" instr *)
+            A.Nah -> L.build_ret_void builder 
+          (* Build return statement *)
+          | _ -> L.build_ret (expr builder e) builder );
+        builder
+      | SSkip expr                              -> raise (Error "Skip statement not implemented")
+      | SAbort expr                             -> raise (Error "Abort statement not implemented")
+      | SPanic expr                             -> raise (Error "Panic statement not implemented")
+      | SIf (predicate, then_stmt, else_stmt)   -> raise (Error "If statement not implemented")
+      | SWhile (predicate, body)                -> raise (Error "While statement not implemented")
+      | _                                       -> raise (Error "Statement match not implemented for stmt builder")
+    in 
+
+    (* Build the code for each statement in the function *)
+    let builder = stmt builder (SBlock fdecl.sbody) in
+
+    (* Add a return if the last block falls off the end *)
+    add_terminal builder (match fdecl.styp with
+          A.Nah -> L.build_ret_void
+        | A.Float -> L.build_ret (L.const_float float_t 0.0)
+        | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
+  in
+
+  (* build all function bodies *)
+  let _ = List.map build_function_body functions in
 
   (* build a main function around top-level statements *)
   let _ = List.map build_main (List.rev statements) in
@@ -158,78 +221,3 @@ let translate (statements, functions) =
 
   (* return the LLVM module *)
   the_module
-
-(* FUNCTION BUILDING CODE (functions)*)
-
-(* Fill in the body of the given function *)
-(* let build_function_body fdecl =
-   let (the_function, _) = StringMap.find fdecl.sfname function_decls in
-   let builder = L.builder_at_end context (L.entry_block the_function) in
-
-   let rec stmt builder = function
-    | SBlock sl                               -> List.fold_left stmt builder sl
-    | SExpr e                                 -> ignore(expr builder e); builder
-    | SDec (t, v)                             -> raise (Error "Dec statement not implemented")
-    | SReturn e -> ignore(match fdecl.styp with
-        (* Special "return nothing" instr *)
-          A.Nah -> L.build_ret_void builder 
-        (* Build return statement *)
-        | _ -> L.build_ret (expr builder e) builder );
-      builder
-    | SSkip expr                              -> raise (Error "Skip statement not implemented")
-    | SAbort expr                             -> raise (Error "Abort statement not implemented")
-    | SPanic expr                             -> raise (Error "Panic statement not implemented")
-    | SIf (predicate, then_stmt, else_stmt)   -> raise (Error "If statement not implemented")
-    | SWhile (predicate, body)                -> raise (Error "While statement not implemented")
-    | _ -> raise (Error "Statement match not implemented for stmt builder")
-   in 
-
-   (* LLVM insists each basic block end with exactly one "terminator" 
-     instruction that transfers control.  This function runs "instr builder"
-     if the current block does not already have a terminator.  Used,
-     e.g., to handle the "fall off the end of the function" case. *)
-   let add_terminal builder instr =
-    match L.block_terminator (L.insertion_block builder) with
-      Some _ -> ()
-    | None -> ignore (instr builder) in
-
-   (* Build the code for each statement in the function *)
-   let builder = stmt builder (SBlock fdecl.sbody) in
-
-   (* Add a return if the last block falls off the end *)
-   add_terminal builder (match fdecl.styp with
-        A.Nah -> L.build_ret_void
-      | A.Float -> L.build_ret (L.const_float float_t 0.0)
-      | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
-   in
-
-   (* build all function bodies *)
-   List.iter build_function_body functions; *)
-
-
-
-(* GLOBALS ARE A NO GO ATM, WILL FIGURE OUT LATER *)
-
-(* Create a map of global variables *)
-(* let global_vars : L.llvalue StringMap.t = StringMap.empty in
-
-   (* function to retrieve a global variable*)
-   let global_lookup n = StringMap.find n global_vars in
-
-   (* function to initialize a global variable to 0 on declaration *)
-   let global_init m (t, n) = match t with
-    A.Float   -> L.const_float (ltype_of_typ t) 0.0
-   | A.Int     -> L.const_int (ltype_of_typ t) 0
-   | _         -> raise (Error "Variable type init not defined") 
-   in *)
-
-(* function to assign a new value to global variable on declaration *)
-(* let global_assign = 
-   in *)
-
-(* let global_var m (t, n) = 
-   let init = match t with
-     A.Float -> L.const_float (ltype_of_typ t) 0.0
-   | _ -> L.const_int (ltype_of_typ t) 0
-   in StringMap.add n (L.define_global n init the_module) m in
-   List.fold_left global_var StringMap.empty globals in *)
