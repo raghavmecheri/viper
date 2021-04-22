@@ -111,6 +111,15 @@ let translate (statements, functions) =
       with Not_found -> raise (Error "variable not found in locals map")
     in
 
+    (* LLVM insists each basic block end with exactly one "terminator" 
+       instruction that transfers control.  This function runs "instr builder"
+       if the current block does not already have a terminator.  Used,
+       e.g., to handle the "fall off the end of the function" case. *)
+    let add_terminal builder instr =
+      match L.block_terminator (L.insertion_block builder) with
+        Some _ -> ()
+      | None -> ignore (instr builder) in
+
     let rec expr builder ((_, e) : sexpr) = match e with
         SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
       | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
@@ -121,7 +130,11 @@ let translate (statements, functions) =
       | SAssign (s, e)            -> 
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
-      | SDecAssign (t, s, e)      -> raise (Error "SDecAssign not implemented")
+      | SDecAssign (t, s, e)      -> 
+        let local_var = L.build_alloca (ltype_of_typ t) s builder in
+        Hashtbl.add local_vars s local_var;
+        let e' = expr builder e in
+        ignore(L.build_store e' (lookup s) builder); e'
       | SListLiteral(list)        -> raise (Error "SListLiteral not implemented")
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
@@ -171,17 +184,6 @@ let translate (statements, functions) =
       | _ -> expr builder (t, e)
     in
 
-    (* NOTE: Expression evaluation function goes here if needed *)
-
-    (* LLVM insists each basic block end with exactly one "terminator" 
-       instruction that transfers control.  This function runs "instr builder"
-       if the current block does not already have a terminator.  Used,
-       e.g., to handle the "fall off the end of the function" case. *)
-    let add_terminal builder instr =
-      match L.block_terminator (L.insertion_block builder) with
-        Some _ -> ()
-      | None -> ignore (instr builder) in
-
     let rec stmt builder = function
       | SBlock sl                               -> List.fold_left stmt builder sl
       | SExpr e                                 -> ignore(expr builder e); builder
@@ -197,6 +199,7 @@ let translate (statements, functions) =
       | SSkip expr                              -> raise (Error "Skip statement not implemented")
       | SAbort expr                             -> raise (Error "Abort statement not implemented")
       | SPanic expr                             -> raise (Error "Panic statement not implemented")
+      (* this if and while is straight from microc if issues *)
       | SIf (predicate, then_stmt, else_stmt)   -> 
         let bool_val = expr builder predicate in
         let merge_bb = L.append_block context "merge" the_function in
@@ -227,8 +230,6 @@ let translate (statements, functions) =
         let merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
-
-      | SWhile (predicate, body)                -> raise (Error "While statement not implemented")
       | _                                       -> raise (Error "Statement match not implemented for stmt builder")
     in 
 
