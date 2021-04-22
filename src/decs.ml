@@ -35,6 +35,9 @@ let rec string_of_params params = match params with
   | _              -> "" 
 and key_string name params = name ^ " (" ^ string_of_params params ^ ")"
 
+
+let key_string_built_in_functions name ty = name ^ " (" ^ string_of_typ ty ^ ")"
+
 let rec is_valid_dec name scope = 
   if StringMap.mem name scope.variables then
     raise (Failure ("Error: variable " ^ name ^ " is already defined"))
@@ -155,7 +158,7 @@ let get_decs (s_list, f_list) =
       let dummy_scope = {
         variables = StringMap.empty;
         parent = None;
-      } in StringMap.add name {
+      } in StringMap.add (key_string_built_in_functions name typ) {
         formals = dummy_scope;
         locals = dummy_scope;
         ret_typ = typ;
