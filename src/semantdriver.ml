@@ -256,7 +256,7 @@ let updated_sfuncs = if has_main sfuncs then sfuncs else
   { styp = Int;
     sfname = "main";
     sformals = [];
-    sbody = sstatements;
+    sbody = List.rev sstatements;
   } :: sfuncs in
 
 (sstatements, updated_sfuncs)
