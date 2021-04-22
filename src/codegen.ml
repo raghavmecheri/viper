@@ -79,30 +79,19 @@ let translate (statements, functions) =
       | _ -> raise (Error "print passed an invalid/unimplemented literal")
     in
 
-    (* Construct the function's "locals": formal arguments and locally
-       declared variables.  Allocate each on the stack, initialize their
-       value, if appropriate, and remember their values in the "locals" map *)
-    (* TODO: get formals working*)
-    let local_vars:(string, L.llvalue) Hashtbl.t = Hashtbl.create 50
-    (* let add_formal m (t, n) p = 
-       L.set_value_name n p;
+    (* create empty local_vars Hashtbl*)
+    let local_vars:(string, L.llvalue) Hashtbl.t = Hashtbl.create 50 in
 
-       let local = L.build_alloca (ltype_of_typ t) n builder in
-       ignore (L.build_store p local builder);
+    (* function takes in a formal binding and parameter values to add to map*)
+    let add_formal (t, n) p = 
+      L.set_value_name n p;
+      let local = L.build_alloca (ltype_of_typ t) n builder in
+      ignore (L.build_store p local builder);
+      Hashtbl.add local_vars n local;
+    in 
 
-       StringMap.add n local m 
-
-       (* Allocate space for any locally declared variables and add the
-     * resulting registers to our map *)
-       and add_local m (t, n) =
-       let local_var = L.build_alloca (ltype_of_typ t) n builder
-       in StringMap.add n local_var m 
-       in
-
-       List.fold_left2 add_formal StringMap.empty fdecl.sformals (Array.to_list (L.params the_function)) *)
-
-    (* in List.fold_left add_local formals fdecl.slocals  *)
-    in
+    (* iterate over the list of formal bindings and their values to add to local_vars *)
+    let _ = List.iter2 add_formal fdecl.sformals (Array.to_list (L.params the_function)) in
 
     (* Return the value for a variable or formal argument *)
     (* let print_vars key value = print_string (key ^ " " ^ value ^ "\n") in *)
