@@ -34,6 +34,7 @@ in
 
 let return_func = function 
       Function(e) -> e 
+  |   e           -> e 
   |   _           -> raise (Failure "function return type is flawed") 
 
   in 

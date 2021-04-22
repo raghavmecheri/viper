@@ -154,24 +154,42 @@ let get_decs (s_list, f_list) =
 
   (* Collect declarations for Viper's built-in functions *)
   let built_in_funcs = 
-    let build_built_in_func_table (name, typ) map = 
-      let dummy_scope = {
+    let build_built_in_func_table (name, param_typ, typ) map = 
+      let dummy_scope = add_symbol name param_typ {
         variables = StringMap.empty;
         parent = None;
-      } in StringMap.add (key_string_built_in_functions name typ) {
-        formals = dummy_scope;
+      } in StringMap.add (key_string_built_in_functions name param_typ) {
+        formals = dummy_scope; 
         locals = dummy_scope;
         ret_typ = typ;
       } map
     in List.fold_left (fun m f -> build_built_in_func_table f m) StringMap.empty [
-      ("print", Nah);
-      ("len", Int);
-      ("int", Int);
-      ("char", Char);
-      ("float", Float);
-      ("bool", Bool);
-      ("string", String);
-      ("nah", Nah); 
+      ("print", Int, Nah);
+      ("print", String, Nah);
+      ("print", Char, Nah);
+      ("print", Bool, Nah);
+      ("print", Float, Nah);
+      ("len", Array(Int), Int);
+      ("len", Array(Float), Int);
+      ("len", Array(Bool), Int);
+      ("len", Array(String), Int);
+      ("len", Array(Char), Int);
+      ("int", Float, Int);
+      ("char", Int, Char);
+      ("float", Int, Float);
+      ("bool", Int, Bool);
+      ("bool", String, Bool);
+      ("bool", Char, Bool);
+      ("bool", Bool, Bool);
+      ("string", Int, String);
+      ("string", Float, String);
+      ("string", Bool, String);
+      ("string", String, String);
+      ("nah", Int, Nah); 
+      ("nah", String, Nah); 
+      ("nah", Char, Nah); 
+      ("nah", Float, Nah); 
+      ("nah", Bool, Nah); 
     ] in
 
   let get_funcs f_list = 
