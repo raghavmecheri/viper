@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/white.min.css">
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <h1>Viper</h1>
+            An amalgamation of our favourite programming quirks
+          </section>
+          <section>
+            Tommy Gomez, Trey Gilliland, Mustafa Eyeceoz, Matthew Ottomano, Raghav Mecheri
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>An Overview</h2>
+          </section>
+          <section>
+            <h3>Type System</h3>
+            <ul>
+              <li>Viper is strongly statically typed, with type checking performed at compile-time</li>
+              <li>Support for int, float, char, bool, string and nah</li>
+              <li>Library support for lists, dicts</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Ternary Operators & Pattern Matching</h3>
+            <ul>
+              <li>Viper comes with support for both ternary operators, and a modified form of guard expressions</li>
+              <li>Guard expressions are an alternative way of using conditional statements. Think of them as more powerful, more flexible, and better looking switch-case statements(example to follow)</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Arrow Functions</h3>
+            <ul>
+              <li>Viper comes with support for Arrow functions, for one line function definitions</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Scope</h3>
+            <ul>
+              <li>Moving away from the Pythonic indent system, Viper goes back to curly braces to define scope</li>
+              <li>An easy way to get rid of tabs vs spaces arguements</li>
+            </ul>
+          </section>
+          <section>
+            <h3>In-built functions</h3>
+            <ul>
+              <li>Support for Math functions like ceil, floor, round, min, max, trunc</li>
+              <li>Support for a couple of in-built functions you've just got to have: len() and print()</li>
+              <li>Support for typecasting functions like int(), float(), char()</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Iterators</h3>
+            <ul>
+              <li>Viper also has built-in support for loop iterators</li>
+              <li>Support for iterating directly across values, as well as index, value pairs</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Viper's Structure & Sample</h2>
+          </section>
+          <section>
+            <h2>Structure</h2>
+            <ul>
+              <li>The body of a Viper program consists of statements, and functions</li>
+              <li>You can write code outside main!</li>
+              <li>Globals are not accessible within functions, preventing Python-esque namespace conflicts</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Sample Program I</h2>
+            <pre><code data-trim data-noescape>
+              string problem = 
+                "H0w many z3r03s and thr33s ar3 in this string?";
+              int count = 0;
+              for (char character in problem) {
+                count += int(character == '0' or character =='3');
+              }
+              print(count);
+            </code></pre>
+          </section>
+          <section>
+            <h2>Sample Program II</h2>
+            <pre><code data-trim data-noescape>
+              int func recursiveGCD(int a, int b) {
+                int func conditional (int x, int y) =>
+                  ??
+                    x == 0 : y
+                  | y == 0 : x
+                  | true   : nah
+                  ??;
+
+                int func swappedGCD (int x, int y) => 
+                  x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
+
+                int check = conditional(a, b);
+
+                return check == nah ? swappedGCD(a, b) : check;
+              }
+            </code></pre>
+          </section>
+        </section>
+        
+        <section>
+          <section>
+            <h2>Compiler Architecture</h2>
+          </section>
+          <section>
+            TBD
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Type System</h2>
+          </section>
+          <section>
+            TBD
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Handling Syntactic Sugar</h2>
+          </section>
+          <section>
+            TBD
+          </section>
+        </section>
+        
+        <section>
+          <section>
+            <h2>Guards and Arrow Functions</h2>
+          </section>
+          <section>
+            TBD
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Future Work</h2>
+          </section>
+          <section>
+            TBD
+          </section>
+        </section>
+
+        <section>
+          <h2>Demo Programs</h2>
+        </section>
+      
+      </div>
+    </div>
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        plugins: [ ]
+      });
+    </script>
+  </body>
+</html>
