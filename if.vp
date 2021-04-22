@@ -1,0 +1,11 @@
+int func main() {
+    int a;
+
+    if(2>3) {
+        a = 3;
+    } else {
+        a = 2;
+    }
+
+    return a;
+}

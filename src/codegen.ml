@@ -68,13 +68,20 @@ let translate (statements, functions) =
 
     (* determines appropriate printf format string for given literal *)
     (* TODO: type inference for which print format string to use*)
-    let get_format_str (_, params) = match params with
+    (* let get_format_str (_, params) = match params with
         SIntegerLiteral(_) -> int_format_str
-      | SStringLiteral(_) -> str_format_str
-      | SCharacterLiteral(_) -> char_format_str
-      | SFloatLiteral(_) -> float_format_str
-      | SBoolLiteral(_) -> str_format_str
-      | _ -> raise (Error "print passed an invalid/unimplemented literal")
+       | SStringLiteral(_) -> str_format_str
+       | SCharacterLiteral(_) -> char_format_str
+       | SFloatLiteral(_) -> float_format_str
+       | SBoolLiteral(_) -> str_format_str
+       | _ -> raise (Error "print passed an invalid/unimplemented literal")
+       in *)
+
+    let get_format_str (t, _) = match t with
+        A.Int -> int_format_str
+      | A.Char -> char_format_str
+      | A.String -> 
+      | _ -> raise (Error "print passed an invalidtype")
     in
 
     (* create empty local_vars Hashtbl*)
