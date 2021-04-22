@@ -4,13 +4,11 @@ open Boolcheck
 open Rhandlhand 
 open Decs 
  
-let check(statements, functions) = 
+let check (statements, functions) = 
 
 let symbol_table = get_decs (statements, functions) in
 
-
 let global_scope = fst symbol_table in
-
 
 let function_scopes = snd symbol_table in
 
@@ -242,4 +240,20 @@ in
 
 in 
 
-(List.map (check_stmt global_scope false) statements, List.map check_function functions)
+let sstatements = List.map (check_stmt global_scope false) statements in
+let sfuncs = List.map check_function functions in
+
+let rec has_main sfuncs = match sfuncs with
+    [] -> false
+  | sfd :: _ when sfd.sfname = "main" && sfd.styp = Function(Int) -> true
+  | sfd :: _ when sfd.sfname = "main" -> raise (Failure ("Error: function main must return type Int, not type " ^ string_of_typ sfd.styp))
+  | _ :: tail -> has_main tail in
+
+let updated_sfuncs = if has_main sfuncs then sfuncs else
+  { styp = Int;
+    sfname = "main";
+    sformals = [];
+    sbody = sstatements;
+  } :: sfuncs in
+
+(sstatements, updated_sfuncs)
