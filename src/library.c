@@ -10,6 +10,17 @@ struct list{
     char* type;
 };
 
+struct dict_elem{
+    void* key;
+    void* val;
+};
+
+struct dict{
+    struct list* pairs;
+    char* key_type;
+    char* val_type;
+};
+
 struct list* create_list(char* type){
     struct list* inlist = malloc(sizeof(struct list));
     char* toadd = malloc(strlen(type));
@@ -30,6 +41,17 @@ void realloc_check(struct list* inlist){
         }
         inlist->data = newdata;
     }
+}
+
+void append_pair(struct list* inlist, struct dict_elem* pair){
+    if(strcmp(inlist->type, "dict")){
+        printf("Can only append %s, not dict\n", inlist->type);
+        return;
+    }
+
+    realloc_check(inlist);
+    inlist->data[(inlist->size)] = pair;
+    inlist->size = inlist->size + 1;
 }
 
 void append_str(struct list* inlist, char* str){
@@ -233,6 +255,20 @@ struct list* access_list(struct list* inlist, int index){
     return lst;
 }
 
+struct dict_elem* access_pair(struct list* inlist, int index){
+    if(strcmp(inlist->type, "dict")){
+        printf("Can only access %s, not dict\n", inlist->type);
+        return 0;
+    }
+
+    struct dict_elem* lst = (struct dict_elem*) access(inlist, index);
+    if(lst == NULL){
+        printf("Illegal index accessed\n");
+        return NULL;
+    }
+    return lst;
+}
+
 int assign_int(struct list* inlist, int index, int toAssign){
     if(strcmp(inlist->type, "int")){
         printf("Can only access %s, not int\n", inlist->type);
@@ -321,6 +357,59 @@ int listlen(struct list* inlist){
     return inlist->size;
 }
 
+struct dict* create_dict(char* ktype, char* vtype){
+    struct dict* indict = malloc(sizeof(struct dict));
+    char* ktoadd = malloc(strlen(ktype));
+    strcpy(ktoadd, ktype);
+    char* vtoadd = malloc(strlen(vtype));
+    strcpy(vtoadd, vtype);
+    indict->key_type = ktoadd;
+    indict->val_type = vtoadd;
+    indict->pairs = create_list("dict");
+    return indict;
+}
+
+void* int_alloc_zone(int input){
+    int* toadd = malloc(4);
+    *toadd = input;
+    return (void*) toadd;
+}
+
+void* char_alloc_zone(char input){
+    char* toadd = malloc(1);
+    *toadd = input;
+    return (void*) toadd;
+}
+
+void* float_alloc_zone(float input){
+    float* toadd = malloc(4);
+    *toadd = input;
+    return (void*) toadd;
+}
+
+void* str_alloc_zone(char* input){
+    char* toadd = malloc(strlen(input));
+    strcpy(toadd, input);
+    return (void*) toadd;
+}
+
+void add_keyval(struct dict* indict, void* key, void* val){
+    struct dict_elem* pair = malloc(sizeof(struct dict_elem));
+    pair->key = key;
+    pair->val = val;
+    append_pair(indict->pairs, pair);
+}
+
+void* access_str_key(struct dict* indict, char* key){
+    void* toret = NULL;
+    for(int i = 0; i < indict->pairs->size; i++){
+        if(!strcmp((char*) access_pair(indict->pairs, i)->key, key)){
+            toret = access_pair(indict->pairs, i)->val;
+        }
+    }
+    return toret;
+}
+
 float pow2(float base){
     return pow(base, 2);
 }
@@ -406,4 +495,12 @@ int main(void){
     printf("Test assign return list: %d\n", access_int(evillist, 0));
     struct list* sameto = access_list(otherlist, 0);
     printf("Test accessed list: %d\n", access_int(evillist, 1));
+
+    struct dict* testdict = create_dict("string", "int");
+    //void* test1 = str_alloc_zone("yo");
+    //void* test2 = int_alloc_zone(1);
+    add_keyval(testdict, str_alloc_zone("yo"), int_alloc_zone(1));
+    add_keyval(testdict, str_alloc_zone("gabba"), int_alloc_zone(12));
+    printf("access_str_key(testdict, \"yo\"): %d\n", *((int*) access_str_key(testdict, "yo")));
+    printf("access_str_key(testdict, \"yo\"): %d\n", *((int*) access_str_key(testdict, "gabba")));
 }
