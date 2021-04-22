@@ -186,8 +186,8 @@ let translate (statements, functions) =
       | SBlock sl                               -> List.fold_left stmt builder sl
       | SExpr e                                 -> ignore(expr builder e); builder
       | SDec (t, n)                             -> 
-          let local_var = L.build_alloca (ltype_of_typ t) n builder
-          in Hashtbl.add local_vars n local_var; builder
+        let local_var = L.build_alloca (ltype_of_typ t) n builder
+        in Hashtbl.add local_vars n local_var; builder
       | SReturn e -> ignore(match fdecl.styp with
           (* Special "return nothing" instr *)
             A.Nah -> L.build_ret_void builder 
@@ -197,7 +197,37 @@ let translate (statements, functions) =
       | SSkip expr                              -> raise (Error "Skip statement not implemented")
       | SAbort expr                             -> raise (Error "Abort statement not implemented")
       | SPanic expr                             -> raise (Error "Panic statement not implemented")
-      | SIf (predicate, then_stmt, else_stmt)   -> raise (Error "If statement not implemented")
+      | SIf (predicate, then_stmt, else_stmt)   -> 
+        let bool_val = expr builder predicate in
+        let merge_bb = L.append_block context "merge" the_function in
+        let build_br_merge = L.build_br merge_bb in (* partial function *)
+
+        let then_bb = L.append_block context "then" the_function in
+        add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+          build_br_merge;
+
+        let else_bb = L.append_block context "else" the_function in
+        add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+          build_br_merge;
+
+        ignore(L.build_cond_br bool_val then_bb else_bb builder);
+        L.builder_at_end context merge_bb
+
+      | SWhile (predicate, body) ->
+        let pred_bb = L.append_block context "while" the_function in
+        ignore(L.build_br pred_bb builder);
+
+        let body_bb = L.append_block context "while_body" the_function in
+        add_terminal (stmt (L.builder_at_end context body_bb) body)
+          (L.build_br pred_bb);
+
+        let pred_builder = L.builder_at_end context pred_bb in
+        let bool_val = expr pred_builder predicate in
+
+        let merge_bb = L.append_block context "merge" the_function in
+        ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
+        L.builder_at_end context merge_bb
+
       | SWhile (predicate, body)                -> raise (Error "While statement not implemented")
       | _                                       -> raise (Error "Statement match not implemented for stmt builder")
     in 
