@@ -1,6 +1,6 @@
 #!/bin/bash
 verbose=0
-type="sast"
+type="llvm"
 
 while getopts v:t: flag
 do
@@ -39,27 +39,7 @@ llvm_tests() {
         echo "______________________________________"
     done
 }
-sast_tests() {
-    cd test/semantsamples
-    echo "Beginning SAST tests"
-    for i in *.vp; do
-        echo "Running SAST test on: $i"
-        if [ $verbose -eq 1 ];
-        then
-            ../../viper.native -a $i
-        else
-            ../../viper.native -a $i >/dev/null 2>&1
-        fi
-        if [ $? -eq 0 ]
-        then
-            echo "PASSED"
-        else
-            echo "FAILURE: $i"
-            exit 1
-        fi
-        echo "______________________________________"
-    done
-}
+
 ast_tests() {
     cd test/tests
     echo "Beginning AST tests"
@@ -95,5 +75,5 @@ if [ $type == "llvm" ]
 then
     llvm_tests
 else
-    sast_tests
+    ast_tests
 fi

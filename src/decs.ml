@@ -20,6 +20,8 @@ type func_table = {
   ret_typ : typ;
 }
 
+let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"]
+
 let rec toi scope s =
     if StringMap.mem s scope.variables then
       StringMap.find s scope.variables 
@@ -58,10 +60,7 @@ let get_bind_decs scope bind =
   let ty, name = bind in add_symbol name ty scope
           
 let rec get_expr_decs scope expr = 
-  let new_scope = {
-    variables = StringMap.empty;
-    parent = Some(scope);
-  } in match expr with
+   match expr with
       Binop(e1, _, e2) -> 
         let expr_list = [e1; e2] in List.fold_left get_expr_decs scope expr_list
     | Unop(_, e) -> get_expr_decs scope e
@@ -109,8 +108,21 @@ let rec get_stmt_decs scope stmt =
 
 let get_vars scope s_list = List.fold_left get_stmt_decs scope s_list
 
+let valid_func_name fd map = 
+  let rec unused_name name illegals = match illegals with
+      [] -> ()
+    | illegal_name :: _ when name = illegal_name ->
+        raise (Failure ("Error: illegal function name " ^ name))
+    | _ :: tail -> unused_name name tail
+  in let _ = unused_name fd.fname illegal_func_names in
+    let key = key_string fd.fname fd.formals in
+    if StringMap.mem key map then 
+      raise (Failure("Error: function " ^ fd.fname ^ " is already defined with formal arguments (" ^ 
+      (string_of_params fd.formals) ^ ")"))
+    else key
+
 let build_func_table global_scope (fd : func_decl) map = 
-  let key = key_string fd.fname fd.formals in
+  let key = valid_func_name fd map in
   if StringMap.mem key map then 
     raise (Failure("Error: function " ^ fd.fname ^ " is already defined with formal arguments (" ^ 
     (string_of_params fd.formals) ^ ")"))
@@ -137,8 +149,29 @@ let get_decs (s_list, f_list) =
     parent = None;
   } (List.rev s_list) in
   
+  (* Collect declarations for Viper's built-in functions *)
+  let built_in_funcs = 
+    let build_built_in_func_table (name, typ) map = 
+      let dummy_scope = {
+        variables = StringMap.empty;
+        parent = None;
+      } in StringMap.add name {
+        formals = dummy_scope;
+        locals = dummy_scope;
+        ret_typ = typ;
+      } map
+    in List.fold_left (fun m f -> build_built_in_func_table f m) StringMap.empty [
+      ("print", Nah);
+      ("len", Int);
+      ("int", Int);
+      ("char", Char);
+      ("float", Float);
+      ("bool", Bool);
+      ("string", String);
+      ("nah", Nah); 
+    ] in
 
   let get_funcs f_list = 
-    List.fold_left (fun m f -> build_func_table globals f m) StringMap.empty f_list
+    List.fold_left (fun m f -> build_func_table globals f m) built_in_funcs f_list
 
 in (globals, get_funcs f_list)

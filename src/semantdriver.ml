@@ -4,15 +4,20 @@ open Boolcheck
 open Rhandlhand 
 open Decs 
  
-let check(statements, functions) = 
+let check (statements, functions) = 
 
 let symbol_table = get_decs (statements, functions) in
 
-
 let global_scope = fst symbol_table in
 
-
 let function_scopes = snd symbol_table in
+
+let rec check_return slist ret = match slist with 
+    Return _ :: _ -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
+  | _ :: ss -> check_return ss ret 
+  | [] -> if ret = Nah then true else raise (Failure "Function does not have a return statement at its highest level") 
+
+in 
 
 let check_expr_scope scope = function 
     DecAssign(ty, s, _) -> add_symbol_driver s ty scope 
@@ -40,6 +45,7 @@ let rec expr scope deepscope  = function
                   |	((t1,_) :: (t2,_) :: _) when t1 != t2 ->
 	                raise (Failure "List types are inconsistent")
                   | _ :: t -> check_types t
+                  | [] -> raise (Failure "listlit became empty") 
                   in check_types eval_list 
 |   DictElem(l, s) -> let (t1, e1) = expr scope deepscope l in 
                       let (t2, e2) = expr scope deepscope s in 
@@ -50,6 +56,7 @@ let rec expr scope deepscope  = function
                   |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when t1 != t3 || t2 != t4 ->
 	                raise (Failure "Dictionary types are inconsistent")
                   | _ :: t -> check_types t
+                  | []     -> raise (Failure "dictlit became empty") 
                   in check_types eval_list  
 |   Id l -> (toi scope l, SId l)
 |   Binop(e1, op, e2) as e -> 
@@ -79,19 +86,64 @@ let rec expr scope deepscope  = function
                                  string_of_uop uop ^ string_of_typ t ^
                                  " in " ^ string_of_expr ex))
           in (ty, SUnop(uop, (t, e')))
-|   Assign(s, e) as ex -> 
+|   Assign(s, e) -> 
           let lt = toi scope s 
           and (rt, e') = expr scope deepscope e in
-          let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
-            string_of_typ rt ^ " in " ^ string_of_expr ex
-          in (check_assign lt rt, SAssign(s, (rt, e')))
-|   Deconstruct(l, e) -> (Int, SDeconstruct(l, expr scope deepscope e)) 
+          (check_assign lt rt, SAssign(s, (rt, e')))
+|   Deconstruct(l, e) -> (****** Work in progress, discrepancy between group and list literals ******)
+      let (e_typ, _) = expr scope deepscope e in
+      let _ = match e_typ with
+          Group(typs) -> typs
+        | _ -> raise (Failure ("Error: deconstruct requires a Group, but was given " ^ string_of_typ e_typ ^ " " ^ string_of_expr e))
+      in 
+        (Int, SDeconstruct(l, expr scope deepscope e)) 
 |   OpAssign(s, op, e) -> let (t, e1) = expr scope deepscope e in 
                           if t = (toi scope s) then (t, SOpAssign(s, op, (t, e1))) else raise (Failure "types not the same") 
 |   DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
-|   Access(e1, e2) -> (Int, SAccess( expr scope deepscope e1, expr scope deepscope e2))  
-|   AccessAssign(e1, e2, e3) -> (Int, SAccessAssign( expr scope deepscope e1, expr scope deepscope e2, expr scope deepscope e3)) 
+|   Access(e1, e2) -> 
+      let (t1, e1') = expr scope deepscope e1
+      and (t2, e2') = expr scope deepscope e2 in 
+      (match t1 with
+          Array(t) when t2 = Int -> (t, SAccess((t1, e1'), (t2, e2')))
+        | Array(_) -> raise (Failure ("Error: Integer required for Array access, given type " ^ string_of_typ t2))
+        | Dictionary((key_t, _)) when t2 = key_t -> (key_t, SAccess((t1, e1'), (t2, e2')))
+        | Dictionary((key_t, _)) -> raise (Failure ("Error: " ^ string_of_typ key_t ^ " required for Dictionary access, given type " ^ string_of_typ t2))
+        | _ -> raise (Failure ("Error: access not invalid for type " ^ string_of_typ t1)))
+|   AccessAssign(e1, e2, e3) ->       
+      let (t1, e1') = expr scope deepscope e1
+      and (t2, e2') = expr scope deepscope e2
+      and (t3, e3') = expr scope deepscope e3 in
+      (match t1 with
+          Dictionary((key_t, val_t)) when t3 = val_t ->
+            if t2 = key_t then (t3, SAccessAssign((t1, e1'), (t2, e2'), (t3, e3')))
+            else raise (Failure ("Error: key type " ^ string_of_typ key_t ^ " expected for Dictionary access, but " ^
+                                string_of_typ t2 ^ " given in expression " ^ string_of_expr e2))
+        | Dictionary((_, val_t)) -> raise (Failure ("Error: value type " ^ string_of_typ t3 ^ " cannot be included in Dictionary " ^ 
+                                            string_of_expr e1 ^ " with value type " ^ string_of_typ val_t))
+        | Array(t) when t = t3 -> 
+            if t2 = Int then (t3, SAccessAssign((t1, e1'), (t2, e2'), (t3, e3')))
+            else raise (Failure ("Error: integer expected for Array access, but " ^ string_of_typ t2 ^ 
+                                " given in expression " ^ string_of_expr e2))
+        | Array(t) -> raise (Failure ("Error: type " ^ string_of_typ t3 ^ " cannot be included in Array " ^ string_of_expr e1 ^ 
+                                      " with type " ^ string_of_typ t))
+        | _ -> raise (Failure ("Error: expression " ^ string_of_expr e1 ^ " has type " ^ string_of_typ t1 ^
+                                ", expected type Array")))
 |   Call(fname, args) -> 
+
+      let eval_list = List.map (expr scope deepscope) args in 
+      let key_func = key_string fname eval_list in  
+      let fd = StringMap.find key_func function_scopes in
+      let param_length = StringMap.cardinal fd.formals.variables in
+      if List.length args != param_length then
+      raise (Failure ("expecting " ^ string_of_int param_length ^ 
+                " arguments in function call" ))
+      else let check_call (_, ft) e = 
+      let (et, e') = expr scope deepscope e in 
+      (check_assign ft et, e')
+      in 
+      let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
+      in (fd.ret_typ, SCall(fname, args')) 
+|   AttributeCall(e, fname, args) -> 
                   let eval_list = List.map (expr scope deepscope) args in 
                   let key_func = key_string fname eval_list in  
                   let fd = StringMap.find key_func function_scopes in
@@ -104,8 +156,8 @@ let rec expr scope deepscope  = function
                   (check_assign ft et, e')
                   in 
                   let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
-                  in (fd.ret_typ, SCall(fname, args')) 
-|   AttributeCall(e, s, l) -> (Int, SAttributeCall(expr scope deepscope e, s, List.map (expr scope deepscope) l ))  
+                  in (fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
+|   _  -> raise (Failure "expression is not an expression")  
 
 in 
 
@@ -120,7 +172,7 @@ let rec check_stmt scope inloop  =
 |   Panic e -> SPanic (expr scope inloop e) 
 |   If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt scope inloop b1, check_stmt scope inloop b2) 
 |   While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s) 
-|   Return e -> raise (Failure "return outside a function")
+|   Return _ -> raise (Failure "return outside a function")
 |   Block sl -> 
           let rec check_stmt_list blockscope = function
               [Return _ as s] -> [check_stmt blockscope inloop s]
@@ -132,6 +184,7 @@ let rec check_stmt scope inloop  =
 |   PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
 
 |   Dec(ty, l) -> SDec(ty, l)
+|   _  -> raise (Failure "statement is not a statement") 
 
  in
 
@@ -162,6 +215,7 @@ let rec check_stmt scope inloop  =
 |   PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
 
 |   Dec(ty, l) -> SDec(ty, l)
+|   _  -> raise (Failure "statement is not a statement")
 
 in
  let return_func = function 
@@ -171,7 +225,7 @@ in
   in 
 
  let check_function ( fd : func_decl ) = 
- 
+  if check_return fd.body (return_func fd.typ)  then 
     let key_func = key_string fd.fname fd.formals in 
       let current_function = StringMap.find key_func function_scopes in 
       { styp = fd.typ;
@@ -181,8 +235,25 @@ in
 	    SBlock(sl) -> sl
       | _ -> raise (Failure ("internal error: block didn't become a block?"))
     }
+    else raise (Failure "there is not return statement at the highest level of the function")
         (*List.map (check_stmt_func current_function.locals false fd.typ) fd.body *)
 
 in 
 
-(List.map (check_stmt global_scope false) statements, List.map check_function functions)
+let sstatements = List.map (check_stmt global_scope false) statements in
+let sfuncs = List.map check_function functions in
+
+let rec has_main sfuncs = match sfuncs with
+    [] -> false
+  | sfd :: _ when sfd.sfname = "main" && sfd.styp = Function(Int) -> true
+  | sfd :: _ when sfd.sfname = "main" -> raise (Failure ("Error: function main must return type Int, not type " ^ string_of_typ sfd.styp))
+  | _ :: tail -> has_main tail in
+
+let updated_sfuncs = if has_main sfuncs then sfuncs else
+  { styp = Int;
+    sfname = "main";
+    sformals = [];
+    sbody = sstatements;
+  } :: sfuncs in
+
+(sstatements, updated_sfuncs)

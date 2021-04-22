@@ -2,9 +2,6 @@ TODO:
 
 
 Deconstruct
-Access
-AttributeCall
 
-Need to check that a function declaration with any return type other than nah has a return statement. 
 
-Fix warnings 
+Note: The warnings that are currently appearing can be ignored (type directed disambiguation is fine) 

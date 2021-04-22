@@ -9,7 +9,7 @@ all : viper.native
 
 .PHONY: viper.native
 viper.native :
-	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4 \
+	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4-42-45 \
 		viper.native
 
 # "make clean" removes all generated files
@@ -19,7 +19,7 @@ clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff viper scanner.ml parser.ml parser.mli
 	rm -rf printbig
-	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
+	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe library
 
 # More detailed: build using ocamlc/ocamlopt + ocamlfind to locate LLVM
 
@@ -55,3 +55,8 @@ scanner.cmx : parser.cmx
 semant.cmo : ast.cmo
 semant.cmx : ast.cmx
 parser.cmi : ast.cmo
+
+### C Standard Library
+
+library : library.c
+	gcc -o library library.c -lm

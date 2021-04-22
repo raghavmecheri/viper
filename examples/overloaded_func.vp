@@ -1,0 +1,33 @@
+int func test(int x) {
+    return x * x;
+}
+
+int func test2() {
+    return 1;
+}
+
+int func test() {
+    return 1;
+}
+
+int func test(int x, float y, bool z, int a, int b) {
+    return 1;
+}
+
+int func test(float x, int y) {
+    return 2;
+}
+
+int func test(int a, float b, bool c, int d, char e) {
+    return 3;
+}
+
+int func test(bool a){
+    return a;
+}
+
+int func test2(float x, int y) {
+
+}
+
+test(10);
