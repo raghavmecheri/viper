@@ -177,7 +177,8 @@ let translate (statements, functions) =
             | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
 
-      | SAttributeCall(e, f, el)  -> raise (Error "SAttributeCall not implemented")
+      (* this is so sketch lol*)
+      | SAttributeCall(e, f, el)  -> expr builder (A.Nah, SCall(f, e::el))
       | SNoexpr                   -> L.const_int i32_t 0
       | _ -> raise (Error "Expression match not implemented")
 
