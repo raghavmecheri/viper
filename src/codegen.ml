@@ -9,7 +9,7 @@ module StringMap = Map.Make(String)
 (* translate : Sast.program -> Llvm.module 
    a viper program consists of statements and function defs
 *)
-let translate (statements, functions) =
+let translate (_, functions) =
   let context    = L.global_context () in
 
   (* Create the LLVM compilation module into which
@@ -80,7 +80,7 @@ let translate (statements, functions) =
     let get_format_str (t, _) = match t with
         A.Int -> int_format_str
       | A.Char -> char_format_str
-      | A.String -> 
+      | A.String -> str_format_str
       | _ -> raise (Error "print passed an invalidtype")
     in
 
