@@ -79,11 +79,10 @@ let translate (statements, functions) =
       | _ -> raise (Error "print passed an invalid/unimplemented literal")
     in
 
-    (* TODO: local variables code goes here *)
-
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
+    (* TODO: get formals working*)
     let local_vars:(string, L.llvalue) Hashtbl.t = Hashtbl.create 50
     (* let add_formal m (t, n) p = 
        L.set_value_name n p;
@@ -126,27 +125,11 @@ let translate (statements, functions) =
       | SBoolLiteral(bln)         -> L.const_int i1_t (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
       | SStringLiteral(str)       -> L.build_global_stringptr str "str" builder
-      | SId s                     -> L.build_load (lookup s) s builder
-      | SAssign (s, e)            -> 
-        let e' = expr builder e in
-        ignore(L.build_store e' (lookup s) builder); e'
-      | SDecAssign (t, s, e)      -> 
-        let local_var = L.build_alloca (ltype_of_typ t) s builder in
-        Hashtbl.add local_vars s local_var;
-        let e' = expr builder e in
-        ignore(L.build_store e' (lookup s) builder); e'
       | SListLiteral(list)        -> raise (Error "SListLiteral not implemented")
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
-      | SUnop(op, ((t, _) as e)) ->
-        let e' = expr builder e in
-        (match op with
-           A.Neg when t = A.Float -> L.build_fneg 
-         | A.Neg                  -> L.build_neg
-         | A.Not                  -> L.build_not 
-         | A.Incr                 -> raise (Error "Incr not implemented")
-         | A.Decr                 -> raise (Error "Decr not implemented")
-        ) e' "tmp" builder
+
+      | SId s                     -> L.build_load (lookup s) s builder
       | SBinop (e1, op, e2) ->
         let e1' = expr builder e1
         and e2' = expr builder e2 in
@@ -166,18 +149,49 @@ let translate (statements, functions) =
          | A.Mod     -> raise (Error "Mod not implemented")
          | A.Has     -> raise (Error "Has not implemented")
         ) e1' e2' "tmp" builder
+
+      | SUnop(op, ((t, _) as e)) ->
+        let e' = expr builder e in
+        (match op with
+           A.Neg when t = A.Float -> L.build_fneg 
+         | A.Neg                  -> L.build_neg
+         | A.Not                  -> L.build_not 
+         | A.Incr                 -> raise (Error "Incr not implemented")
+         | A.Decr                 -> raise (Error "Decr not implemented")
+        ) e' "tmp" builder
+
+      | SAssign (s, e)            -> 
+        let e' = expr builder e in
+        ignore(L.build_store e' (lookup s) builder); e'
+      | SDeconstruct(v, e)        -> raise (Error "SDeconstruct not implemented")
+      | SOpAssign(v, o, e)        -> raise (Error "SOpAssign not implemented")
+      | SDecAssign(t, s, e)       -> 
+        let local_var = L.build_alloca (ltype_of_typ t) s builder in
+        Hashtbl.add local_vars s local_var;
+        let e' = expr builder e in
+        ignore(L.build_store e' (lookup s) builder); e'
+      | SAccess(e, l)             -> raise (Error "SAccess not implemented")
+      | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
+
+      (* hardcoded SCalls for built-ins *)
       | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
-      | SCall (f, args) -> 
+
+      (* SCall for user defined functions *)
+      | SCall (f, args)           -> 
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
         let result = (match fdecl.styp with 
               A.Nah -> ""
             | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
+
+      | SAttributeCall(e, f, el)  -> raise (Error "SAttributeCall not implemented")
+      | SNoexpr                   -> L.const_int i32_t 0
       | _ -> raise (Error "Expression match not implemented")
 
     and
+      (* used to map bool values to strings for printf *)
       get_print_value builder (t, e) = match e with
         SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
         in expr builder (A.Bool, strlit)
@@ -199,7 +213,8 @@ let translate (statements, functions) =
       | SSkip expr                              -> raise (Error "Skip statement not implemented")
       | SAbort expr                             -> raise (Error "Abort statement not implemented")
       | SPanic expr                             -> raise (Error "Panic statement not implemented")
-      (* this if and while is straight from microc if issues *)
+
+      (* this if and while is straight from microc if issues arise *)
       | SIf (predicate, then_stmt, else_stmt)   -> 
         let bool_val = expr builder predicate in
         let merge_bb = L.append_block context "merge" the_function in
@@ -237,6 +252,7 @@ let translate (statements, functions) =
     let builder = stmt builder (SBlock fdecl.sbody) in
 
     (* Add a return if the last block falls off the end *)
+    (* TODO: do we need this or does semantic checking check for this? *)
     add_terminal builder (match fdecl.styp with
           A.Nah -> L.build_ret_void
         | A.Float -> L.build_ret (L.const_float float_t 0.0)
