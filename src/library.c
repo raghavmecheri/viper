@@ -410,6 +410,16 @@ void* access_str_key(struct dict* indict, char* key){
     return toret;
 }
 
+void* access_char_key(struct dict* indict, char key){
+    void* toret = NULL;
+    for(int i = 0; i < indict->pairs->size; i++){
+        if(*((char*) access_pair(indict->pairs, i)->key) == key){
+            toret = access_pair(indict->pairs, i)->val;
+        }
+    }
+    return toret;
+}
+
 float pow2(float base){
     return pow(base, 2);
 }
@@ -503,4 +513,12 @@ int main(void){
     add_keyval(testdict, str_alloc_zone("gabba"), int_alloc_zone(12));
     printf("access_str_key(testdict, \"yo\"): %d\n", *((int*) access_str_key(testdict, "yo")));
     printf("access_str_key(testdict, \"yo\"): %d\n", *((int*) access_str_key(testdict, "gabba")));
+
+    struct dict* chrdict = create_dict("char", "int");
+    //void* test1 = str_alloc_zone("yo");
+    //void* test2 = int_alloc_zone(1);
+    add_keyval(chrdict, char_alloc_zone('A'), int_alloc_zone(7));
+    add_keyval(chrdict, char_alloc_zone('B'), int_alloc_zone(8));
+    printf("access_char_key(chrdict, 'A'): %d\n", *((int*) access_char_key(chrdict, 'A')));
+    printf("access_char_key(chrdict, 'B'): %d\n", *((int*) access_char_key(chrdict, 'B')));
 }
