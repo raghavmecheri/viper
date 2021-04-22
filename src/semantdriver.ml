@@ -4,13 +4,11 @@ open Boolcheck
 open Rhandlhand 
 open Decs 
  
-let check(statements, functions) = 
+let check (statements, functions) = 
 
 let symbol_table = get_decs (statements, functions) in
 
-
 let global_scope = fst symbol_table in
-
 
 let function_scopes = snd symbol_table in
 
@@ -33,6 +31,13 @@ let check_stmt_scope scope = function
 |   _ -> scope 
 
 in
+
+let return_func = function 
+      Function(e) -> e 
+  |   e           -> e 
+  |   _           -> raise (Failure "function return type is flawed") 
+
+  in 
 
 let rec expr scope deepscope  = function 
     IntegerLiteral l -> (Int, SIntegerLiteral l)
@@ -144,7 +149,7 @@ let rec expr scope deepscope  = function
       (check_assign ft et, e')
       in 
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
-      in (fd.ret_typ, SCall(fname, args')) 
+      in (return_func fd.ret_typ, SCall(fname, args')) 
 |   AttributeCall(e, fname, args) -> 
                   let eval_list = List.map (expr scope deepscope) args in 
                   let key_func = key_string fname eval_list in  
@@ -158,7 +163,7 @@ let rec expr scope deepscope  = function
                   (check_assign ft et, e')
                   in 
                   let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
-                  in (fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
+                  in (return_func fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
 |   _  -> raise (Failure "expression is not an expression")  
 
 in 
@@ -220,17 +225,13 @@ let rec check_stmt scope inloop  =
 |   _  -> raise (Failure "statement is not a statement")
 
 in
- let return_func = function 
-      Function(e) -> e 
-  |   _           -> raise (Failure "function return type is flawed") 
-
-  in 
+ 
 
  let check_function ( fd : func_decl ) = 
   if check_return fd.body (return_func fd.typ)  then 
     let key_func = key_string fd.fname fd.formals in 
       let current_function = StringMap.find key_func function_scopes in 
-      { styp = fd.typ;
+      { styp = return_func fd.typ;
         sfname = fd.fname;
         sformals = fd.formals;
         sbody = match check_stmt_func current_function.locals false (return_func fd.typ) (Block fd.body) with
@@ -242,4 +243,20 @@ in
 
 in 
 
-(List.map (check_stmt global_scope false) statements, List.map check_function functions)
+let sstatements = List.map (check_stmt global_scope false) statements in
+let sfuncs = List.map check_function functions in
+
+let rec has_main sfuncs = match sfuncs with
+    [] -> false
+  | sfd :: _ when sfd.sfname = "main" && sfd.styp = Int -> true
+  | sfd :: _ when sfd.sfname = "main" -> raise (Failure ("Error: function main must return type Int, not type " ^ string_of_typ sfd.styp))
+  | _ :: tail -> has_main tail in
+
+let updated_sfuncs = if has_main sfuncs then sfuncs else
+  { styp = Int;
+    sfname = "main";
+    sformals = [];
+    sbody = List.rev sstatements;
+  } :: sfuncs in
+
+(sstatements, updated_sfuncs)

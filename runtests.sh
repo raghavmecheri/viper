@@ -95,5 +95,5 @@ if [ $type == "llvm" ]
 then
     llvm_tests
 else
-    sast_tests
+   sast_tests
 fi
