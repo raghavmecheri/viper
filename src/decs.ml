@@ -1,10 +1,10 @@
 (* * * * *
-  This file semantically checks all variable and function declarations in the AST.
-  Duplicate variables, nah variable declarations, and function declarations
-  with the same parameters throw errors.
-  A scoped symbol table mapping variable names to their types is returned, along with  
-  a mapping of functions to their scoped formal and local variables.
-* * * * *)
+   This file semantically checks all variable and function declarations in the AST.
+   Duplicate variables, nah variable declarations, and function declarations
+   with the same parameters throw errors.
+   A scoped symbol table mapping variable names to their types is returned, along with  
+   a mapping of functions to their scoped formal and local variables.
+ * * * * *)
 
 open Ast
 
@@ -23,9 +23,9 @@ type func_table = {
 let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"]
 
 let rec toi scope s =
-    if StringMap.mem s scope.variables then
-      StringMap.find s scope.variables 
-    else match scope.parent with
+  if StringMap.mem s scope.variables then
+    StringMap.find s scope.variables 
+  else match scope.parent with
       Some(parent) -> toi parent s 
     | _ -> raise (Failure "Variable not found") 
 
@@ -39,72 +39,72 @@ let rec is_valid_dec name scope =
   if StringMap.mem name scope.variables then
     raise (Failure ("Error: variable " ^ name ^ " is already defined"))
   else match scope.parent with
-      Some(parent) -> print_endline name; is_valid_dec name parent
-    | _ -> print_endline (name ^ " not found"); true
+      Some(parent) -> (* print_endline name; *) is_valid_dec name parent
+    | _ -> (* print_endline (name ^ " not found"); *) true
 
 let add_symbol name ty scope = match ty with
     Nah -> raise (Failure ("Error: variable " ^ name ^ " declared with type nah"))
   | _  -> if is_valid_dec name scope then {
-            variables = StringMap.add name ty scope.variables;
-            parent = scope.parent;
-          } else scope (* Never enters else clause, but still needed to avoid type error *)
+      variables = StringMap.add name ty scope.variables;
+      parent = scope.parent;
+    } else scope (* Never enters else clause, but still needed to avoid type error *)
 
 let add_symbol_driver name ty scope = match ty with
     Nah -> raise (Failure ("Error: variable " ^ name ^ " declared with type nah"))
   | _  ->  {
-            variables = StringMap.add name ty scope.variables;
-            parent = scope.parent;
-          } 
+      variables = StringMap.add name ty scope.variables;
+      parent = scope.parent;
+    } 
 
 let get_bind_decs scope bind = 
   let ty, name = bind in add_symbol name ty scope
-          
+
 let rec get_expr_decs scope expr = 
-   match expr with
-      Binop(e1, _, e2) -> 
-        let expr_list = [e1; e2] in List.fold_left get_expr_decs scope expr_list
-    | Unop(_, e) -> get_expr_decs scope e
-    | Ternop(e1, e2, e3) -> 
-        let expr_list = [e1; e2; e3] in List.fold_left get_expr_decs scope expr_list
-    | OpAssign(_, _, e)
-    | Assign(_, e) -> get_expr_decs scope e
-    | DecAssign(ty, name, e) -> 
-        let updated_scope = get_expr_decs scope e in add_symbol name ty updated_scope
-    | Deconstruct(b_list, e) -> 
-        let updated_scope = List.fold_left get_bind_decs scope b_list in get_expr_decs updated_scope e
-    | Access(arr, index) ->
-        let expr_list = [arr; index] in List.fold_left get_expr_decs scope expr_list
-    | AccessAssign(e1, e2, e3) ->
-        let expr_list = [e1; e2; e3] in List.fold_left get_expr_decs scope expr_list
-    | Call(_, expr_list) -> List.fold_left get_expr_decs scope expr_list
-    | AttributeCall(e1, _, e_list) -> 
-        let expr_list = e1 :: e_list in List.fold_left (get_expr_decs) scope expr_list
-    | _ -> scope
+  match expr with
+    Binop(e1, _, e2) -> 
+    let expr_list = [e1; e2] in List.fold_left get_expr_decs scope expr_list
+  | Unop(_, e) -> get_expr_decs scope e
+  | Ternop(e1, e2, e3) -> 
+    let expr_list = [e1; e2; e3] in List.fold_left get_expr_decs scope expr_list
+  | OpAssign(_, _, e)
+  | Assign(_, e) -> get_expr_decs scope e
+  | DecAssign(ty, name, e) -> 
+    let updated_scope = get_expr_decs scope e in add_symbol name ty updated_scope
+  | Deconstruct(b_list, e) -> 
+    let updated_scope = List.fold_left get_bind_decs scope b_list in get_expr_decs updated_scope e
+  | Access(arr, index) ->
+    let expr_list = [arr; index] in List.fold_left get_expr_decs scope expr_list
+  | AccessAssign(e1, e2, e3) ->
+    let expr_list = [e1; e2; e3] in List.fold_left get_expr_decs scope expr_list
+  | Call(_, expr_list) -> List.fold_left get_expr_decs scope expr_list
+  | AttributeCall(e1, _, e_list) -> 
+    let expr_list = e1 :: e_list in List.fold_left (get_expr_decs) scope expr_list
+  | _ -> scope
 
 let rec get_stmt_decs scope stmt =
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
   } in match stmt with
-      Block(s_list) -> 
-        let _ = List.fold_left get_stmt_decs new_scope s_list in scope
-    | Expr(e) -> get_expr_decs scope e
-    | Dec(ty, name) -> add_symbol name ty scope
-    | If(cond, then_s, else_s) -> 
-        let cond_scope = get_expr_decs new_scope cond in
-        let _ = (get_stmt_decs cond_scope then_s, get_stmt_decs cond_scope else_s) in scope
-    | For(e1, e2, e3, s) -> 
-        let expr_list = [e1; e2; e3] in
-        let for_scope = List.fold_left get_expr_decs new_scope expr_list in 
-        let _ = get_stmt_decs for_scope s in scope
-    | DecForIter(ty, name, e, s) -> 
-        let iter_scope = add_symbol name ty new_scope in
-        let for_scope = get_expr_decs iter_scope e in 
-        let _ = get_stmt_decs for_scope s in scope
-    | While(e, s) -> 
-        let while_scope = get_expr_decs new_scope e in 
-        let _ = get_stmt_decs while_scope s in scope
-    | _ -> scope
+    Block(s_list) -> 
+    let _ = List.fold_left get_stmt_decs new_scope s_list in scope
+  | Expr(e) -> get_expr_decs scope e
+  | Dec(ty, name) -> add_symbol name ty scope
+  | If(cond, then_s, else_s) -> 
+    let cond_scope = get_expr_decs new_scope cond in
+    let _ = (get_stmt_decs cond_scope then_s, get_stmt_decs cond_scope else_s) in scope
+  | For(e1, e2, e3, s) -> 
+    let expr_list = [e1; e2; e3] in
+    let for_scope = List.fold_left get_expr_decs new_scope expr_list in 
+    let _ = get_stmt_decs for_scope s in scope
+  | DecForIter(ty, name, e, s) -> 
+    let iter_scope = add_symbol name ty new_scope in
+    let for_scope = get_expr_decs iter_scope e in 
+    let _ = get_stmt_decs for_scope s in scope
+  | While(e, s) -> 
+    let while_scope = get_expr_decs new_scope e in 
+    let _ = get_stmt_decs while_scope s in scope
+  | _ -> scope
 
 let get_vars scope s_list = List.fold_left get_stmt_decs scope s_list
 
@@ -112,43 +112,43 @@ let valid_func_name fd map =
   let rec unused_name name illegals = match illegals with
       [] -> ()
     | illegal_name :: _ when name = illegal_name ->
-        raise (Failure ("Error: illegal function name " ^ name))
+      raise (Failure ("Error: illegal function name " ^ name))
     | _ :: tail -> unused_name name tail
   in let _ = unused_name fd.fname illegal_func_names in
-    let key = key_string fd.fname fd.formals in
-    if StringMap.mem key map then 
-      raise (Failure("Error: function " ^ fd.fname ^ " is already defined with formal arguments (" ^ 
-      (string_of_params fd.formals) ^ ")"))
-    else key
+  let key = key_string fd.fname fd.formals in
+  if StringMap.mem key map then 
+    raise (Failure("Error: function " ^ fd.fname ^ " is already defined with formal arguments (" ^ 
+                   (string_of_params fd.formals) ^ ")"))
+  else key
 
 let build_func_table global_scope (fd : func_decl) map = 
   let key = valid_func_name fd map in
   if StringMap.mem key map then 
     raise (Failure("Error: function " ^ fd.fname ^ " is already defined with formal arguments (" ^ 
-    (string_of_params fd.formals) ^ ")"))
+                   (string_of_params fd.formals) ^ ")"))
   else let formals_scope = List.fold_left get_bind_decs {
-    variables = StringMap.empty;
-    parent = None;
-  } fd.formals in
-  let updated_scope = { 
-    variables = formals_scope.variables;
-    parent = Some(global_scope); } in
-  let locals_scope = get_vars {
-    variables = StringMap.empty;
-    parent = Some(updated_scope);
-  } fd.body in StringMap.add key {
-    formals = updated_scope;
-    locals = locals_scope;
-    ret_typ = fd.typ;
-  } map
+      variables = StringMap.empty;
+      parent = None;
+    } fd.formals in
+    let updated_scope = { 
+      variables = formals_scope.variables;
+      parent = Some(global_scope); } in
+    let locals_scope = get_vars {
+        variables = StringMap.empty;
+        parent = Some(updated_scope);
+      } fd.body in StringMap.add key {
+      formals = updated_scope;
+      locals = locals_scope;
+      ret_typ = fd.typ;
+    } map
 
 let get_decs (s_list, f_list) = 
 
   let globals = get_vars {
-    variables = StringMap.empty;
-    parent = None;
-  } (List.rev s_list) in
-  
+      variables = StringMap.empty;
+      parent = None;
+    } (List.rev s_list) in
+
   (* Collect declarations for Viper's built-in functions *)
   let built_in_funcs = 
     let build_built_in_func_table (name, typ) map = 
@@ -174,4 +174,4 @@ let get_decs (s_list, f_list) =
   let get_funcs f_list = 
     List.fold_left (fun m f -> build_func_table globals f m) built_in_funcs f_list
 
-in (globals, get_funcs f_list)
+  in (globals, get_funcs f_list)
