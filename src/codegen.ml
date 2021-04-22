@@ -54,14 +54,12 @@ let translate (statements, functions) =
       StringMap.add name (L.define_function name ftype the_module, fdecl) m in
     List.fold_left function_decl StringMap.empty functions in
 
-  (* FUNCTION BUILDING CODE (functions) *)
-
   (* Fill in the body of the given function *)
   let build_function_body fdecl =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    (* TODO: this gets redefined for every function declaration *)
+    (* TODO: move this so it wont get redefined for every function declaration *)
     let char_format_str = L.build_global_stringptr "%c\n" "fmt" builder
     and int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
     and str_format_str = L.build_global_stringptr "%s\n" "fmt" builder
@@ -153,7 +151,11 @@ let translate (statements, functions) =
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
       | SDeconstruct(v, e)        -> raise (Error "SDeconstruct not implemented")
-      | SOpAssign(v, o, e)        -> raise (Error "SOpAssign not implemented")
+      | SOpAssign(v, o, e)        ->
+        (* compute value to assign *)
+        let value = expr builder (A.Nah, SBinop( (A.Nah, SId(v)), o, e)) in
+        (* assign result to variable*)
+        ignore(L.build_store value (lookup v) builder); value
       | SDecAssign(t, s, e)       -> 
         let local_var = L.build_alloca (ltype_of_typ t) s builder in
         Hashtbl.add local_vars s local_var;
@@ -234,7 +236,7 @@ let translate (statements, functions) =
         let merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
-      | _                                       -> raise (Error "Statement match not implemented for stmt builder")
+      | _                                       -> raise (Error "Statement match not implemented")
     in 
 
     (* Build the code for each statement in the function *)
@@ -286,7 +288,7 @@ let translate (statements, functions) =
   in  *)
 
 (* build a main function around top-level statements *)
-(* let _ = List.map build_main (List.rev statements) in
+  (* let _ = List.map build_main (List.rev statements) in
 
    (* add a return statement to the main function *)
    let _ = L.build_ret (L.const_int i32_t 0) builder in *)
