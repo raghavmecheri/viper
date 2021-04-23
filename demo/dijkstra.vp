@@ -52,7 +52,7 @@ print(dictToString(visited))
 string func dictToString([char: int] dict) {
     string output = "";
     for ((char, int) path in dict) {
-        output += "The shortest path to Node " + string(path[0]) + " has distance " + string(path[1]) + ".\n"
+        output += "The shortest path to Node " + string(path[0]) + " has distance " + string(path[1]) + ".\n";
     }
     return output;
 }
