@@ -16,7 +16,7 @@ let translate (_, functions) =
      we will generate code *)
   let the_module = L.create_module context "Viper" in
 
-  (* Get llytype from the context *)
+  (* define llytype variables *)
   let i64_t      = L.i64_type    context
   and i32_t      = L.i32_type    context
   and i16_t      = L.i16_type    context
@@ -27,7 +27,7 @@ let translate (_, functions) =
   let str_t      = L.pointer_type i8_t
   in
 
-  (* Return the LLVM lltype for a Viper primitive type *)
+  (* Return the LLVM lltype for a Viper type *)
   let rec ltype_of_typ = function
       A.Int               -> i64_t
     | A.Bool              -> i1_t
@@ -39,6 +39,17 @@ let translate (_, functions) =
     | A.Function(t)       -> (ltype_of_typ t)
     | A.Group(_)          -> raise (Error "Group lltype not implemented")
     | A.Dictionary(_, _)  -> raise (Error "Dictionary lltype not implemented")
+  in
+
+  (* function to return initial value for a declaration*)
+  let rec lvalue_of_typ typ = function
+      A.Int | A.Bool | A.Nah | A.Char -> L.const_int (ltype_of_typ typ) 0
+    | A.Float                         -> L.const_float (ltype_of_typ typ) 0.0
+    | A.String                        -> L.const_pointer_null (ltype_of_typ typ)
+    | A.Array(_)                      -> raise (Error "Array lltype not implemented")
+    | A.Group(_)                      -> raise (Error "Group lltype not implemented")
+    | A.Dictionary(_, _)              -> raise (Error "Dictionary lltype not implemented")
+    | A.Function(_)                   -> raise (Error "What should a function init be ?")
   in
 
   (* Define built-in functions at top of every file *)  
