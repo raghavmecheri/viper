@@ -16,25 +16,29 @@ let translate (_, functions) =
      we will generate code *)
   let the_module = L.create_module context "Viper" in
 
-  (* Get types from the context *)
+  (* Get llytype from the context *)
   let i64_t      = L.i64_type    context
   and i32_t      = L.i32_type    context
   and i16_t      = L.i16_type    context
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
-  and void_t     = L.void_type   context
+  and void_t     = L.void_type   context in
+  let str_t      = L.pointer_type i8_t
   in
 
-  (* Return the LLVM type for a Viper primitive type *)
+  (* Return the LLVM lltype for a Viper primitive type *)
   let rec ltype_of_typ = function
-      A.Int   -> i64_t
-    | A.Char  -> i16_t
-    | A.Float -> float_t
-    | A.Bool  -> i1_t
-    | A.Nah   -> void_t
-    | A.Function(t) -> (ltype_of_typ t)
-    | _       -> raise (Error "Argument is not implemented or is not a Viper type")
+      A.Int               -> i64_t
+    | A.Bool              -> i1_t
+    | A.Nah               -> void_t
+    | A.Char              -> i16_t
+    | A.Float             -> float_t
+    | A.String            -> str_t
+    | A.Array(_)          -> raise (Error "Array lltype not implemented")
+    | A.Function(t)       -> (ltype_of_typ t)
+    | A.Group(_)          -> raise (Error "Group lltype not implemented")
+    | A.Dictionary(_, _)  -> raise (Error "Dictionary lltype not implemented")
   in
 
   (* Define built-in functions at top of every file *)  
@@ -118,7 +122,7 @@ let translate (_, functions) =
       | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
       | SBoolLiteral(bln)         -> L.const_int i1_t (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
-      | SStringLiteral(str)       -> L.build_global_stringptr str "str" builder
+      | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
       | SListLiteral(list)        -> raise (Error "SListLiteral not implemented")
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
@@ -296,7 +300,7 @@ let translate (_, functions) =
   in  *)
 
 (* build a main function around top-level statements *)
-  (* let _ = List.map build_main (List.rev statements) in
+(* let _ = List.map build_main (List.rev statements) in
 
    (* add a return statement to the main function *)
    let _ = L.build_ret (L.const_int i32_t 0) builder in *)
