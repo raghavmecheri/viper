@@ -1,6 +1,6 @@
 # Original Code: https://stackoverflow.com/questions/22897209/dijkstras-algorithm-in-python
 
-char nodes[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+char[] nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 [char: [char:int]] distances = [
     'B': ['A': 5, 'D': 1, 'G': 2],
     'A': ['B': 5, 'D': 3, 'E': 12, 'F' :5],
@@ -13,7 +13,7 @@ char nodes[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 [char: int] unvisited = [];
 [char: int] visited = [];
 
-for(char node in nodes) {
+for (char node in nodes) {
     unvisited[node] = -1;
 }
 
@@ -47,5 +47,13 @@ while(True) {
     current = tempCurrent;
     currentDistance = tempDist;
 }
+print(dictToString(visited))
 
-print(visited.toString())
+string func dictToString([char: int] dict) {
+    string output = "";
+    for ((char, int) path in dict) {
+        output += "The shortest path to Node " + string(path[0]) + " has distance " + string(path[1]) + ".\n"
+    }
+    return output;
+}
+
