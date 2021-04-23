@@ -9,19 +9,25 @@
 open Ast
 
 module StringMap = Map.Make(String)
+
+(* Data structure that holds scoped variables *)
 type scope_table = {
   variables : typ StringMap.t;
   parent : scope_table option;
 }
 
+(* Data structure that stores function declarations *)
 type func_table = {
   formals : scope_table;
   locals : scope_table;
   ret_typ : typ;
 }
 
+(* Names of built-in Viper functions *)
+(* User-defined functions cannot have any name in this list *)
 let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"]
 
+(* Retrieves a type from an ID name *)
 let rec toi scope s =
   if StringMap.mem s scope.variables then
     StringMap.find s scope.variables 
@@ -29,22 +35,27 @@ let rec toi scope s =
       Some(parent) -> toi parent s 
     | _ -> raise (Failure "Variable not found") 
 
+(* Builds a comma-separated string out of a list of parameters *)
+(* For example, [int, char, bool] becomes "(int, char, bool)" *)
 let rec string_of_params params = match params with
     (typ, _) :: [] -> string_of_typ typ
   | (typ, _) ::  p -> string_of_typ typ ^ ", " ^ string_of_params p
   | _              -> "" 
+
+(* Creates a key string used in mapping functions to their declarations *)
+(* Strings include function name and a list of parameters to allow overloaded functions *)
 and key_string name params = name ^ " (" ^ string_of_params params ^ ")"
+and key_string_built_in_functions name ty = name ^ " (" ^ string_of_typ ty ^ ")"
 
-
-let key_string_built_in_functions name ty = name ^ " (" ^ string_of_typ ty ^ ")"
-
+(* Checks to see if a variable name is a duplicate *)
 let rec is_valid_dec name scope = 
   if StringMap.mem name scope.variables then
     raise (Failure ("Error: variable " ^ name ^ " is already defined"))
   else match scope.parent with
-      Some(parent) -> (* print_endline name; *) is_valid_dec name parent
-    | _ -> (* print_endline (name ^ " not found"); *) true
+      Some(parent) -> is_valid_dec name parent
+    | _ -> true
 
+(* Adds a (name, type) pair to a symbol table *)
 let add_symbol name ty scope = match ty with
     Nah -> raise (Failure ("Error: variable " ^ name ^ " declared with type nah"))
   | _  -> if is_valid_dec name scope then {
@@ -59,9 +70,11 @@ let add_symbol_driver name ty scope = match ty with
       parent = scope.parent;
     } 
 
+(* Adds declarations from a bind into a symbol table *)
 let get_bind_decs scope bind = 
   let ty, name = bind in add_symbol name ty scope
 
+(* Adds declarations from expressions into a symbol table *)
 let rec get_expr_decs scope expr = 
   match expr with
     Binop(e1, _, e2) -> 
@@ -84,6 +97,7 @@ let rec get_expr_decs scope expr =
     let expr_list = e1 :: e_list in List.fold_left (get_expr_decs) scope expr_list
   | _ -> scope
 
+(* Adds declarations from statements into a symbol table *)
 let rec get_stmt_decs scope stmt =
   let new_scope = {
     variables = StringMap.empty;
@@ -109,8 +123,12 @@ let rec get_stmt_decs scope stmt =
     let _ = get_stmt_decs while_scope s in scope
   | _ -> scope
 
+(* Driver for getting declarations from a list of statements *)
 let get_vars scope s_list = List.fold_left get_stmt_decs scope s_list
 
+(* Ensure that no functions are duplicated *)
+(* Functions are invalid if they share the name with a built-in Viper function, or it
+   two user-defined functions have the same name and list of formal arguments *)
 let valid_func_name fd map = 
   let rec unused_name name illegals = match illegals with
       [] -> ()
@@ -124,12 +142,10 @@ let valid_func_name fd map =
                    (string_of_params fd.formals) ^ ")"))
   else key
 
+(* Builds a function table for a function declaration *)
 let build_func_table global_scope (fd : func_decl) map = 
   let key = valid_func_name fd map in
-  if StringMap.mem key map then 
-    raise (Failure("Error: function " ^ fd.fname ^ " is already defined with formal arguments (" ^ 
-                   (string_of_params fd.formals) ^ ")"))
-  else let formals_scope = List.fold_left get_bind_decs {
+  let formals_scope = List.fold_left get_bind_decs {
       variables = StringMap.empty;
       parent = None;
     } fd.formals in
@@ -145,8 +161,8 @@ let build_func_table global_scope (fd : func_decl) map =
       ret_typ = fd.typ;
     } map
 
+(* Driver for getting declarations *)
 let get_decs (s_list, f_list) = 
-
   let globals = get_vars {
       variables = StringMap.empty;
       parent = None;
@@ -192,6 +208,7 @@ let get_decs (s_list, f_list) =
       ("nah", Bool, Nah); 
     ] in
 
+  (* Collects function tables for a list of function declarations *)
   let get_funcs f_list = 
     List.fold_left (fun m f -> build_func_table globals f m) built_in_funcs f_list
 
