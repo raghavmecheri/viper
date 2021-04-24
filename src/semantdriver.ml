@@ -105,7 +105,7 @@ let rec expr scope deepscope  = function
       (match t1 with
           Array(t) when t2 = Int -> (t, SAccess((t1, e1'), (t2, e2')))
         | Array(_) -> raise (Failure ("Error: Integer required for Array access, given type " ^ string_of_typ t2))
-        | Dictionary((key_t, _)) when t2 = key_t -> (key_t, SAccess((t1, e1'), (t2, e2')))
+        | Dictionary((key_t, value_t)) when t2 = key_t -> (value_t, SAccess((t1, e1'), (t2, e2')))
         | Dictionary((key_t, _)) -> raise (Failure ("Error: " ^ string_of_typ key_t ^ " required for Dictionary access, given type " ^ string_of_typ t2))
         | _ -> raise (Failure ("Error: access not invalid for type " ^ string_of_typ t1)))
   | AccessAssign(e1, e2, e3) ->       
