@@ -1,0 +1,13 @@
+int a = toInt("5");
+int b = toInt(9.34);
+string c = toString(888);
+string d = toString(false);
+bool e = toBool(400);
+bool f = toBool("");
+float g = toFloat("4.55");
+float h = toFloat(8);
+char i = toChar("fun");
+char j = toChar(255);
+
+int a2 = 4;
+string k = toString(a2);
