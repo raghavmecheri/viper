@@ -1,13 +1,26 @@
 int a = 10;
 int b = 20;
-
 int c = 0;
 
+/* 0 */
+print(c);
+
+/* 10 */
 c += a;
+print(c);
+
+/* -10 */
 c -= b;
+print(c);
 
+/* 190 */
 c += a * b;
+print(c);
 
+/* -10 */
 c -= a * b;
+print(c);
 
+/* 100 */
 c *= c;
+print(c);

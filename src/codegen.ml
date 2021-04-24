@@ -102,6 +102,7 @@ let translate (_, functions) =
       | A.Char    -> char_format_str
       | A.String  -> str_format_str
       | A.Float   -> float_format_str
+      | A.Bool    -> int_format_str
       | _ -> raise (Error "print passed an invalid type")
     in
 
@@ -134,10 +135,11 @@ let translate (_, functions) =
         Some _ -> ()
       | None -> ignore (instr builder) in
 
+    (* this returns an llvalue *)
     let rec expr builder ((_, e) : sexpr) = match e with
         SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
       | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
-      | SBoolLiteral(bln)         -> L.const_int i1_t (if bln then 1 else 0)
+      | SBoolLiteral(bln)         -> L.const_int (ltype_of_typ A.Bool) (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
       | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
       | SListLiteral(list)        -> raise (Error "SListLiteral not implemented")
@@ -145,6 +147,25 @@ let translate (_, functions) =
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
 
       | SId s                     -> L.build_load (lookup s) s builder
+
+      | SBinop ((A.Float,_ ) as e1, op, e2) ->
+        let e1' = expr builder e1
+        and e2' = expr builder e2 in
+        (match op with 
+           A.Add     -> L.build_fadd
+         | A.Sub     -> L.build_fsub
+         | A.Mult    -> L.build_fmul
+         | A.Div     -> L.build_fdiv 
+         | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+         | A.Neq     -> L.build_fcmp L.Fcmp.One
+         | A.Less    -> L.build_fcmp L.Fcmp.Olt
+         | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+         | A.Greater -> L.build_fcmp L.Fcmp.Ogt
+         | A.Geq     -> L.build_fcmp L.Fcmp.Oge
+         | A.And | A.Or ->
+           raise (Failure "internal error: semant should have rejected and/or on float")
+        ) e1' e2' "tmp" builder
+
       | SBinop (e1, op, e2) ->
         let e1' = expr builder e1
         and e2' = expr builder e2 in
@@ -165,7 +186,7 @@ let translate (_, functions) =
          | A.Has     -> raise (Error "Has not implemented")
         ) e1' e2' "tmp" builder
 
-      | SUnop(op, ((t, _) as e)) ->
+      | SUnop(op, ((t, _) as e)) -> 
         let e' = expr builder e in
         (match op with
            A.Neg when t = A.Float -> L.build_fneg 
@@ -214,10 +235,11 @@ let translate (_, functions) =
       | _ -> raise (Error "Expression match not implemented")
 
     and
-      (* used to map bool values to strings for printf *)
+
+      (* TODO: used to map bool values to strings for printf *)
       get_print_value builder (t, e) = match e with
-        SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
-        in expr builder (A.Bool, strlit)
+      (* SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
+         in expr builder (A.String, strlit) *)
       | _ -> expr builder (t, e)
     in
 

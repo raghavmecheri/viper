@@ -25,7 +25,7 @@ type func_table = {
 
 (* Names of built-in Viper functions *)
 (* User-defined functions cannot have any name in this list *)
-let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"]
+let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"; "pow2"]
 
 (* Retrieves a type from an ID name *)
 let rec toi scope s =
@@ -149,17 +149,17 @@ let build_func_table global_scope (fd : func_decl) map =
       variables = StringMap.empty;
       parent = None;
     } fd.formals in
-    let updated_scope = { 
-      variables = formals_scope.variables;
-      parent = Some(global_scope); } in
-    let locals_scope = get_vars {
-        variables = StringMap.empty;
-        parent = Some(updated_scope);
-      } fd.body in StringMap.add key {
-      formals = updated_scope;
-      locals = locals_scope;
-      ret_typ = fd.typ;
-    } map
+  let updated_scope = { 
+    variables = formals_scope.variables;
+    parent = Some(global_scope); } in
+  let locals_scope = get_vars {
+      variables = StringMap.empty;
+      parent = Some(updated_scope);
+    } fd.body in StringMap.add key {
+    formals = updated_scope;
+    locals = locals_scope;
+    ret_typ = fd.typ;
+  } map
 
 (* Driver for getting declarations *)
 let get_decs (s_list, f_list) = 
@@ -172,9 +172,9 @@ let get_decs (s_list, f_list) =
   let built_in_funcs = 
     let build_built_in_func_table (name, param_typ, typ) map = 
       let dummy_scope = add_symbol name param_typ {
-        variables = StringMap.empty;
-        parent = None;
-      } in StringMap.add (key_string_built_in_functions name param_typ) {
+          variables = StringMap.empty;
+          parent = None;
+        } in StringMap.add (key_string_built_in_functions name param_typ) {
         formals = dummy_scope; 
         locals = dummy_scope;
         ret_typ = typ;
@@ -205,7 +205,9 @@ let get_decs (s_list, f_list) =
       ("nah", String, Nah); 
       ("nah", Char, Nah); 
       ("nah", Float, Nah); 
-      ("nah", Bool, Nah); 
+      ("nah", Bool, Nah);
+      ("pow2", Float, Float);
+      ("pow2", Int, Float);
     ] in
 
   (* Collects function tables for a list of function declarations *)

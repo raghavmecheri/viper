@@ -533,6 +533,7 @@ float ptrunc(float input, int decs)
     return floor(pow(10, decs) * input) / pow(10, decs);
 }
 
+#ifdef BUILD_TEST
 int main(void)
 {
     printf("sqrt(100) = %f\n", sqrt(100));
@@ -612,3 +613,4 @@ int main(void)
     printf("access_char_key(chrdict, 'A'): %d\n", *((int *)access_char_key(chrdict, 'A')));
     printf("access_char_key(chrdict, 'B'): %d\n", *((int *)access_char_key(chrdict, 'B')));
 }
+#endif

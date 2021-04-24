@@ -153,6 +153,7 @@ let rec expr scope deepscope  = function
       (check_assign ft et, e') in 
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
       in (return_func fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
+  | Ternop(_,_,_) -> raise (Failure "Ternop slipped through... BLAME RATGHAV")
   | _  -> raise (Failure "expression is not an expression")  
 in 
 

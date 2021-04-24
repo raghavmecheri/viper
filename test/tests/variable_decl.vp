@@ -1,15 +1,24 @@
 int a = 10;
+print(a);
 int b = 20;
+print(b);
 int c;
 c = 10;
+print(c);
 int d = c + 10;
+print(d);
 
-char z = 'a';
+char e = 'a';
+print(e);
 
 bool x = true;
+print(x);
 bool y = false;
+print(y);
 
-float xx = 1.0;
-float zz = 2.0;
-float zzz = 3.33;
+float xx = 1.1;
+print(xx);
+float zz = 2.2;
+print(zz);
 float aa = xx + zz;
+print(aa);

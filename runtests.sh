@@ -21,7 +21,9 @@ llvm_tests() {
         fi
         echo "Running LLVM test on: $i"
         ../../viper.native $i > a.ll
-        output=$(lli a.ll)
+        llc -relocation-model=pic a.ll > a.s
+        cc -o a.exe a.s ../../src/library.o -lm
+        output=$(./a.exe)
         expectedoutput=$(cat "${i}.out")
         rm a.ll
         if [ $verbose -eq 1 ];
