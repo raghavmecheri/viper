@@ -98,10 +98,11 @@ let translate (_, functions) =
        in *)
 
     let get_format_str (t, _) = match t with
-        A.Int -> int_format_str
-      | A.Char -> char_format_str
-      | A.String -> str_format_str
-      | _ -> raise (Error "print passed an invalidtype")
+        A.Int     -> int_format_str
+      | A.Char    -> char_format_str
+      | A.String  -> str_format_str
+      | A.Float   -> float_format_str
+      | _ -> raise (Error "print passed an invalid type")
     in
 
     (* create empty local_vars Hashtbl*)
@@ -160,7 +161,7 @@ let translate (_, functions) =
          | A.Leq     -> L.build_icmp L.Icmp.Sle
          | A.Greater -> L.build_icmp L.Icmp.Sgt
          | A.Geq     -> L.build_icmp L.Icmp.Sge
-         | A.Mod     -> raise (Error "Mod not implemented")
+         | A.Mod     -> L.build_srem
          | A.Has     -> raise (Error "Has not implemented")
         ) e1' e2' "tmp" builder
 
@@ -196,7 +197,7 @@ let translate (_, functions) =
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
 
       | SCall ("pow2", [params]) -> let value = expr builder params in 
-        L.build_call printf_func [| value |] "printf" builder
+        L.build_call pow2_func [| value |] "pow2" builder
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
