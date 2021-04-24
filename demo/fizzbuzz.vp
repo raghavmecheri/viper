@@ -1,12 +1,18 @@
 /* fizzbuzz for-loop with pattern-matching
 valid, short, and easily comprehensible solution */
 
-for (int i = 0; i <= 100; i++) {
-    string output = ??
-        i % 15 == 0 : "fizzbuzz"
-        | i % 3 == 0 : "fizz"
-        | i % 5 == 0 : "buzz"
-        ?? i;
+bool func isDivisible(int x, int div) => (x % div == 0);
 
-    print(output);
+bool divThree;
+bool divFive;
+
+for(int i = 0; i <= 100; i++) {
+    divThree = isDivisible(i, 3);
+    divFive = isDivisible(i, 5);
+    
+    if(divThree) {
+        print("fizz");
+    } else if(divFive) {
+        print("buzz");
+    }
 }
