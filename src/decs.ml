@@ -45,7 +45,13 @@ let rec string_of_params params = match params with
 (* Creates a key string used in mapping functions to their declarations *)
 (* Strings include function name and a list of parameters to allow overloaded functions *)
 and key_string name params = name ^ " (" ^ string_of_params params ^ ")"
-and key_string_built_in_functions name ty = name ^ " (" ^ string_of_typ ty ^ ")"
+
+let rec string_of_params_built_in params = match params with
+    typ :: [] -> string_of_typ typ 
+  | typ :: p -> string_of_typ typ ^ ", " ^ string_of_params_built_in p
+  | _              -> "" 
+
+and key_string_built_in_functions name params = name ^ " (" ^ string_of_params_built_in params ^ ")"
 
 (* Checks to see if a variable name is a duplicate *)
 let rec is_valid_dec name scope = 
@@ -171,43 +177,44 @@ let get_decs (s_list, f_list) =
   (* Collect declarations for Viper's built-in functions *)
   let built_in_funcs = 
     let build_built_in_func_table (name, param_typ, typ) map = 
-      let dummy_scope = add_symbol name param_typ {
+      let dummy_scope = List.fold_left (fun m f -> add_symbol name f m) {
           variables = StringMap.empty;
           parent = None;
-        } in StringMap.add (key_string_built_in_functions name param_typ) {
+        } param_typ in StringMap.add (key_string_built_in_functions name param_typ) {
         formals = dummy_scope; 
         locals = dummy_scope;
         ret_typ = typ;
       } map
     in List.fold_left (fun m f -> build_built_in_func_table f m) StringMap.empty [
-      ("print", Int, Nah);
-      ("print", String, Nah);
-      ("print", Char, Nah);
-      ("print", Bool, Nah);
-      ("print", Float, Nah);
-      ("len", Array(Int), Int);
-      ("len", Array(Float), Int);
-      ("len", Array(Bool), Int);
-      ("len", Array(String), Int);
-      ("len", Array(Char), Int);
-      ("toInt", Float, Int);
-      ("toChar", Int, Char);
-      ("toFloat", Int, Float);
-      ("toBool", Int, Bool);
-      ("toBool", String, Bool);
-      ("toBool", Char, Bool);
-      ("toBool", Bool, Bool);
-      ("toString", Int, String);
-      ("toString", Float, String);
-      ("toString", Bool, String);
-      ("toString", String, String);
-      ("toNah", Int, Nah); 
-      ("toNah", String, Nah); 
-      ("toNah", Char, Nah); 
-      ("toNah", Float, Nah); 
-      ("toNah", Bool, Nah);
-      ("pow2", Float, Float);
-      ("pow2", Int, Float);
+      ("print", [Int], Nah);
+      ("print", [String], Nah);
+      ("print", [Char], Nah);
+      ("print", [Bool], Nah);
+      ("print", [Float], Nah);
+      ("len", [Array(Int)], Int);
+      ("len", [Array(Float)], Int);
+      ("len", [Array(Bool)], Int);
+      ("len", [Array(String)], Int);
+      ("len", [Array(Char)], Int);
+      ("toInt", [Float], Int);
+      ("toChar", [Int], Char);
+      ("toFloat", [Int], Float);
+      ("toBool", [Int], Bool);
+      ("toBool", [String], Bool);
+      ("toBool", [Char], Bool);
+      ("toBool", [Bool], Bool);
+      ("toString", [Int], String);
+      ("toString", [Float], String);
+      ("toString", [Bool], String);
+      ("toString", [String], String);
+      ("toNah", [Int], Nah); 
+      ("toNah", [String], Nah); 
+      ("toNah", [Char], Nah); 
+      ("toNah", [Float], Nah); 
+      ("toNah", [Bool], Nah);
+      ("pow2", [Float], Float);
+      ("pow2", [Int], Float);
+
     ] in
 
   (* Collects function tables for a list of function declarations *)

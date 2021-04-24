@@ -33,6 +33,17 @@ let return_func = function
   | e           -> e 
   | _           -> raise (Failure "function return type is flawed") in 
 
+let type_check t1 t2 = 
+  let type1 = match t1 with 
+  Group([ta; tb]) -> (ta, tb) 
+| _ -> (t1, t1) in 
+  let type2 = match t2 with 
+  Group([tc; td]) -> (tc, td) 
+| _ -> (t2, t2) in
+(fst type1 = fst type2) && (snd type1 = snd type2)  
+
+in
+
 (* Driver for semantically checking expressions *)
 let rec expr scope deepscope  = function 
     IntegerLiteral l -> (Int, SIntegerLiteral l)
@@ -56,8 +67,8 @@ let rec expr scope deepscope  = function
       let rec check_types = function
           [] -> (Dictionary(Nah, Nah), SDictLiteral([]))
         | (Group([t1; t2]), _) :: [] -> (Dictionary(t1, t2), SDictLiteral(eval_list))
-        |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when t1 != t3 || t2 != t4 ->  
-	       raise (Failure "Dictionary types are inconsistent")
+        |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when not ((type_check t1 t3)) || not ((type_check t2 t4)) (*t1 != t3 || t2 != t4 *)->  
+	       raise (Failure (string_of_typ t1 ^ string_of_typ t2 ^ string_of_typ t3 ^ string_of_typ t4))
         | _ :: t -> check_types t
       in check_types eval_list  
   | Id l -> (toi scope l, SId l)
