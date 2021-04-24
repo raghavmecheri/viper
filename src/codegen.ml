@@ -262,7 +262,6 @@ let translate (_, functions) =
           (* Build return statement *)
           | _ -> L.build_ret (expr builder e) builder );
         builder
-      | SSkip expr                              -> raise (Error "Skip statement not implemented")
       | SAbort expr                             -> raise (Error "Abort statement not implemented")
       | SPanic expr                             -> raise (Error "Panic statement not implemented")
 
@@ -284,11 +283,32 @@ let translate (_, functions) =
         L.builder_at_end context merge_bb
 
       | SWhile (predicate, body) ->
+        (*print_endline "WORKING HERE";
+        print_endline "entering while loop basic block";*)
+        let rec loop_stmt loop_bb builder = (*print_endline "entering special case matching";*)(function
+            SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb b s) builder sl
+          | SIf (predicate, then_stmt, else_stmt)   -> 
+              let bool_val = expr builder predicate in
+              let merge_bb = L.append_block context "merge" the_function in
+              let build_br_merge = L.build_br merge_bb in (* partial function *)
+      
+              let then_bb = L.append_block context "then" the_function in
+              add_terminal (loop_stmt loop_bb (L.builder_at_end context then_bb) then_stmt)
+                build_br_merge;
+      
+              let else_bb = L.append_block context "else" the_function in
+              add_terminal (loop_stmt loop_bb (L.builder_at_end context else_bb) else_stmt)
+                build_br_merge;
+      
+              ignore(L.build_cond_br bool_val then_bb else_bb builder);
+              L.builder_at_end context merge_bb
+          | SSkip e -> (*print_endline "entering skip"; *)ignore(L.build_br loop_bb builder) ; builder
+          | _ as e -> stmt builder e) in
+
         let pred_bb = L.append_block context "while" the_function in
         ignore(L.build_br pred_bb builder);
-
         let body_bb = L.append_block context "while_body" the_function in
-        add_terminal (stmt (L.builder_at_end context body_bb) body)
+        add_terminal (loop_stmt pred_bb (L.builder_at_end context body_bb) body)
           (L.build_br pred_bb);
 
         let pred_builder = L.builder_at_end context pred_bb in
@@ -297,7 +317,7 @@ let translate (_, functions) =
         let merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
-      | _                                       -> raise (Error "Statement match not implemented")
+      | _ -> raise (Error "Statement match not implemented")
     in 
 
     (* Build the code for each statement in the function *)
