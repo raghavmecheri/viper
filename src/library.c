@@ -503,6 +503,16 @@ void *access_char_key(struct dict *indict, char key)
     return toret;
 }
 
+void print_char_list(struct list* inlist){
+    printf("[");
+
+    for(int i = 0; i < inlist->size; i++){
+        printf(" %c ", access_char(inlist, i));
+    }
+
+    printf("]\n");
+}
+
 double pow2(double base)
 {
     return pow(base, 2);
@@ -612,5 +622,11 @@ int main(void)
     add_keyval(chrdict, char_alloc_zone('B'), int_alloc_zone(8));
     printf("access_char_key(chrdict, 'A'): %d\n", *((int *)access_char_key(chrdict, 'A')));
     printf("access_char_key(chrdict, 'B'): %d\n", *((int *)access_char_key(chrdict, 'B')));
+
+    struct list *chrlist = create_list("char");
+    append_char(chrlist, 'a');
+    append_char(chrlist, 'b');
+    append_char(chrlist, 'c');
+    print_char_list(chrlist);
 }
 #endif

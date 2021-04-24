@@ -14,8 +14,8 @@ let function_scopes = snd symbol_table in
 (* Verifies that a function has a valid return statement *)
 let rec check_return slist ret = match slist with 
     Return _ :: _ -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
-  | _ :: ss -> check_return ss ret 
-  | [] -> if ret = Nah then true else raise (Failure "Function does not have a return statement at its highest level") in 
+  | s :: ss -> ignore(print_endline (string_of_stmt s)); check_return ss ret 
+  | [] -> if ret = Nah then true else raise (Failure "Function has an empty body at the highest level but returns (?)") in 
 
 
 let check_expr_scope scope = function 
@@ -32,6 +32,17 @@ let return_func = function
     Function(e) -> e 
   | e           -> e 
   | _           -> raise (Failure "function return type is flawed") in 
+
+let type_check t1 t2 = 
+  let type1 = match t1 with 
+  Group([ta; tb]) -> (ta, tb) 
+| _ -> (t1, t1) in 
+  let type2 = match t2 with 
+  Group([tc; td]) -> (tc, td) 
+| _ -> (t2, t2) in
+(fst type1 = fst type2) && (snd type1 = snd type2)  
+
+in
 
 (* Driver for semantically checking expressions *)
 let rec expr scope deepscope  = function 
@@ -56,8 +67,8 @@ let rec expr scope deepscope  = function
       let rec check_types = function
           [] -> (Dictionary(Nah, Nah), SDictLiteral([]))
         | (Group([t1; t2]), _) :: [] -> (Dictionary(t1, t2), SDictLiteral(eval_list))
-        |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when t1 != t3 || t2 != t4 ->  
-	       raise (Failure "Dictionary types are inconsistent")
+        |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when not ((type_check t1 t3)) || not ((type_check t2 t4)) (*t1 != t3 || t2 != t4 *)->  
+	       raise (Failure (string_of_typ t1 ^ string_of_typ t2 ^ string_of_typ t3 ^ string_of_typ t4))
         | _ :: t -> check_types t
       in check_types eval_list  
   | Id l -> (toi scope l, SId l)
@@ -105,7 +116,7 @@ let rec expr scope deepscope  = function
       (match t1 with
           Array(t) when t2 = Int -> (t, SAccess((t1, e1'), (t2, e2')))
         | Array(_) -> raise (Failure ("Error: Integer required for Array access, given type " ^ string_of_typ t2))
-        | Dictionary((key_t, _)) when t2 = key_t -> (key_t, SAccess((t1, e1'), (t2, e2')))
+        | Dictionary((key_t, value_t)) when t2 = key_t -> (value_t, SAccess((t1, e1'), (t2, e2')))
         | Dictionary((key_t, _)) -> raise (Failure ("Error: " ^ string_of_typ key_t ^ " required for Dictionary access, given type " ^ string_of_typ t2))
         | _ -> raise (Failure ("Error: access not invalid for type " ^ string_of_typ t1)))
   | AccessAssign(e1, e2, e3) ->       
@@ -142,13 +153,13 @@ let rec expr scope deepscope  = function
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
       in (return_func fd.ret_typ, SCall(fname, args')) 
   | AttributeCall(e, fname, args) -> 
-      let eval_list = List.map (expr scope deepscope) args in 
+      let eval_list = List.map (expr scope deepscope) args in
       let key_func = key_string fname eval_list in  
+      print_endline key_func;
       let fd = StringMap.find key_func function_scopes in
       let param_length = StringMap.cardinal fd.formals.variables in
-      if List.length args != param_length then
-        raise (Failure ("expecting " ^ string_of_int param_length ^ " arguments in function call"))
-      else let check_call (_, ft) e = 
+      if List.length args + 1 != param_length then raise (Failure ("expecting " ^ string_of_int param_length ^ " arguments in function call"))
+      else let check_call (_, ft) e =  
       let (et, e') = expr scope deepscope e in 
       (check_assign ft et, e') in 
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
