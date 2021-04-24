@@ -127,7 +127,17 @@ let translate (_, functions) =
   let append_char_func : L.llvalue = 
     L.declare_function "append_char" append_char_t the_module in
 
-  (* (L.pointer_type (find_struct_type "list")) *)
+  (* takes a list and a character and returns 1 if in, 0 otherwise*)
+  let contains_char_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
+  let contains_char_func : L.llvalue =
+    L.declare_function "contains_char" contains_char_t the_module in
+
+  (* given a pointer to list, returns length*)
+  let listlen_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")) |] in
+  let listlen_func : L.llvalue =
+    L.declare_function "listlen" listlen_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -286,21 +296,21 @@ let translate (_, functions) =
         let e1' = expr builder e1 in
         let e2' = expr builder e2 in
         (* let bool_val = expr builder predicate in
-        let merge_bb = L.append_block context "merge" the_function in
-        let build_br_merge = L.build_br merge_bb in (* partial function *)
+           let merge_bb = L.append_block context "merge" the_function in
+           let build_br_merge = L.build_br merge_bb in (* partial function *)
 
-        let then_bb = L.append_block context "then" the_function in
-        add_terminal (expr (L.builder_at_end context then_bb) e1')
-          build_br_merge;
+           let then_bb = L.append_block context "then" the_function in
+           add_terminal (expr (L.builder_at_end context then_bb) e1')
+           build_br_merge;
 
-        let else_bb = L.append_block context "else" the_function in
-        add_terminal (expr (L.builder_at_end context else_bb) e2')
-          build_br_merge;
+           let else_bb = L.append_block context "else" the_function in
+           add_terminal (expr (L.builder_at_end context else_bb) e2')
+           build_br_merge;
 
-        ignore(L.build_cond_br bool_val then_bb else_bb builder);
-        L.builder_at_end context merge_bb*)
+           ignore(L.build_cond_br bool_val then_bb else_bb builder);
+           L.builder_at_end context merge_bb*)
         e1'
-      
+
       | SAssign (s, e)            -> 
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
@@ -329,7 +339,7 @@ let translate (_, functions) =
 
       (* casts *)
       | SCall("toChar", params) -> expr builder (Cast.to_char params)
-      | SCall("toInt", params) -> print_endline "toINT";expr builder (Cast.to_int params)
+      | SCall("toInt", params) -> expr builder (Cast.to_int params)
       | SCall("toFloat", params) -> expr builder (Cast.to_float params)
       | SCall("toBool", params) -> expr builder (Cast.to_bool params)
       | SCall("toString", params) -> expr builder (Cast.to_string params)
@@ -338,10 +348,24 @@ let translate (_, functions) =
       (* pow2 *)
       | SCall ("pow2", [params])    -> let value = expr builder params in 
         L.build_call pow2_func [| value |] "pow2" builder
+
+      (* append *)
       | SCall ("append", params)  ->
         let li = expr builder (List.hd params) in
         let p = expr builder (List.nth params 1) in
         L.build_call append_char_func [| li; p |] "" builder
+
+      (* contains *)
+      | SCall ("contains", params)  ->
+        let li = expr builder (List.hd params) in
+        let p = expr builder (List.nth params 1) in
+        L.build_call contains_char_func [| li; p |] "contains" builder
+
+      (* len *)
+      | SCall ("len", params)  ->
+        let li = expr builder (List.hd params) in
+        let p = expr builder (List.nth params 1) in
+        L.build_call contains_char_func [| li; p |] "contains" builder
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
