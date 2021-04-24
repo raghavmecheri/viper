@@ -1,0 +1,5 @@
+int func tester(int x) {
+  return 42;
+}
+
+int z = 42.tester();
