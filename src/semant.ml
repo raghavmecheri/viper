@@ -5,20 +5,30 @@ let placeholderCheck ast = ast
 
 exception SemanticException of string
 
-let rec clean_pattern_rec s e base = match e with
-    ConditionalPattern(cond, exp) :: [] -> If(cond, Expr(Assign(s, exp)), Expr(Assign(s, base)))
-  | ConditionalPattern(cond, exp) :: tail -> If(cond, Expr(Assign(s, exp)), clean_pattern_rec s tail base)
-  | _ -> Expr(Noexpr)
+let rec clean_pattern_rec e base = match e with
+    ConditionalPattern(cond, exp) :: [] -> Ternop(cond, exp, base)
+  | ConditionalPattern(cond, exp) :: tail -> Ternop(cond, exp, (clean_pattern_rec tail base))
+  | _ -> Noexpr
 
-let clean_pattern s e = match e with
-    MatchPattern(pattern, base) -> clean_pattern_rec s pattern base
-  | _ -> Expr(Noexpr)
 
-let clean_expression expr = match expr with
-    PatternMatch(s, e) -> clean_pattern s e
-  | DecPatternMatch(t, s, e) -> PretendBlock([ Dec(t, s); clean_pattern s e;  ])
-  | AttributeCall(e, f, args) -> ignore (print_endline "Modifying attribute call"); Expr(Call(f, e::args))
-  | _ -> Expr(expr)
+let rec clean_expression expr = match expr with
+    MatchPattern(p, b) -> clean_pattern_rec p b
+  | PatternMatch(s, e) -> Assign(s, clean_expression e)
+  | DecPatternMatch(t, s, e) -> DecAssign(t, s, clean_expression e)
+  | Ternop(e, e1, e2) -> Ternop((clean_expression e), (clean_expression e1), (clean_expression e2))
+
+  | Binop(e1, op, e2) -> Binop((clean_expression e1), op, (clean_expression e2))
+  | Unop(op, e) -> Unop(op, (clean_expression e))
+
+  | Assign(n, e) -> Assign(n, (clean_expression e))
+  | OpAssign(n, o, e) -> OpAssign(n, o, (clean_expression e))
+  | DecAssign(t, n, e) -> DecAssign(t, n, (clean_expression e))
+  | AccessAssign(e1, e2, e3) -> AccessAssign((clean_expression e1), (clean_expression e2), (clean_expression e3))
+  
+  | Call(n, l) -> Call(n, (List.map clean_expression l))
+  | AttributeCall(e, f, args) -> Call(f, List.map clean_expression (e::args))
+
+  | _ -> expr
 
 let decompose_deconstforiter n e s = 
     let comparison = Binop(Id("dfi_tmp_idx"), Leq, Call("len", [e]))
@@ -48,11 +58,11 @@ let decompose_decforiter t n e s =
 let clean_statements stmts = 
     let rec clean_statement stmt = match stmt with
         Block(s) -> Block(List.map clean_statement s)
-      | Expr(expr) -> clean_expression expr 
-      | For(e1, e2, e3, s) -> Block( [ Expr(e1); While(e2, Block([ s; Expr(e3); ]))  ])
-      | ForIter(name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_foriter name e2 s]) 
-      | DecForIter(t, name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_decforiter t name e2 s])
-      | DeconstForIter(p, e, s) ->  Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_deconstforiter p e s])
+      | Expr(expr) -> Expr(clean_expression expr) 
+      | For(e1, e2, e3, s) -> PretendBlock( [ Expr(e1); While(e2, Block([ (clean_statement s); Expr(e3); ]))  ])
+      | ForIter(name, e2, s) -> PretendBlock([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_foriter name e2 (clean_statement s)]) 
+      | DecForIter(t, name, e2, s) -> PretendBlock([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_decforiter t name e2 (clean_statement s)])
+      | DeconstForIter(p, e, s) ->  PretendBlock([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_deconstforiter p e (clean_statement s)])
       | _ -> stmt
     in
     (List.map clean_statement stmts)
