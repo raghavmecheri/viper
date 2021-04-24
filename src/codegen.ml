@@ -73,7 +73,7 @@ let translate (_, functions) =
     | A.Char              -> i8_t
     | A.Float             -> float_t
     | A.String            -> str_t
-    | A.Array(_)          -> (find_struct_type "list")
+    | A.Array(_)          -> (L.pointer_type (find_struct_type "list"))
     | A.Function(t)       -> (ltype_of_typ t)
     | A.Group(_)          -> raise (Error "Group lltype not implemented")
     | A.Dictionary(_, _)  -> raise (Error "Dictionary lltype not implemented")
@@ -105,11 +105,11 @@ let translate (_, functions) =
 
   (* takes in a char pointer to a string of the type *)
   let create_list_t : L.lltype =
-    L.function_type (find_struct_type "list") [| L.pointer_type i8_t |] in
+    L.function_type (L.pointer_type (find_struct_type "list")) [| L.pointer_type i8_t |] in
   let create_list_func : L.llvalue = 
     L.declare_function "create_list" create_list_t the_module in
 
-  (* takes in a char pointer to a string of the type *)
+  (* takes in a char pointer to a string of the type TODO: fix typing *)
   let create_dict_t : L.lltype =
     L.function_type (find_struct_type "dict") [| L.pointer_type i8_t; L.pointer_type i8_t |] in
   let create_dict_func : L.llvalue = 
@@ -117,15 +117,15 @@ let translate (_, functions) =
 
   (* takes in a list and an int and returns the index of the list *)
   let access_char_t : L.lltype =
-    L.function_type (ltype_of_typ A.Char) [| (find_struct_type "list"); i32_t |] in
+    L.function_type (ltype_of_typ A.Char) [| (L.pointer_type (find_struct_type "list")); i32_t |] in
   let access_char_func : L.llvalue = 
     L.declare_function "access_char" access_char_t the_module in
 
   (* takes in a list and a char to append *)
   let append_char_t : L.lltype =
-    L.function_type (ltype_of_typ A.Nah) [| (find_struct_type "list"); (ltype_of_typ A.Char) |] in
+    L.function_type (L.pointer_type (find_struct_type "list")) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
   let append_char_func : L.llvalue = 
-    L.declare_function "append_char" access_char_t the_module in
+    L.declare_function "append_char" append_char_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -220,10 +220,9 @@ let translate (_, functions) =
         (* create empty list llvalue *)
         let li = L.build_call create_list_func [| type_string_ptr |] "create_list" builder in
         (* map over elements to add to list *)
-        let appender c = L.build_call append_char_func [| li; (expr builder c) |] "create_list" builder in
-        List.map appender list;
+        let appender accum c = L.build_call append_char_func [| accum; (expr builder c) |] "li" builder in
+        (List.fold_left appender li list);
         (* return the list *)
-        li
 
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
@@ -314,8 +313,12 @@ let translate (_, functions) =
       | SCall("toNah", params) -> expr builder (Cast.to_nah params)
 
       (* pow2 *)
-      | SCall ("pow2", [params]) -> let value = expr builder params in 
+      | SCall ("pow2", [params])    -> let value = expr builder params in 
         L.build_call pow2_func [| value |] "pow2" builder
+      (* | SCall ("append", params)  ->
+         let li = expr builder (List.hd params) in
+         let p = expr builder (List.nth params 1) in
+         L.build_call append_char_func [| li; p |] "li" builder *)
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
