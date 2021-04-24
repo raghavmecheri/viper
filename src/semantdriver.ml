@@ -164,7 +164,13 @@ let rec expr scope deepscope  = function
       (check_assign ft et, e') in 
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
       in (return_func fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
-  | Ternop(_,_,_) -> raise (Failure "Ternop slipped through... BLAME RATGHAV")
+  | Ternop(e1, e2, e3) -> 
+      let (e1t, e1') = expr scope deepscope e1 in
+      if e1t != Bool then raise (Failure "Error: expected bool in first expression of ternary operator") else
+      let (e2t, e2') = expr scope deepscope e2 
+      and (e3t, e3') = expr scope deepscope e3 in
+      if e2t != e3t then raise (Failure ("Error: ternary operator types " ^ string_of_typ e2t ^ " and " ^ string_of_typ e3t ^ " do not match"))
+      else (e2t, STernop((e1t, e1'), (e2t, e2'), (e3t, e3')))
   | _  -> raise (Failure "expression is not an expression")  
 in 
 
