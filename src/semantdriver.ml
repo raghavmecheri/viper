@@ -14,7 +14,7 @@ let function_scopes = snd symbol_table in
 (* Verifies that a function has a valid return statement *)
 let rec check_return slist ret = match slist with 
     Return _ :: _ -> if ret != Nah then true else raise(Failure "Function of type Nah should not have a return statement") 
-  | s :: ss -> ignore(print_endline (string_of_stmt s)); check_return ss ret 
+  | s :: ss -> check_return ss ret 
   | [] -> if ret = Nah then true else raise (Failure "Function has an empty body at the highest level but returns (?)") in 
 
 
@@ -155,7 +155,6 @@ let rec expr scope deepscope  = function
   | AttributeCall(e, fname, args) -> 
       let eval_list = List.map (expr scope deepscope) args in
       let key_func = key_string fname eval_list in  
-      print_endline key_func;
       let fd = StringMap.find key_func function_scopes in
       let param_length = StringMap.cardinal fd.formals.variables in
       if List.length args + 1 != param_length then raise (Failure ("expecting " ^ string_of_int param_length ^ " arguments in function call"))

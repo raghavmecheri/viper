@@ -75,9 +75,6 @@ let rec string_of_sexpr (t, e) =
   | SDecAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_sexpr e
   | SDeconstruct(v, e) -> "(" ^ String.concat ", " (List.map snd v) ^ ") = " ^ string_of_sexpr e
 
-  
-  
-
   | SCall(f, el) -> f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SAttributeCall(e, f, el) -> string_of_sexpr e ^ "." ^ f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
 

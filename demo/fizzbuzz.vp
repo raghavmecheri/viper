@@ -3,7 +3,7 @@ bool func isDivisible(int x, int div) => (x % div == 0);
 bool divThree;
 bool divFive;
 
-for(int i = 0; i <= 100; i++) {
+for(int i = 0; i <= 100; i+=1) {
     divThree = isDivisible(i, 3);
     divFive = isDivisible(i, 5);
     
