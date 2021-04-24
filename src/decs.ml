@@ -47,9 +47,9 @@ let rec string_of_params params = match params with
 and key_string name params = name ^ " (" ^ string_of_params params ^ ")"
 
 let rec string_of_params_built_in params = match params with
-    typ :: [] -> string_of_typ typ 
-  | typ :: p -> string_of_typ typ ^ ", " ^ string_of_params_built_in p
-  | _              -> "" 
+    typ :: p    -> string_of_typ typ ^ ", " ^ string_of_params_built_in p
+  | typ :: []   -> string_of_typ typ 
+  | _           -> "" 
 
 and key_string_built_in_functions name params = name ^ " (" ^ string_of_params_built_in params ^ ")"
 
@@ -176,16 +176,17 @@ let get_decs (s_list, f_list) =
 
   (* Collect declarations for Viper's built-in functions *)
   let built_in_funcs = 
-    let build_built_in_func_table (name, param_typ, typ) map = 
+    let build_built_in_func_table map (name, param_typ, typ) = 
       let dummy_scope = List.fold_left (fun m f -> add_symbol name f m) {
           variables = StringMap.empty;
           parent = None;
-        } param_typ in StringMap.add (key_string_built_in_functions name param_typ) {
+        } param_typ in 
+      StringMap.add (key_string_built_in_functions name param_typ) {
         formals = dummy_scope; 
         locals = dummy_scope;
         ret_typ = typ;
       } map
-    in List.fold_left (fun m f -> build_built_in_func_table f m) StringMap.empty [
+    in List.fold_left build_built_in_func_table StringMap.empty [
       ("print", [Int], Nah);
       ("print", [String], Nah);
       ("print", [Char], Nah);
@@ -196,7 +197,7 @@ let get_decs (s_list, f_list) =
       ("len", [Array(Bool)], Int);
       ("len", [Array(String)], Int);
       ("len", [Array(Char)], Int);
-      (* ("append", [Array(Char), Char], Array(Char)); *)
+      ("append", [Array(Char); Char], Nah);
       (*
       ("contains", [Array(Int); Int], Bool);
       ("contains", [Array(Float); Float], Bool);
@@ -223,7 +224,8 @@ let get_decs (s_list, f_list) =
       ("pow2", [Float], Float);
       ("pow2", [Int], Float);
 
-    ] in
+    ] 
+  in
 
   (* Collects function tables for a list of function declarations *)
   let get_funcs f_list = 

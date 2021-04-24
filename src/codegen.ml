@@ -123,9 +123,11 @@ let translate (_, functions) =
 
   (* takes in a list and a char to append *)
   let append_char_t : L.lltype =
-    L.function_type (L.pointer_type (find_struct_type "list")) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
   let append_char_func : L.llvalue = 
     L.declare_function "append_char" append_char_t the_module in
+
+    (* (L.pointer_type (find_struct_type "list")) *)
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -220,8 +222,8 @@ let translate (_, functions) =
         (* create empty list llvalue *)
         let li = L.build_call create_list_func [| type_string_ptr |] "create_list" builder in
         (* map over elements to add to list *)
-        let appender accum c = L.build_call append_char_func [| accum; (expr builder c) |] "li" builder in
-        (List.fold_left appender li list);
+        let appender c = L.build_call append_char_func [| li; (expr builder c) |] "" builder in
+        (List.map appender list); li
         (* return the list *)
 
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
