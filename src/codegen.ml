@@ -194,9 +194,7 @@ let translate (_, functions) =
       | SCall("toInt", params) -> expr builder (Cast.to_int params)
       | SCall("toFloat", params) -> expr builder (Cast.to_float params)
       | SCall("toBool", params) -> expr builder (Cast.to_bool params)
-      | SCall("toString", params) -> 
-          let cast_val = expr builder (Cast.verify_params params "string") 
-          in expr builder (Cast.to_string cast_val)
+      | SCall("toString", params) -> expr builder (Cast.to_string params)
       | SCall("toNah", params) -> expr builder (Cast.to_nah params)
 
       (* SCall for user defined functions *)
