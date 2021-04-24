@@ -190,12 +190,14 @@ let translate (_, functions) =
       (* hardcoded SCalls for built-ins *)
       | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
-      (*| SCall("char", params) -> Cast.to_char params
-      | SCall("int", params) -> Cast.to_int params
-      | SCall("float", params) -> Cast.to_float params
-      | SCall("bool", params) -> Cast.to_bool params
-      | SCall("string", params) -> Cast.to_string params
-      | SCall("nah", params) -> Cast.to_nah params *)
+      | SCall("toChar", params) -> expr builder (Cast.to_char params)
+      | SCall("toInt", params) -> expr builder (Cast.to_int params)
+      | SCall("toFloat", params) -> expr builder (Cast.to_float params)
+      | SCall("toBool", params) -> expr builder (Cast.to_bool params)
+      | SCall("toString", params) -> 
+          let cast_val = expr builder (Cast.verify_params params "string") 
+          in expr builder (Cast.to_string cast_val)
+      | SCall("toNah", params) -> expr builder (Cast.to_nah params)
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
