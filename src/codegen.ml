@@ -1,5 +1,6 @@
 module L = Llvm
 module A = Ast
+open Cast
 open Sast
 
 exception Error of string
@@ -189,6 +190,12 @@ let translate (_, functions) =
       (* hardcoded SCalls for built-ins *)
       | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
+      (*| SCall("char", params) -> Cast.to_char params
+      | SCall("int", params) -> Cast.to_int params
+      | SCall("float", params) -> Cast.to_float params
+      | SCall("bool", params) -> Cast.to_bool params
+      | SCall("string", params) -> Cast.to_string params
+      | SCall("nah", params) -> Cast.to_nah params *)
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
