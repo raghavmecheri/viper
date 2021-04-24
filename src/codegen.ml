@@ -24,19 +24,56 @@ let translate (_, functions) =
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
-  and void_t     = L.void_type   context in
+  and void_t     = L.void_type   context 
+  and struct_t   = L.struct_type context in
   let str_t      = L.pointer_type i8_t
+  in
+
+  (* STRUCT CODE HERE *)
+
+  (* create hashtbl for the structs we use in standard library *)
+  let struct_types:(string, L.lltype) Hashtbl.t = Hashtbl.create 3 in
+
+  (* lookup struct type *)
+  let find_struct_type name = try Hashtbl.find struct_types name 
+    with Not_found -> raise (Error "Invalid struct name")
+  in 
+
+  (* declare struct type *)
+  let declare_struct_typ name =
+    let struct_type = L.named_struct_type context name in
+    Hashtbl.add struct_types name struct_type
+  in
+
+  (* build struct body *)
+  let define_struct_body name lltypes = 
+    let struct_type = try Hashtbl.find struct_types name
+      with Not_found -> raise (Error "undefined struct typ") in
+    L.struct_set_body struct_type lltypes false
+  in
+
+  (* declare list struct*)
+  let _ = declare_struct_typ "list"
+  and _ = define_struct_body "list" [| L.pointer_type (L.pointer_type i8_t); i32_t; i32_t; L.pointer_type i8_t |]
+
+  (* declare dict_elem struct*)
+  and _ = declare_struct_typ "dict_elem"
+  and _ = define_struct_body "dict_elem" [| L.pointer_type i8_t; L.pointer_type i8_t |]
+
+  (* declare dict struct*)
+  and _ = declare_struct_typ "dict"
+  and _ = define_struct_body "dict" [| (find_struct_type "list"); L.pointer_type i8_t; L.pointer_type i8_t |] 
   in
 
   (* Return the LLVM lltype for a Viper type *)
   let rec ltype_of_typ = function
-      A.Int               -> i64_t
+      A.Int               -> i32_t
     | A.Bool              -> i1_t
     | A.Nah               -> void_t
-    | A.Char              -> i16_t
+    | A.Char              -> i8_t
     | A.Float             -> float_t
     | A.String            -> str_t
-    | A.Array(_)          -> raise (Error "Array lltype not implemented")
+    | A.Array(_)          -> (L.pointer_type (find_struct_type "list"))
     | A.Function(t)       -> (ltype_of_typ t)
     | A.Group(_)          -> raise (Error "Group lltype not implemented")
     | A.Dictionary(_, _)  -> raise (Error "Dictionary lltype not implemented")
@@ -47,11 +84,13 @@ let translate (_, functions) =
       A.Int | A.Bool | A.Nah | A.Char -> L.const_int (ltype_of_typ typ) 0
     | A.Float                         -> L.const_float (ltype_of_typ typ) 0.0
     | A.String                        -> L.const_pointer_null (ltype_of_typ typ)
-    | A.Array(_)                      -> raise (Error "Array lltype not implemented")
-    | A.Group(_)                      -> raise (Error "Group lltype not implemented")
-    | A.Dictionary(_, _)              -> raise (Error "Dictionary lltype not implemented")
-    | A.Function(_)                   -> raise (Error "What should a function init be ?")
+    | A.Array(_)                      -> raise (Error "Array llvalue not implemented")
+    | A.Group(_)                      -> raise (Error "Group llvalue not implemented")
+    | A.Dictionary(_, _)              -> raise (Error "Dictionary llvalue not implemented")
+    | A.Function(_)                   -> raise (Error "What should a function init value be ?")
   in
+
+  (* BUILTIN FUNCTIONS HERE*)
 
   (* Define built-in functions at top of every file *)  
   let printf_t : L.lltype = 
@@ -63,6 +102,30 @@ let translate (_, functions) =
     L.function_type float_t [| float_t |] in
   let pow2_func : L.llvalue = 
     L.declare_function "pow2" pow2_t the_module in
+
+  (* takes in a char pointer to a string of the type *)
+  let create_list_t : L.lltype =
+    L.function_type (L.pointer_type (find_struct_type "list")) [| L.pointer_type i8_t |] in
+  let create_list_func : L.llvalue = 
+    L.declare_function "create_list" create_list_t the_module in
+
+  (* takes in a char pointer to a string of the type TODO: fix typing *)
+  let create_dict_t : L.lltype =
+    L.function_type (find_struct_type "dict") [| L.pointer_type i8_t; L.pointer_type i8_t |] in
+  let create_dict_func : L.llvalue = 
+    L.declare_function "create_dict" create_dict_t the_module in
+
+  (* takes in a list and an int and returns the index of the list *)
+  let access_char_t : L.lltype =
+    L.function_type (ltype_of_typ A.Char) [| (L.pointer_type (find_struct_type "list")); i32_t |] in
+  let access_char_func : L.llvalue = 
+    L.declare_function "access_char" access_char_t the_module in
+
+  (* takes in a list and a char to append *)
+  let append_char_t : L.lltype =
+    L.function_type (L.pointer_type (find_struct_type "list")) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
+  let append_char_func : L.llvalue = 
+    L.declare_function "append_char" append_char_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -136,14 +199,31 @@ let translate (_, functions) =
         Some _ -> ()
       | None -> ignore (instr builder) in
 
+    let get_type_string_of_array e_type = match e_type with
+      | A.Array (li)   -> (match li with
+          | A.Char  -> "char"
+          | _       -> raise (Error "array type string nah"))
+      | _ -> raise (Error "type string map not here yet ")
+    in
+
     (* this returns an llvalue *)
-    let rec expr builder ((_, e) : sexpr) = match e with
+    (* raise (Error "SListLiteral not implemented") *)
+    let rec expr builder ((e_type, e) : sexpr) = match e with
         SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
       | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
       | SBoolLiteral(bln)         -> L.const_int (ltype_of_typ A.Bool) (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
       | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
-      | SListLiteral(list)        -> raise (Error "SListLiteral not implemented")
+      | SListLiteral(list)        -> 
+        let type_string = (get_type_string_of_array e_type) in
+        let type_string_ptr = expr builder (A.String, SStringLiteral(type_string)) in
+        (* create empty list llvalue *)
+        let li = L.build_call create_list_func [| type_string_ptr |] "create_list" builder in
+        (* map over elements to add to list *)
+        let appender accum c = L.build_call append_char_func [| accum; (expr builder c) |] "li" builder in
+        (List.fold_left appender li list);
+        (* return the list *)
+
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
 
@@ -163,7 +243,8 @@ let translate (_, functions) =
          | A.Leq     -> L.build_fcmp L.Fcmp.Ole
          | A.Greater -> L.build_fcmp L.Fcmp.Ogt
          | A.Geq     -> L.build_fcmp L.Fcmp.Oge
-         | A.And | A.Or ->
+         | A.Mod     -> L.build_frem
+         | A.And | A.Or | A.Has ->
            raise (Failure "internal error: semant should have rejected and/or on float")
         ) e1' e2' "tmp" builder
 
@@ -211,12 +292,19 @@ let translate (_, functions) =
         Hashtbl.add local_vars s local_var;
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
-      | SAccess(e, l)             -> raise (Error "SAccess not implemented")
+
+      | SAccess(e, l)             ->
+        let index = expr builder l in
+        let li = expr builder e in
+        L.build_call access_char_func [| li; index |] "access_char" builder
+
       | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
 
       (* hardcoded SCalls for built-ins *)
       | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
+
+      (* casts *)
       | SCall("toChar", params) -> expr builder (Cast.to_char params)
       | SCall("toInt", params) -> expr builder (Cast.to_int params)
       | SCall("toFloat", params) -> expr builder (Cast.to_float params)
@@ -224,8 +312,13 @@ let translate (_, functions) =
       | SCall("toString", params) -> expr builder (Cast.to_string params)
       | SCall("toNah", params) -> expr builder (Cast.to_nah params)
 
-      | SCall ("pow2", [params]) -> let value = expr builder params in 
+      (* pow2 *)
+      | SCall ("pow2", [params])    -> let value = expr builder params in 
         L.build_call pow2_func [| value |] "pow2" builder
+      (* | SCall ("append", params)  ->
+         let li = expr builder (List.hd params) in
+         let p = expr builder (List.nth params 1) in
+         L.build_call append_char_func [| li; p |] "li" builder *)
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
@@ -236,7 +329,6 @@ let translate (_, functions) =
             | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
 
-      (* this is so sketch lol*)
       | SAttributeCall(e, f, el)  -> expr builder (A.Nah, SCall(f, e::el))
       | SNoexpr                   -> L.const_int i32_t 0
       | _ -> raise (Error "Expression match not implemented")
