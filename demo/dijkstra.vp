@@ -47,7 +47,7 @@ while(True) {
     current = tempCurrent;
     currentDistance = tempDist;
 }
-print(dictToString(visited))
+print(dictToString(visited));
 
 string func dictToString([char: int] dict) {
     string output = "";
