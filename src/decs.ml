@@ -178,10 +178,10 @@ let get_decs (s_list, f_list) =
   let built_in_funcs = 
     let build_built_in_func_table map (name, param_typ, typ) = 
       let args = List.fold_left 
-        (fun m f -> let param_name = ("p" ^ string_of_int (StringMap.cardinal m.variables)) in add_symbol param_name f m) {
-        variables = StringMap.empty;
-        parent = None;
-      } param_typ in
+          (fun m f -> let param_name = ("p" ^ string_of_int (StringMap.cardinal m.variables)) in add_symbol param_name f m) {
+          variables = StringMap.empty;
+          parent = None;
+        } param_typ in
       let key = (key_string_built_in_functions name param_typ)
       in StringMap.add key {
         formals = args; 

@@ -127,7 +127,7 @@ let translate (_, functions) =
   let append_char_func : L.llvalue = 
     L.declare_function "append_char" append_char_t the_module in
 
-    (* (L.pointer_type (find_struct_type "list")) *)
+  (* (L.pointer_type (find_struct_type "list")) *)
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -142,7 +142,9 @@ let translate (_, functions) =
 
   (* Fill in the body of the given function *)
   let build_function_body fdecl =
-    let (the_function, _) = StringMap.find fdecl.sfname function_decls in
+    let (the_function, _) = try StringMap.find fdecl.sfname function_decls 
+      with Not_found -> raise (Error "function definition not found")
+    in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     (* TODO: move this so it wont get redefined for every function declaration *)
@@ -224,7 +226,7 @@ let translate (_, functions) =
         (* map over elements to add to list *)
         let appender c = L.build_call append_char_func [| li; (expr builder c) |] "" builder in
         (List.map appender list); li
-        (* return the list *)
+      (* return the list *)
 
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
       | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
@@ -317,14 +319,16 @@ let translate (_, functions) =
       (* pow2 *)
       | SCall ("pow2", [params])    -> let value = expr builder params in 
         L.build_call pow2_func [| value |] "pow2" builder
-      (* | SCall ("append", params)  ->
-         let li = expr builder (List.hd params) in
-         let p = expr builder (List.nth params 1) in
-         L.build_call append_char_func [| li; p |] "li" builder *)
+      | SCall ("append", params)  ->
+        let li = expr builder (List.hd params) in
+        let p = expr builder (List.nth params 1) in
+        L.build_call append_char_func [| li; p |] "" builder
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
-        let (fdef, fdecl) = StringMap.find f function_decls in
+        let (fdef, fdecl) = try StringMap.find f function_decls 
+          with Not_found -> raise (Error "User defined function call not found")
+        in
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
         let result = (match fdecl.styp with 
               A.Nah -> ""
@@ -378,26 +382,26 @@ let translate (_, functions) =
 
       | SWhile (predicate, body) ->
         (*print_endline "WORKING HERE";
-        print_endline "entering while loop basic block";*)
+          print_endline "entering while loop basic block";*)
         let rec loop_stmt loop_bb builder = (*print_endline "entering special case matching";*)(function
-            SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb b s) builder sl
-          | SIf (predicate, then_stmt, else_stmt)   -> 
+              SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb b s) builder sl
+            | SIf (predicate, then_stmt, else_stmt)   -> 
               let bool_val = expr builder predicate in
               let merge_bb = L.append_block context "merge" the_function in
               let build_br_merge = L.build_br merge_bb in (* partial function *)
-      
+
               let then_bb = L.append_block context "then" the_function in
               add_terminal (loop_stmt loop_bb (L.builder_at_end context then_bb) then_stmt)
                 build_br_merge;
-      
+
               let else_bb = L.append_block context "else" the_function in
               add_terminal (loop_stmt loop_bb (L.builder_at_end context else_bb) else_stmt)
                 build_br_merge;
-      
+
               ignore(L.build_cond_br bool_val then_bb else_bb builder);
               L.builder_at_end context merge_bb
-          | SSkip e -> (*print_endline "entering skip"; *)ignore(L.build_br loop_bb builder) ; builder
-          | _ as e -> stmt builder e) in
+            | SSkip e -> (*print_endline "entering skip"; *)ignore(L.build_br loop_bb builder) ; builder
+            | _ as e -> stmt builder e) in
 
         let pred_bb = L.append_block context "while" the_function in
         ignore(L.build_br pred_bb builder);
