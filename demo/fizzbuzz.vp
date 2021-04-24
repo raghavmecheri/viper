@@ -1,6 +1,3 @@
-/* fizzbuzz for-loop with pattern-matching
-valid, short, and easily comprehensible solution */
-
 bool func isDivisible(int x, int div) => (x % div == 0);
 
 bool divThree;

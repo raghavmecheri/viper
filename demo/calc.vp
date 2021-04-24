@@ -1,9 +1,9 @@
 int func calc(int a, int b, char op) {
     int res = ??
-        op == '+' : a + b
-      | op == '-' : a - b
-      | op == '*' : a * b
-      | op == '/' : a / b
+        op == '+' : (a + b)
+      | op == '-' : (a - b)
+      | op == '*' : (a * b)
+      | op == '/' : (a / b)
     ?? a ;
 
     return res;
