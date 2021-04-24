@@ -3,7 +3,7 @@ int func binary_search(int []arr, int x) {
     int high = len(arr);
     int mid = 0;
 
-    while(low < high) {
+    while(low <= high) {
         mid = (high + low)/2;
         if(arr[mid] < x) {
             low = mid + 1;

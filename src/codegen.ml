@@ -90,7 +90,7 @@ let translate (_, functions) =
     | A.Function(_)                   -> raise (Error "What should a function init value be ?")
   in
 
-  (* BUILTIN FUNCTIONS HERE*)
+  (* BUILT-IN FUNCTIONS HERE*)
 
   (* Define built-in functions at top of every file *)  
   let printf_t : L.lltype = 
@@ -117,9 +117,15 @@ let translate (_, functions) =
 
   (* takes in a list and an int and returns the index of the list *)
   let access_char_t : L.lltype =
-    L.function_type (ltype_of_typ A.Char) [| (L.pointer_type (find_struct_type "list")); i32_t |] in
+    L.function_type (ltype_of_typ A.Char) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
   let access_char_func : L.llvalue = 
     L.declare_function "access_char" access_char_t the_module in
+
+  (* takes in a list and an int and returns the index of the list *)
+  let access_int_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int)|] in
+  let access_int_func : L.llvalue = 
+    L.declare_function "access_int" access_int_t the_module in
 
   (* takes in a list and a char to append *)
   let append_char_t : L.lltype =
@@ -127,11 +133,22 @@ let translate (_, functions) =
   let append_char_func : L.llvalue = 
     L.declare_function "append_char" append_char_t the_module in
 
+  (* takes in a list and a char to append *)
+  let append_int_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
+  let append_int_func : L.llvalue = 
+    L.declare_function "append_int" append_int_t the_module in
+
   (* takes a list and a character and returns 1 if in, 0 otherwise*)
   let contains_char_t : L.lltype =
     L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
   let contains_char_func : L.llvalue =
     L.declare_function "contains_char" contains_char_t the_module in
+
+  let contains_int_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
+  let contains_int_func : L.llvalue =
+    L.declare_function "contains_int" contains_int_t the_module in
 
   (* given a pointer to list, returns length*)
   let listlen_t : L.lltype =
@@ -216,6 +233,7 @@ let translate (_, functions) =
     let get_type_string_of_array e_type = match e_type with
       | A.Array (li)   -> (match li with
           | A.Char  -> "char"
+          | A.Int   -> "int"
           | _       -> raise (Error "array type string nah"))
       | _ -> raise (Error "type string map not here yet ")
     in
@@ -234,7 +252,14 @@ let translate (_, functions) =
         (* create empty list llvalue *)
         let li = L.build_call create_list_func [| type_string_ptr |] "create_list" builder in
         (* map over elements to add to list *)
-        let appender c = L.build_call append_char_func [| li; (expr builder c) |] "" builder in
+        let rec append_func typ = match typ with
+            A.Int         -> append_int_func
+          | A.Char        -> append_char_func
+          | A.Nah         -> raise (Error "No such thing as nah append function")
+          | A.Array(arr)  -> (append_func arr)
+          | _             -> raise (Error "append function not defined for type")
+        in
+        let appender c = L.build_call (append_func e_type) [| li; (expr builder c) |] "" builder in
         (List.map appender list); li
       (* return the list *)
 
@@ -326,10 +351,17 @@ let translate (_, functions) =
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
 
-      | SAccess(e, l)             ->
-        let index = expr builder l in
-        let li = expr builder e in
-        L.build_call access_char_func [| li; index |] "access_char" builder
+      | SAccess((typ, _) as e, l) ->
+        let index       = expr builder l in
+        let li          = expr builder e in
+        let rec access_func typ = match typ with
+            A.Int         -> access_int_func
+          | A.Char        -> access_char_func
+          | A.Nah         -> raise (Error "No such thing as nah access function")
+          | A.Array(arr)  -> (access_func arr)
+          | _             -> raise (Error "access function not defined for type")
+        in 
+        L.build_call (access_func typ) [| li; index |] "access" builder
 
       | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
 
@@ -355,17 +387,24 @@ let translate (_, functions) =
         let p = expr builder (List.nth params 1) in
         L.build_call append_char_func [| li; p |] "" builder
 
-      (* contains *)
-      | SCall ("contains", params)  ->
-        let li = expr builder (List.hd params) in
-        let p = expr builder (List.nth params 1) in
-        L.build_call contains_char_func [| li; p |] "contains" builder
-
       (* len *)
       | SCall ("len", params)  ->
         let li = expr builder (List.hd params) in
+        L.build_call listlen_func [| li |] "len" builder
+
+      (* contains *)
+      | SCall ("contains", params)  ->
+        let typ = (fst (List.hd params)) in
+        let li = expr builder (List.hd params) in
         let p = expr builder (List.nth params 1) in
-        L.build_call contains_char_func [| li; p |] "contains" builder
+        let rec contains_func typ = match typ with
+            A.Int         -> contains_int_func
+          | A.Char        -> contains_char_func
+          | A.Nah         -> raise (Error "No such thing as nah contains function")
+          | A.Array(arr)  -> (contains_func arr)
+          | _             -> raise (Error "contains function not defined for type")
+        in 
+        L.build_call (contains_func typ) [| li; p |] "contains" builder
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
