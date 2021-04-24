@@ -1,10 +1,18 @@
-int a = 10;
-int b = 0;
+print(5 > 0);
+print(0 < 5);
+print(5 >= 5);
+print(5 <= 5);
+print(true && true);
+print(true || false);
 
-if(a > 5) {
-    b = 10;
+if (true) {
+    print(true);
+} else {
+    print(false);
 }
 
-if(a > 5 && a > 10) {
-    b = 20;
+if (false) {
+    print(false);
+} else {
+    print(true);
 }
