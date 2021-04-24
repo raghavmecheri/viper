@@ -1,5 +1,0 @@
-int func tester() {
-  return 42;
-}
-
-42.tester();

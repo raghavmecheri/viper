@@ -39,32 +39,12 @@ llvm_tests() {
         echo "______________________________________"
     done
 }
+
 sast_tests() {
-    cd test/semantsamples
+    cd test/tests
     echo "Beginning SAST tests"
     for i in *.vp; do
         echo "Running SAST test on: $i"
-        if [ $verbose -eq 1 ];
-        then
-            ../../viper.native -a $i
-        else
-            ../../viper.native -a $i >/dev/null 2>&1
-        fi
-        if [ $? -eq 0 ]
-        then
-            echo "PASSED"
-        else
-            echo "FAILURE: $i"
-            exit 1
-        fi
-        echo "______________________________________"
-    done
-}
-ast_tests() {
-    cd test/tests
-    echo "Beginning AST tests"
-    for i in *.vp; do
-        echo "Running AST test on: $i"
         if [ $verbose -eq 1 ];
         then
             ../../viper.native -a $i
