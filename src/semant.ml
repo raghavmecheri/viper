@@ -15,8 +15,6 @@ let rec clean_expression expr = match expr with
     MatchPattern(p, b) -> clean_expression (clean_pattern_rec p b)
   | PatternMatch(s, e) -> Assign(s, clean_expression e)
   | DecPatternMatch(t, s, e) -> DecAssign(t, s, clean_expression e)
-  | Ternop(e, e1, e2) -> clean_expression e1 (*Ternop((clean_expression e), (clean_expression e1), (clean_expression e2)) *)
-
   | Binop(e1, op, e2) -> Binop((clean_expression e1), op, (clean_expression e2))
   | Unop(op, e) -> Unop(op, (clean_expression e))
 
