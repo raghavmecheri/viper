@@ -164,7 +164,7 @@ let rec expr scope deepscope  = function
       (check_assign ft et, e') in 
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
       in (return_func fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
-  | Ternop(e1, e2, e3) -> 
+  | Ternop(e1, e2, e3) -> print_endline "running ternary";
       let (e1t, e1') = expr scope deepscope e1 in
       if e1t != Bool then raise (Failure "Error: expected bool in first expression of ternary operator") else
       let (e2t, e2') = expr scope deepscope e2 
