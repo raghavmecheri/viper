@@ -980,10 +980,10 @@ float bad_bad_bad = trunc(0.99, 0); /* Throws an error */
 Viper's standard library provides methods for casting between types for ease of use and readability. Type casting functions include:
 
 ### `9.2.1` `char()`
-`char()` converts to `char`s. The input can be an `int` in range [0, 127], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. For empty strings, `char()` returns an empty `char` (`''`). Passing any other types or `nah` to `char()` results in an error.
+`char()` converts to `char`s. The input can be an `int` in range [0, 255], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. Passing any other types or `nah` to `char()` results in an error.
 ```java
 char int_chr = char(36); /* Returns '$' */
-char str_char = char(str(true)); /* Returns 't' */
+char str_char = char(string(true)); /* Returns 't' */
 char no_dont_do_it = char(33.4); /* Throws an error */
 ``` 
 
@@ -1024,13 +1024,13 @@ See the below table for details on what values `bool()` maps to true and result 
 | `nah` | n/a | `nah`   
 
 
-### `9.2.5` `str()`
+### `9.2.5` `string()`
 `str()` converts any type to a `string`, which is useful for printing. See the below examples for type-specific details.
 ```java
-string char_str = str('z'); /* Returns "z" */
-string int_str = str(30); /* Returns "30" */
-string float_str = str(34.5); /* Returns "34.5" */
-string bool_str = str(false); /* Returns "false" */
+string char_str = string('z'); /* Returns "z" */
+string int_str = string(30); /* Returns "30" */
+string float_str = string(34.5); /* Returns "34.5" */
+string bool_str = string(false); /* Returns "false" */
 ```
 
 ## `9.3` Miscellaneous Functions
