@@ -190,7 +190,6 @@ let get_decs (s_list, f_list) =
       ("len", Array(Bool), Int);
       ("len", Array(String), Int);
       ("len", Array(Char), Int);
-<<<<<<< Updated upstream
       ("toInt", Float, Int);
       ("toChar", Int, Char);
       ("toFloat", Int, Float);
