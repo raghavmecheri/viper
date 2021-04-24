@@ -47,8 +47,8 @@ let rec string_of_params params = match params with
 and key_string name params = name ^ " (" ^ string_of_params params ^ ")"
 
 let rec string_of_params_built_in params = match params with
-    typ :: p    -> string_of_typ typ ^ ", " ^ string_of_params_built_in p
   | typ :: []   -> string_of_typ typ 
+  | typ :: p    -> string_of_typ typ ^ ", " ^ string_of_params_built_in p
   | _           -> "" 
 
 and key_string_built_in_functions name params = name ^ " (" ^ string_of_params_built_in params ^ ")"
@@ -177,13 +177,18 @@ let get_decs (s_list, f_list) =
   (* Collect declarations for Viper's built-in functions *)
   let built_in_funcs = 
     let build_built_in_func_table map (name, param_typ, typ) = 
-      let dummy_scope = List.fold_left (fun m f -> add_symbol name f m) {
+      let args = List.fold_left 
+          (fun m f -> let param_name = ("p" ^ string_of_int (StringMap.cardinal m.variables)) in add_symbol param_name f m) {
           variables = StringMap.empty;
           parent = None;
-        } param_typ in 
-      StringMap.add (key_string_built_in_functions name param_typ) {
-        formals = dummy_scope; 
-        locals = dummy_scope;
+        } param_typ in
+      let key = (key_string_built_in_functions name param_typ)
+      in StringMap.add key {
+        formals = args; 
+        locals = {
+          variables = StringMap.empty;
+          parent = None;
+        };
         ret_typ = typ;
       } map
     in List.fold_left build_built_in_func_table StringMap.empty [
@@ -206,8 +211,17 @@ let get_decs (s_list, f_list) =
       ("contains", [Array(Char); Char], Bool);
       *)
       ("toInt", [Float], Int);
+      ("toInt", [String], Int);
+      ("toInt", [Char], Int);
+      ("toInt", [Bool], Int);
+      ("toInt", [Int], Int);
       ("toChar", [Int], Char);
+      ("toChar", [String], Char); 
+      ("toChar", [Char], Char);
       ("toFloat", [Int], Float);
+      ("toFloat", [String], Float);
+      ("toFloat", [Char], Float);
+      ("toFloat", [Float], Float);
       ("toBool", [Int], Bool);
       ("toBool", [String], Bool);
       ("toBool", [Char], Bool);
