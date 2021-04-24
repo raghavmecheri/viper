@@ -25,7 +25,7 @@ type func_table = {
 
 (* Names of built-in Viper functions *)
 (* User-defined functions cannot have any name in this list *)
-let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"]
+let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"; "pow2"]
 
 (* Retrieves a type from an ID name *)
 let rec toi scope s =
@@ -149,17 +149,17 @@ let build_func_table global_scope (fd : func_decl) map =
       variables = StringMap.empty;
       parent = None;
     } fd.formals in
-    let updated_scope = { 
-      variables = formals_scope.variables;
-      parent = Some(global_scope); } in
-    let locals_scope = get_vars {
-        variables = StringMap.empty;
-        parent = Some(updated_scope);
-      } fd.body in StringMap.add key {
-      formals = updated_scope;
-      locals = locals_scope;
-      ret_typ = fd.typ;
-    } map
+  let updated_scope = { 
+    variables = formals_scope.variables;
+    parent = Some(global_scope); } in
+  let locals_scope = get_vars {
+      variables = StringMap.empty;
+      parent = Some(updated_scope);
+    } fd.body in StringMap.add key {
+    formals = updated_scope;
+    locals = locals_scope;
+    ret_typ = fd.typ;
+  } map
 
 (* Driver for getting declarations *)
 let get_decs (s_list, f_list) = 
@@ -172,9 +172,9 @@ let get_decs (s_list, f_list) =
   let built_in_funcs = 
     let build_built_in_func_table (name, param_typ, typ) map = 
       let dummy_scope = add_symbol name param_typ {
-        variables = StringMap.empty;
-        parent = None;
-      } in StringMap.add (key_string_built_in_functions name param_typ) {
+          variables = StringMap.empty;
+          parent = None;
+        } in StringMap.add (key_string_built_in_functions name param_typ) {
         formals = dummy_scope; 
         locals = dummy_scope;
         ret_typ = typ;
@@ -190,34 +190,24 @@ let get_decs (s_list, f_list) =
       ("len", Array(Bool), Int);
       ("len", Array(String), Int);
       ("len", Array(Char), Int);
-      ("len", String, Int);
-      ("toInt", Int, Int);
-      ("toInt", Float, Int);
-      ("toInt", String, Int);
-      ("toInt", Char, Int);
-      ("toInt", Bool, Int);
-      ("toChar", Char, Char);
-      ("toChar", Int, Char);
-      ("toChar", String, Char);
-      ("toFloat", Float, Float);
-      ("toFloat", Int, Float);
-      ("toFloat", Char, Float);
-      ("toFloat", String, Float);
-      ("toBool", Int, Bool);
-      ("toBool", String, Bool);
-      ("toBool", Char, Bool);
-      ("toBool", Float, Bool);
-      ("toBool", Bool, Bool);
-      ("toString", Int, String);
-      ("toString", Char, String);
-      ("toString", Float, String);
-      ("toString", Bool, String);
-      ("toString", String, String);
-      ("toNah", Int, Nah); 
-      ("toNah", String, Nah); 
-      ("toNah", Char, Nah); 
-      ("toNah", Float, Nah); 
-      ("toNah", Bool, Nah); 
+      ("int", Float, Int);
+      ("char", Int, Char);
+      ("float", Int, Float);
+      ("bool", Int, Bool);
+      ("bool", String, Bool);
+      ("bool", Char, Bool);
+      ("bool", Bool, Bool);
+      ("string", Int, String);
+      ("string", Float, String);
+      ("string", Bool, String);
+      ("string", String, String);
+      ("nah", Int, Nah); 
+      ("nah", String, Nah); 
+      ("nah", Char, Nah); 
+      ("nah", Float, Nah); 
+      ("nah", Bool, Nah);
+      ("pow2", Float, Float);
+      ("pow2", Int, Float);
     ] in
 
   (* Collects function tables for a list of function declarations *)

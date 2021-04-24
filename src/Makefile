@@ -5,7 +5,7 @@
 # Easiest way to build: using ocamlbuild, which in turn uses ocamlfind
 
 .PHONY: all
-all : viper.native
+all : viper.native library.o
 
 .PHONY: viper.native
 viper.native :
@@ -59,4 +59,4 @@ parser.cmi : ast.cmo
 ### C Standard Library
 
 library : library.c
-	gcc -o library library.c -lm
+	cc -o library -DBUILD_TEST library.c -lm

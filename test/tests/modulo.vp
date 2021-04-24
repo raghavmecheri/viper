@@ -1,4 +1,21 @@
-int a = 10;
-int b = 20;
+int ten = 10;
+int twenty = 20;
+int one = 1;
+int two = 2;
 
-int c = a % b;
+
+/* 10 */
+int a = ten % twenty;
+print(a);
+
+/* 0 */
+int b = twenty % ten;
+print(b);
+
+/* 1 */
+int c = one % two;
+print(c);
+
+/* 0 */
+int d = two % one;
+print(d);
