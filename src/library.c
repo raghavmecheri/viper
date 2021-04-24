@@ -78,12 +78,12 @@ void append_str(struct list *inlist, char *str)
     inlist->size = inlist->size + 1;
 }
 
-struct list *append_char(struct list *inlist, char chr)
+void append_char(struct list *inlist, char chr)
 {
     if (strcmp(inlist->type, "char"))
     {
         printf("Can only append %s, not char\n", inlist->type);
-        return inlist;
+        return;
     }
 
     realloc_check(inlist);
@@ -91,7 +91,6 @@ struct list *append_char(struct list *inlist, char chr)
     *toadd = chr;
     inlist->data[(inlist->size)] = toadd;
     inlist->size = inlist->size + 1;
-    return inlist;
 }
 
 void append_int(struct list *inlist, int num)
