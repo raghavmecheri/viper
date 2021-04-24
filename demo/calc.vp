@@ -4,9 +4,10 @@ int func calc(int a, int b, char op) {
       | op == '-' : a - b
       | op == '*' : a * b
       | op == '/' : a / b
+    ?? a
+
     return res
 }
 
-print(calc(10, 20, '+'));
-print(calc(20, 50, '*'));
-print(calc(15, 10, '/'));
+int result = calc(10, 20, '+')
+print(result);
