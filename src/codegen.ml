@@ -41,7 +41,7 @@ let translate (_, functions) =
     | A.Dictionary(_, _)  -> raise (Error "Dictionary lltype not implemented")
   in
 
-  (* function to return initial value for a declaration*)
+  (* Return initial value for a declaration *)
   let rec lvalue_of_typ typ = function
       A.Int | A.Bool | A.Nah | A.Char -> L.const_int (ltype_of_typ typ) 0
     | A.Float                         -> L.const_float (ltype_of_typ typ) 0.0
@@ -57,6 +57,11 @@ let translate (_, functions) =
     L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
     L.declare_function "printf" printf_t the_module in
+
+  let pow2_t : L.lltype = 
+    L.function_type float_t [| float_t |] in
+  let pow2_func : L.llvalue = 
+    L.declare_function "pow2" pow2_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -189,6 +194,9 @@ let translate (_, functions) =
       (* hardcoded SCalls for built-ins *)
       | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
+
+      | SCall ("pow2", [params]) -> let value = expr builder params in 
+        L.build_call printf_func [| value |] "printf" builder
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
