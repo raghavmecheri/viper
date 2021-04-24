@@ -308,7 +308,7 @@ let translate (_, functions) =
 
       (* casts *)
       | SCall("toChar", params) -> expr builder (Cast.to_char params)
-      | SCall("toInt", params) -> expr builder (Cast.to_int params)
+      | SCall("toInt", params) -> print_endline "toINT";expr builder (Cast.to_int params)
       | SCall("toFloat", params) -> expr builder (Cast.to_float params)
       | SCall("toBool", params) -> expr builder (Cast.to_bool params)
       | SCall("toString", params) -> expr builder (Cast.to_string params)
