@@ -25,7 +25,7 @@ type func_table = {
 
 (* Names of built-in Viper functions *)
 (* User-defined functions cannot have any name in this list *)
-let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"; "pow2"]
+let illegal_func_names = ["print"; "len"; "int"; "char"; "float"; "bool"; "string"; "nah"; "pow2"; "append"]
 
 (* Retrieves a type from an ID name *)
 let rec toi scope s =
@@ -196,6 +196,14 @@ let get_decs (s_list, f_list) =
       ("len", [Array(Bool)], Int);
       ("len", [Array(String)], Int);
       ("len", [Array(Char)], Int);
+      (* ("append", [Array(Char), Char], Array(Char)); *)
+      (*
+      ("contains", [Array(Int); Int], Bool);
+      ("contains", [Array(Float); Float], Bool);
+      ("contains", [Array(String); String], Bool);
+      ("contains", [Array(Bool); Bool], Bool);
+      ("contains", [Array(Char); Char], Bool);
+      *)
       ("toInt", [Float], Int);
       ("toChar", [Int], Char);
       ("toFloat", [Int], Float);
