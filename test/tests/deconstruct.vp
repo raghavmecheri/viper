@@ -1,7 +1,0 @@
-(int, bool, int) t = [10, false, 42];
-
-(int x, bool y, int z) = t;
-
-(int) t2 = [10];
-
-(int y) = t2;
