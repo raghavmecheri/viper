@@ -366,7 +366,9 @@ let translate (_, functions) =
       | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
 
       (* hardcoded SCalls for built-ins *)
-      | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
+      | SCall("print", []) -> let newline = expr builder (String, SStringLiteral(""))
+        in L.build_call printf_func [| str_format_str ; newline |] "printf" builder
+      | SCall("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
 
       (* casts *)
@@ -427,7 +429,7 @@ let translate (_, functions) =
       get_print_value builder (t, e) = match e with
       (* SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
          in expr builder (A.String, strlit) *)
-      | _ -> expr builder (t, e)
+        | _ -> expr builder (t, e)
     in
 
     let rec stmt builder = function
@@ -500,6 +502,8 @@ let translate (_, functions) =
 
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
+      | SSkip _  -> raise (Failure "Error: skip occurs outside of loop")
+      | SAbort _ -> raise (Failure "Error: abort occurs outside of loop")
       | _ -> raise (Error "Statement match not implemented")
     in 
 
