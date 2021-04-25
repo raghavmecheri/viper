@@ -65,7 +65,7 @@ type stmt =
   | ForIter of string * expr * stmt
   | DecForIter of typ * string * expr * stmt
   | DeconstForIter of bind list * expr * stmt
-  | While of expr * stmt * expr
+  | While of expr * stmt * stmt
 
 type func_decl = {
     typ : typ;

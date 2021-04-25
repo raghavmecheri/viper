@@ -39,7 +39,7 @@ type sstmt =
   | SAbort of sexpr
   | SPanic of sexpr
   | SIf of sexpr * sstmt * sstmt
-  | SWhile of sexpr * sstmt * sexpr
+  | SWhile of sexpr * sstmt * sstmt
 
 type sfunc_decl = {
   styp : typ;
