@@ -33,7 +33,7 @@ let rec toi scope s =
     StringMap.find s scope.variables 
   else match scope.parent with
       Some(parent) -> toi parent s 
-    | _ -> raise (Failure "Variable not found") 
+    | _ -> raise (Failure ("Variable " ^ s ^ " not found"))
 
 (* Builds a comma-separated string out of a list of parameters *)
 (* For example, [int, char, bool] becomes "(int, char, bool)" *)
@@ -192,6 +192,7 @@ let get_decs (s_list, f_list) =
         ret_typ = typ;
       } map
     in List.fold_left build_built_in_func_table StringMap.empty [
+      ("print", [], Nah);
       ("print", [Int], Nah);
       ("print", [String], Nah);
       ("print", [Char], Nah);
