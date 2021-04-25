@@ -143,6 +143,12 @@ The one other reference worth mentioning is in relation to Viper's pattern-match
 
 ## `1.3` Goals
 
+## `1.4` How to Obtain and Use Viper
+To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
+ - Once cloned, type `cd src && make && cd ..`
+ - There should now be a viper.native file in your current directory, as well as an exec.sh
+ - (TO BE CONTINUED) 
+
 [↩️  Back to Contents 📌](#0-contents)
 
 # `2` Lexical Conventions 📝
