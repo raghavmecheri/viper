@@ -65,7 +65,7 @@ type stmt =
   | ForIter of string * expr * stmt
   | DecForIter of typ * string * expr * stmt
   | DeconstForIter of bind list * expr * stmt
-  | While of expr * stmt
+  | While of expr * stmt * stmt
 
 type func_decl = {
     typ : typ;
@@ -168,7 +168,7 @@ let rec string_of_stmt = function
   | DecForIter(t, name, e2, s) ->
       "for (" ^ string_of_typ t ^ " " ^ name ^ " in " ^ string_of_expr e2 ^ ") " ^ string_of_stmt s
   | DeconstForIter(p, expr, s) -> "for ((" ^ String.concat ", " (List.map snd p) ^ ") in " ^ string_of_expr expr ^ ") " ^ string_of_stmt s 
-  | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+  | While(e, s, _) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

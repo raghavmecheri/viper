@@ -184,7 +184,7 @@ let rec check_stmt scope inloop =
   | Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop")  
   | Panic e -> SPanic (expr scope inloop e) 
   | If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt scope inloop b1, check_stmt scope inloop b2) 
-  | While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s) 
+  | While(p, s, inc) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s, check_stmt scope inloop inc) 
   | Return _ -> raise (Failure "return outside a function")
   | Block sl -> 
       let rec check_stmt_list blockscope = function
@@ -210,7 +210,7 @@ let rec check_stmt_func scope inloop ret =
   | Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop") 
   | Panic e -> SPanic (expr scope inloop e) 
   | If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt_func scope inloop ret b1, check_stmt_func scope inloop ret b2) 
-  | While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt_func new_scope true ret s) 
+  | While(p, s, inc) -> SWhile(check_bool (expr scope inloop p), check_stmt_func new_scope true ret s, check_stmt scope inloop inc) 
   | Return e -> let (t, e') = expr scope inloop e in 
       if t = ret then SReturn (t, e') 
       else raise (

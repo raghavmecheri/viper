@@ -124,7 +124,7 @@ let rec get_stmt_decs scope stmt =
     let iter_scope = add_symbol name ty new_scope in
     let for_scope = get_expr_decs iter_scope e in 
     let _ = get_stmt_decs for_scope s in scope
-  | While(e, s) -> 
+  | While(e, s, _) -> 
     let while_scope = get_expr_decs new_scope e in 
     let _ = get_stmt_decs while_scope s in scope
   | _ -> scope

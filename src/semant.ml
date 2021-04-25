@@ -39,27 +39,28 @@ let decompose_deconstforiter n e s =
     in
     let exec = Block([ Expr(DecAssign(idx_t, idx_name, Id("dfi_tmp_idx"))); Expr(DecAssign(el_t, el_name, Access(e, Id("dfi_tmp_idx")))); s; Expr(Unop(Incr, Id("dfi_tmp_idx")))  ])
     in
-    While(comparison, exec)
+    While(comparison, exec, Expr(Noexpr))
 
 let decompose_foriter n e s = 
     let comparison = Binop(Id("dfi_tmp_idx"), Leq, Call("len", [e]))
     in
-    let exec = Block([ Expr(Assign(n, Access(e, Id("dfi_tmp_idx")))); s; Expr(Unop(Incr, Id("dfi_tmp_idx")))  ])
+    let (iterator : Ast.stmt) = Expr(Unop(Incr, Id("dfi_tmp_idx"))) in
+    let exec = Block([ Expr(Assign(n, Access(e, Id("dfi_tmp_idx")))); s; iterator])
     in
-    While(comparison, exec)
+    While(comparison, exec, iterator)
 
 let decompose_decforiter t n e s = 
     let comparison = Binop(Id("dfi_tmp_idx"), Leq, Call("len", [e]))
     in
     let exec = Block([ Expr(DecAssign(t, n, Access(e, Id("dfi_tmp_idx")))); s; Expr(Unop(Incr, Id("dfi_tmp_idx")))  ])
     in
-    While(comparison, exec)
+    While(comparison, exec, Expr(Noexpr))
     
 let clean_statements stmts = 
     let rec clean_statement stmt = match stmt with
         Block(s) -> Block(List.map clean_statement s)
       | Expr(expr) -> Expr(clean_expression expr) 
-      | For(e1, e2, e3, s) -> Block( [ Expr(e1); While(e2, Block([ (clean_statement s); Expr(e3); ]))  ])
+      | For(e1, e2, e3, s) -> Block( [ Expr(e1); While(e2, Block([ (clean_statement s); Expr(e3)]), Expr(e3))  ])
       | ForIter(name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_foriter name e2 (clean_statement s)]) 
       | DecForIter(t, name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_decforiter t name e2 (clean_statement s)])
       | DeconstForIter(p, e, s) ->  Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_deconstforiter p e (clean_statement s)])
