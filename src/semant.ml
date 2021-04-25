@@ -82,4 +82,26 @@ let clean_normal_function fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=
 
 let clean_function fdecl = if fdecl.autoreturn then reshape_arrow_function fdecl else clean_normal_function fdecl
 
-let desugar (stmts, functions) = (clean_statements stmts, (List.map clean_function functions))
+let rec eliminate_ternaries stmts =
+  let new_functions = [] in
+
+  let rec eliminate_ternaries_from_expr expr = match expr with
+      Ternop(e, e1, e2) -> (* Do something here, return append_function_call + do recursively *)
+    | _ -> expr
+  in 
+
+  let rec clean_statement = match stmt with
+    Expr(e) -> eliminate_ternaries_from_expr e
+  | _ -> stmt
+  in
+
+  let cleaned_stmts = List.map clean_statement stmts in
+  (cleaned_stmts, new_functions)
+
+
+let desugar (stmts, functions) = 
+  let cleaned_statements = clean_statements stmts in
+  let cleaned_functions = List.map clean_function functions in
+  let (adjusted_statements, new_functions) = eliminate_ternaries cleaned_statements in
+  let adusted_functions = add_adjusted_functions cleaned_functions new_functions
+  (adjusted_statements, adusted_functions)
