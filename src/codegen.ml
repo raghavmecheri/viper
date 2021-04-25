@@ -462,10 +462,8 @@ let translate (_, functions) =
         ignore(L.build_cond_br bool_val then_bb else_bb builder);
         L.builder_at_end context merge_bb
 
-      | SWhile (predicate, body) ->
-        (*print_endline "WORKING HERE";
-          print_endline "entering while loop basic block";*)
-        let rec loop_stmt loop_bb builder = (*print_endline "entering special case matching";*)(function
+      | SWhile (predicate, body, increment) ->
+        let rec loop_stmt loop_bb builder = (function
               SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb b s) builder sl
             | SIf (predicate, then_stmt, else_stmt)   -> 
               let bool_val = expr builder predicate in
@@ -482,7 +480,12 @@ let translate (_, functions) =
 
               ignore(L.build_cond_br bool_val then_bb else_bb builder);
               L.builder_at_end context merge_bb
-            | SSkip e -> (*print_endline "entering skip"; *)ignore(L.build_br loop_bb builder) ; builder
+            | SSkip e -> 
+                let skip_bb = L.append_block context "skip" the_function in 
+                ignore (L.build_br skip_bb builder);
+                let skip_builder = (L.builder_at_end context skip_bb) in
+                add_terminal (loop_stmt loop_bb skip_builder increment) (L.build_br loop_bb);
+                builder 
             | _ as e -> stmt builder e) in
 
         let pred_bb = L.append_block context "while" the_function in
