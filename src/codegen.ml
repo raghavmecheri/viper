@@ -382,7 +382,9 @@ let translate (_, functions) =
       | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
 
       (* hardcoded SCalls for built-ins *)
-      | SCall ("print", [params]) -> let print_value = (get_print_value builder params)
+      | SCall("print", []) -> let newline = expr builder (String, SStringLiteral(""))
+        in L.build_call printf_func [| str_format_str ; newline |] "printf" builder
+      | SCall("print", [params]) -> let print_value = (get_print_value builder params)
         in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
 
       (* casts *)
@@ -443,7 +445,7 @@ let translate (_, functions) =
       get_print_value builder (t, e) = match e with
       (* SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
          in expr builder (A.String, strlit) *)
-      | _ -> expr builder (t, e)
+        | _ -> expr builder (t, e)
     in
 
     let rec stmt builder = function
@@ -458,7 +460,6 @@ let translate (_, functions) =
           (* Build return statement *)
           | _ -> L.build_ret (expr builder e) builder );
         builder
-      | SAbort expr                             -> raise (Error "Abort statement not implemented")
       | SPanic expr                             -> raise (Error "Panic statement not implemented")
 
       (* this if and while is straight from microc if issues arise *)
@@ -478,41 +479,47 @@ let translate (_, functions) =
         ignore(L.build_cond_br bool_val then_bb else_bb builder);
         L.builder_at_end context merge_bb
 
-      | SWhile (predicate, body) ->
-        (*print_endline "WORKING HERE";
-          print_endline "entering while loop basic block";*)
-        let rec loop_stmt loop_bb builder = (*print_endline "entering special case matching";*)(function
-              SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb b s) builder sl
+      | SWhile (predicate, body, increment) ->
+        let rec loop_stmt loop_bb exit_bb builder = (function
+              SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb exit_bb b s) builder sl
             | SIf (predicate, then_stmt, else_stmt)   -> 
               let bool_val = expr builder predicate in
               let merge_bb = L.append_block context "merge" the_function in
               let build_br_merge = L.build_br merge_bb in (* partial function *)
 
               let then_bb = L.append_block context "then" the_function in
-              add_terminal (loop_stmt loop_bb (L.builder_at_end context then_bb) then_stmt)
+              add_terminal (loop_stmt loop_bb exit_bb (L.builder_at_end context then_bb) then_stmt)
                 build_br_merge;
 
               let else_bb = L.append_block context "else" the_function in
-              add_terminal (loop_stmt loop_bb (L.builder_at_end context else_bb) else_stmt)
+              add_terminal (loop_stmt loop_bb exit_bb (L.builder_at_end context else_bb) else_stmt)
                 build_br_merge;
 
               ignore(L.build_cond_br bool_val then_bb else_bb builder);
               L.builder_at_end context merge_bb
-            | SSkip e -> (*print_endline "entering skip"; *)ignore(L.build_br loop_bb builder) ; builder
+            | SSkip _ -> 
+                let skip_bb = L.append_block context "skip" the_function in 
+                ignore (L.build_br skip_bb builder);
+                let skip_builder = (L.builder_at_end context skip_bb) in
+                add_terminal (loop_stmt loop_bb exit_bb skip_builder increment) (L.build_br loop_bb);
+                builder 
+            | SAbort _ -> ignore(L.build_br exit_bb builder); builder
             | _ as e -> stmt builder e) in
 
-        let pred_bb = L.append_block context "while" the_function in
+        let pred_bb = L.append_block context "while" the_function 
+        and merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_br pred_bb builder);
         let body_bb = L.append_block context "while_body" the_function in
-        add_terminal (loop_stmt pred_bb (L.builder_at_end context body_bb) body)
+        add_terminal (loop_stmt pred_bb merge_bb (L.builder_at_end context body_bb) body)
           (L.build_br pred_bb);
 
         let pred_builder = L.builder_at_end context pred_bb in
         let bool_val = expr pred_builder predicate in
 
-        let merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
+      | SSkip _  -> raise (Failure "Error: skip occurs outside of loop")
+      | SAbort _ -> raise (Failure "Error: abort occurs outside of loop")
       | _ -> raise (Error "Statement match not implemented")
     in 
 

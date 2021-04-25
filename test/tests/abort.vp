@@ -1,0 +1,52 @@
+print("testing skip and abort together:");
+for (int i = 0; i < 10; i += 1) {
+    if (i == 4) {
+        skip;
+    }
+    if (i > 5) {
+        abort;
+    }
+    print(i);
+}
+
+print();
+print();
+print("---------");
+print();
+print("testing abort in a while loop:");
+int a = -1;
+while (a += 1 < 80) {
+    if (a > 3) {
+        abort;
+    }
+    print(a);
+}
+
+/* Throws error
+if (a > 9) {
+    abort;
+} */
+
+print();
+print("testing skip and abort with nested loops:"); 
+int x = -1;
+int i;
+while (x < 10) {
+    x += 1;
+    if (x == 3) {
+        skip;
+    }
+    for (i = 0; i < 10; i += 1) {
+        if (x > i) {
+            print(x);
+            print(i);
+        } else {
+            abort;
+        }
+    } 
+    print("aborted inner for loop");
+}
+print("terminated outer while loop");
+
+
+

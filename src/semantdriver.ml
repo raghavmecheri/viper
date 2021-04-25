@@ -3,6 +3,7 @@ open Sast
 open Boolcheck
 open Rhandlhand 
 open Decs 
+open Semant
  
 let check (statements, functions) = 
 
@@ -184,7 +185,8 @@ let rec check_stmt scope inloop =
   | Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop")  
   | Panic e -> SPanic (expr scope inloop e) 
   | If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt scope inloop b1, check_stmt scope inloop b2) 
-  | While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s) 
+  | While(p, s, inc) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s, check_stmt scope inloop inc) 
+  | For(e1, e2, e3, s) -> raise (Failure ("Error: nested for loops currently broken"))
   | Return _ -> raise (Failure "return outside a function")
   | Block sl -> 
       let rec check_stmt_list blockscope = function
@@ -196,7 +198,7 @@ let rec check_stmt scope inloop =
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
   | PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
   | Dec(ty, l) -> SDec(ty, l)
-  | _  -> raise (Failure "statement is not a statement") 
+  | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in
 
 (* Check statements within functions *)
@@ -210,7 +212,7 @@ let rec check_stmt_func scope inloop ret =
   | Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop") 
   | Panic e -> SPanic (expr scope inloop e) 
   | If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt_func scope inloop ret b1, check_stmt_func scope inloop ret b2) 
-  | While(p, s) -> SWhile(check_bool (expr scope inloop p), check_stmt_func new_scope true ret s) 
+  | While(p, s, inc) -> SWhile(check_bool (expr scope inloop p), check_stmt_func new_scope true ret s, check_stmt scope inloop inc) 
   | Return e -> let (t, e') = expr scope inloop e in 
       if t = ret then SReturn (t, e') 
       else raise (
@@ -226,7 +228,7 @@ let rec check_stmt_func scope inloop ret =
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
   | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
   | Dec(ty, l) -> SDec(ty, l)
-  | _  -> raise (Failure "statement is not a statement")
+  | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in
 
 (* Check function declarations *)

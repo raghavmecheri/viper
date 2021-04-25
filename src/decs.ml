@@ -33,7 +33,7 @@ let rec toi scope s =
     StringMap.find s scope.variables 
   else match scope.parent with
       Some(parent) -> toi parent s 
-    | _ -> raise (Failure "Variable not found") 
+    | _ -> raise (Failure ("Variable " ^ s ^ " not found"))
 
 (* Builds a comma-separated string out of a list of parameters *)
 (* For example, [int, char, bool] becomes "(int, char, bool)" *)
@@ -124,7 +124,7 @@ let rec get_stmt_decs scope stmt =
     let iter_scope = add_symbol name ty new_scope in
     let for_scope = get_expr_decs iter_scope e in 
     let _ = get_stmt_decs for_scope s in scope
-  | While(e, s) -> 
+  | While(e, s, _) -> 
     let while_scope = get_expr_decs new_scope e in 
     let _ = get_stmt_decs while_scope s in scope
   | _ -> scope
@@ -192,6 +192,7 @@ let get_decs (s_list, f_list) =
         ret_typ = typ;
       } map
     in List.fold_left build_built_in_func_table StringMap.empty [
+      ("print", [], Nah);
       ("print", [Int], Nah);
       ("print", [String], Nah);
       ("print", [Char], Nah);
