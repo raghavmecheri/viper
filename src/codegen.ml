@@ -103,17 +103,13 @@ let translate (_, functions) =
   let pow2_func : L.llvalue = 
     L.declare_function "pow2" pow2_t the_module in
 
+  (* BUILTIN LIST FUNCTIONS HERE*)
+
   (* takes in a char pointer to a string of the type *)
   let create_list_t : L.lltype =
     L.function_type (L.pointer_type (find_struct_type "list")) [| L.pointer_type i8_t |] in
   let create_list_func : L.llvalue = 
     L.declare_function "create_list" create_list_t the_module in
-
-  (* takes in a char pointer to a string of the type TODO: fix typing *)
-  let create_dict_t : L.lltype =
-    L.function_type (find_struct_type "dict") [| L.pointer_type i8_t; L.pointer_type i8_t |] in
-  let create_dict_func : L.llvalue = 
-    L.declare_function "create_dict" create_dict_t the_module in
 
   (* takes in a list and an int and returns the index of the list *)
   let access_char_t : L.lltype =
@@ -155,6 +151,26 @@ let translate (_, functions) =
     L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")) |] in
   let listlen_func : L.llvalue =
     L.declare_function "listlen" listlen_t the_module in
+
+  (* BUILTIN DICT FUNCTIONS HERE *)
+
+  (* takes in a char pointer to a string of the type *)
+  let create_dict_t : L.lltype =
+    L.function_type (L.pointer_type (find_struct_type "dict")) [| L.pointer_type i8_t; L.pointer_type i8_t |] in
+  let create_dict_func : L.llvalue = 
+    L.declare_function "create_dict" create_dict_t the_module in
+
+  (* takes in a dict pointer and a void pointer to key and val and adds pair to dict *)
+  let add_keyval_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "dict")); (L.pointer_type i8_t); (L.pointer_type i8_t) |] in
+  let add_keyval_func : L.llvalue = 
+    L.declare_function "add_keyval" add_keyval_t the_module in
+
+  (* takes in a dict and a char key and returns a void pointer to the value *)
+  let access_char_key_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "dict")); (ltype_of_typ A.Char) |] in
+  let access_char_func : L.llvalue = 
+    L.declare_function "access_char_key" access_char_key_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
