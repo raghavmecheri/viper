@@ -90,21 +90,23 @@
           <section>
             <h2>Sample Program II</h2>
             <pre><code data-trim data-noescape>
-              int func recursiveGCD(int a, int b) {
-                int func conditional (int x, int y) =>
-                  ??
-                    x == 0 : y
-                  | y == 0 : x
-                  | true   : nah
-                  ??;
-
-                int func swappedGCD (int x, int y) => 
-                  x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
-
-                int check = conditional(a, b);
-
-                return check == nah ? swappedGCD(a, b) : check;
+              int func conditional(int x, int y) {
+                  if(x == 0 && y == 0) {
+                      return -1;
+                  }
+                  return (x == 0 ? y : x);
               }
+
+              int func gcd(int a, int b) {
+                  int check = conditional(a, b);
+                  if(check == -1) {
+                      int diff = a > b ? (a-b) : (b-a);
+                      return a > b ? gcd(diff, b) : gcd(a, diff);
+                  }
+                  return check;
+              }
+
+              print(gcd(100, 10));
             </code></pre>
           </section>
         </section>
@@ -114,7 +116,7 @@
             <h2>Compiler Architecture</h2>
           </section>
           <section>
-            TBD
+            <img src="./architecture.png">
           </section>
         </section>
 
@@ -132,7 +134,16 @@
             <h2>Handling Syntactic Sugar</h2>
           </section>
           <section>
-            TBD
+            Viper has a lot of features that we were able to reduce to just syntactic sugar, to make the work easier when we need to generate LLVM
+          </section>
+          <section>
+            Arrow functions are reduced to just regular functions
+          </section>
+          <section>
+            Guard expressions are merely nested ternaries
+          </section>
+          <section>
+            For loops, iterative for loops (for-in) and other types of syntactically sugared for-loops are all reduced to while loops
           </section>
         </section>
         
