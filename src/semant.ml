@@ -64,6 +64,8 @@ let clean_statements stmts =
       | ForIter(name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_foriter name e2 (clean_statement s)]) 
       | DecForIter(t, name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_decforiter t name e2 (clean_statement s)])
       | DeconstForIter(p, e, s) ->  Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_deconstforiter p e (clean_statement s)])
+      | While(e, s, iterator) -> While(clean_expression e, clean_statement s, clean_statement iterator)
+      | If(cond, t, f) -> If(clean_expression cond, clean_statement t, clean_statement f)
       | _ -> stmt
     in
     (List.map clean_statement stmts)
