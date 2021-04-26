@@ -3,7 +3,6 @@ open Sast
 open Boolcheck
 open Rhandlhand 
 open Decs 
-open Semant
  
 let check (statements, functions) = 
 

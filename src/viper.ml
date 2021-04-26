@@ -26,7 +26,7 @@ let _ =
   let lexbuf = Lexing.from_channel channel in
   let ast = Parser.program Scanner.token lexbuf in
   (* this is sast, currently not used so replace _ with sast when used *)
-  let desugared = Semant.desugar ast in
+  let desugared = Desugar.desugar ast in
   let sast = Semantdriver.check desugared in
   match !action with
     Ast -> print_string (Ast.string_of_program desugared)
