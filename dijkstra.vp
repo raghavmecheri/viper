@@ -13,10 +13,11 @@ char[] nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 [char: int] unvisited = [];
 [char: int] visited = [];
 
-/*
 for (char node in nodes) {
     unvisited[node] = -1;
 }
+
+/*
 
 char current = 'B';
 int currentDistance = 0;
