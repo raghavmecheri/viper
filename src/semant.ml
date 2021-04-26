@@ -117,11 +117,10 @@ let rec sanitize_expr e = match e with
   | _ -> e
 
 let rec decompose_nested_ternary e e1 e2 = match e2 with
-    Ternop(e', e1', e2') -> If(e', Expr(Assign("ternop_tempvar", e1')), decompose_nested_ternary e' e1' e2')
+    Ternop(e', e1', e2') -> If(e, Expr(Assign("ternop_tempvar", e1)), (decompose_nested_ternary e' e1' e2'))
   | _ -> If(e, Expr(Assign("ternop_tempvar", e1)), Expr(Assign("ternop_tempvar", e2)))
 
 let rec check_for_ternary e t = match e with
-   (* Assign(n, e) -> check_for_ternary e *)
     DecAssign(t, n, e) -> check_for_ternary e t
   | Ternop(e, e1, e2) -> (true, decompose_nested_ternary e e1 e2, "ternary_tmpvar", t)
   | _ -> (false, PretendBlock([]), "ternary_tempvar_none", Int)
@@ -132,17 +131,18 @@ let sanitize_ternaries stmts =
         if to_sanitize then PretendBlock([ Dec(t, "ternop_tempvar"); required_stmt; Expr(sanitize_expr e) ]) else Expr(e)
     in
 
+    (* int a = TERNARY *)
     let check_stmt stmt = match stmt with
     Expr(e) -> generate_pb_if_needed e 
   | _ -> stmt
 
     in List.map check_stmt stmts
 
-let clean_adjust_function fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=fdecl.fname; body = (sanitize_ternaries fdecl.body); autoreturn=fdecl.autoreturn; }
+let sanitize_ternaries_f fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=fdecl.fname; body = (sanitize_ternaries fdecl.body); autoreturn=fdecl.autoreturn; }
 
 let desugar (stmts, functions) = 
   let cleaned_statements = clean_statements stmts in
   let cleaned_functions = List.map clean_function functions in
   let adjusted_statements = sanitize_ternaries cleaned_statements in
-  let cleaned_adjusted_functions = List.map clean_adjust_function cleaned_functions in
-  (adjusted_statements, cleaned_adjusted_functions)
+  let adjusted_functions = List.map sanitize_ternaries_f cleaned_functions in
+  (adjusted_statements, adjusted_functions)
