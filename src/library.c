@@ -536,7 +536,12 @@ void print_int_list(struct list *inlist)
 
     for (int i = 0; i < inlist->size; i++)
     {
-        printf(" %d ", access_int(inlist, i));
+        printf("%d", access_int(inlist, i));
+
+        if (i < inlist->size - 1)
+        {
+            printf(", ");
+        }
     }
 
     printf("]\n");
@@ -553,7 +558,12 @@ void print_str_list(struct list *inlist)
 
     for (int i = 0; i < inlist->size; i++)
     {
-        printf(" %s ", access_str(inlist, i));
+        printf("%s", access_str(inlist, i));
+
+        if (i < inlist->size - 1)
+        {
+            printf(", ");
+        }
     }
 
     printf("]\n");
