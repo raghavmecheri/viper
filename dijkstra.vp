@@ -1,4 +1,4 @@
-# Original Code: https://stackoverflow.com/questions/22897209/dijkstras-algorithm-in-python
+/* Original Code: https://stackoverflow.com/questions/22897209/dijkstras-algorithm-in-python */
 
 char[] nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 [char: [char:int]] distances = [
@@ -16,6 +16,8 @@ char[] nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 for (char node in nodes) {
     unvisited[node] = -1;
 }
+
+/*
 
 char current = 'B';
 int currentDistance = 0;
@@ -56,4 +58,4 @@ string func dictToString([char: int] dict) {
     }
     return output;
 }
-
+*/

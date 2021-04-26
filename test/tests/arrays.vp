@@ -1,8 +1,17 @@
-int []f;
-int[] g;
 
-int[] e = [1,2,3,4];
+int[] s = [1, 2, 3, 4, 5];
+char[] c = ['a', 'b', 'c', 'd'];
+int[] e;
 
-int[] p = [1,2,3,4];
+print(s[0]);
+print(s[1]);
+print(s[2]);
+print(s[3]);
+print(s[4]);
 
-p[0] = 10;
+print(c[0]);
+print(c[1]);
+print(c[2]);
+print(c[3]);
+
+

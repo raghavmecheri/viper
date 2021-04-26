@@ -1,2 +1,6 @@
-int func sum (int c) => c + c;
-sum(10);
+int func sum (int c, int d) => c + d;
+bool func between (int i, int lowerb, int upperb) => (i > lowerb && i < upperb);
+
+
+print(sum(10, 40));
+print(between(5, 1, 9));

@@ -16,6 +16,15 @@ type scope_table = {
   parent : scope_table option;
 }
 
+let rec string_of_scope scope = 
+  let print_bind name ty str = ("(" ^ name ^ ": " ^ (string_of_typ ty) ^ ")\n" ^ str) in
+  let this_scope = StringMap.fold (fun k t s -> print_bind k t s) scope.variables "" in 
+  let parent_scope = match scope.parent with
+      Some(parent) -> string_of_scope parent
+    | None -> ""
+  in "{" ^ this_scope ^ "}\n|\nV\n{" ^ parent_scope ^ "}"  
+  
+
 (* Data structure that stores function declarations *)
 type func_table = {
   formals : scope_table;
@@ -33,7 +42,7 @@ let rec toi scope s =
     StringMap.find s scope.variables 
   else match scope.parent with
       Some(parent) -> toi parent s 
-    | _ -> raise (Failure "Variable not found") 
+    | _ -> raise (Failure ("Variable " ^ s ^ " not found"))
 
 (* Builds a comma-separated string out of a list of parameters *)
 (* For example, [int, char, bool] becomes "(int, char, bool)" *)
@@ -192,6 +201,7 @@ let get_decs (s_list, f_list) =
         ret_typ = typ;
       } map
     in List.fold_left build_built_in_func_table StringMap.empty [
+      ("print", [], Nah);
       ("print", [Int], Nah);
       ("print", [String], Nah);
       ("print", [Char], Nah);

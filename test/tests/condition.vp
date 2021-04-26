@@ -4,6 +4,9 @@ print(5 >= 5);
 print(5 <= 5);
 print(true && true);
 print(true || false);
+print(false && true);
+print(false && false || true);
+
 
 if (true) {
     print(true);
