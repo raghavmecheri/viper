@@ -505,6 +505,11 @@ void *access_char_key(struct dict *indict, char key)
 
 void print_char_list(struct list *inlist)
 {
+    if (strcmp(inlist->type, "char"))
+    {
+        printf("Can only access %s, not char\n", inlist->type);
+    }
+
     printf("[");
 
     for (int i = 0; i < inlist->size; i++)
@@ -513,6 +518,70 @@ void print_char_list(struct list *inlist)
     }
 
     printf("]\n");
+}
+
+void print_int_list(struct list *inlist)
+{
+    if (strcmp(inlist->type, "int"))
+    {
+        printf("Can only access %s, not int\n", inlist->type);
+    }
+
+    printf("[");
+
+    for (int i = 0; i < inlist->size; i++)
+    {
+        printf(" %d ", access_int(inlist, i));
+    }
+
+    printf("]\n");
+}
+
+void print_str_list(struct list *inlist)
+{
+    if (strcmp(inlist->type, "string"))
+    {
+        printf("Can only access %s, not string\n", inlist->type);
+    }
+
+    printf("[");
+
+    for (int i = 0; i < inlist->size; i++)
+    {
+        printf(" %s ", access_str(inlist, i));
+    }
+
+    printf("]\n");
+}
+
+struct list* get_char_keys(struct dict* indict){
+    if (strcmp(indict->key_type, "char"))
+    {
+        printf("Can only access %s, not char\n", indict->key_type);
+        return 0;
+    }
+
+    struct list* keys = create_list("char");
+    for(int i = 0; i < indict->pairs->size; i++){
+        char toadd = *((char *)access_pair(indict->pairs, i)->key);
+        append_char(keys, toadd);
+    }
+    return keys;
+}
+
+struct list* get_str_keys(struct dict* indict){
+    if (strcmp(indict->key_type, "string"))
+    {
+        printf("Can only access %s, not string\n", indict->key_type);
+        return 0;
+    }
+
+    struct list* keys = create_list("string");
+    for(int i = 0; i < indict->pairs->size; i++){
+        char* toadd = (char *)access_pair(indict->pairs, i)->key;
+        append_str(keys, toadd);
+    }
+    return keys;
 }
 
 int void_to_int(void *v_ptr)
@@ -585,94 +654,112 @@ void dicty()
 #ifdef BUILD_TEST
 int main(void)
 {
-    dicty();
-    // printf("sqrt(100) = %f\n", sqrt(100));
-    // printf("sqrt(100.7) = %f\n", sqrt(100.7));
-    // printf("pow(100, 3) = %f\n", pow(100, 3));
-    // printf("pow(1.7, 12) = %f\n", pow(1.7, 12));
-    // printf("pow2(3) = %f\n", pow2(3));
-    // printf("floor(2.4) = %f\n", floor(2.4));
-    // printf("ceil(2.4) = %f\n", ceil(2.4));
-    // printf("round(2.4) = %f\n", round(2.4));
-    // printf("round(2.4) = %f\n", round(2.6));
-    // printf("imax(2, 7) = %d\n", imax(2, 7));
-    // printf("fmax(2.6, 3.5) = %f\n", fmax(2.6, 3.5));
-    // printf("cmax('k', 'm') = %c\n", cmax('k', 'm'));
-    // printf("trunc(5.121212) = %f\n", trunc(5.121212));
-    // printf("ptrunc(5.121212, 3) = %f\n", ptrunc(5.121212, 3));
+    //dicty();
+    printf("sqrt(100) = %f\n", sqrt(100));
+    printf("sqrt(100.7) = %f\n", sqrt(100.7));
+    printf("pow(100, 3) = %f\n", pow(100, 3));
+    printf("pow(1.7, 12) = %f\n", pow(1.7, 12));
+    printf("pow2(3) = %f\n", pow2(3));
+    printf("floor(2.4) = %f\n", floor(2.4));
+    printf("ceil(2.4) = %f\n", ceil(2.4));
+    printf("round(2.4) = %f\n", round(2.4));
+    printf("round(2.4) = %f\n", round(2.6));
+    printf("imax(2, 7) = %d\n", imax(2, 7));
+    printf("fmax(2.6, 3.5) = %f\n", fmax(2.6, 3.5));
+    printf("cmax('k', 'm') = %c\n", cmax('k', 'm'));
+    printf("trunc(5.121212) = %f\n", trunc(5.121212));
+    printf("ptrunc(5.121212, 3) = %f\n", ptrunc(5.121212, 3));
 
-    // struct list *charlist = create_list("char");
-    // append_char(charlist, 'a');
-    // append_char(charlist, 'b')
-    // append_char(charlist, 'c')
+    struct list *charlist = create_list("char");
+    append_char(charlist, 'a');
+    append_char(charlist, 'b');
+    append_char(charlist, 'c');
 
-    // struct list *mylist = create_list("int");
-    // append_int(mylist, 0);
-    // append_str(mylist, "yooo");
-    // append_int(mylist, 1);
-    // append_int(mylist, 2);
-    // append_int(mylist, 3);
-    // append_int(mylist, 4);
-    // append_int(mylist, 5);
-    // append_int(mylist, 6);
-    // append_int(mylist, 7);
-    // append_int(mylist, 8);
-    // //append_float(mylist, 4.5);
-    // //append_char(mylist, 'c');
-    // struct list *otherlist = create_list("list");
-    // //append_int(otherlist, 1);
-    // append_list(otherlist, mylist);
+    struct list *mylist = create_list("int");
+    append_int(mylist, 0);
+    append_str(mylist, "yooo");
+    append_int(mylist, 1);
+    append_int(mylist, 2);
+    append_int(mylist, 3);
+    append_int(mylist, 4);
+    append_int(mylist, 5);
+    append_int(mylist, 6);
+    append_int(mylist, 7);
+    append_int(mylist, 8);
+    append_float(mylist, 4.5);
+    append_char(mylist, 'c');
+    struct list *otherlist = create_list("list");
+    append_int(otherlist, 1);
+    append_list(otherlist, mylist);
 
-    // printf("Type: %s\n", get_type(mylist));
-    // printf("Type: %s\n", get_type(otherlist));
-    // printf("Length: %d\n", listlen(mylist));
-    // printf("Length: %d\n", listlen(otherlist));
+    printf("Type: %s\n", get_type(mylist));
+    printf("Type: %s\n", get_type(otherlist));
+    printf("Length: %d\n", listlen(mylist));
+    printf("Length: %d\n", listlen(otherlist));
 
-    // printf("@ index 0: %d\n", access_int(mylist, 0));
-    // printf("@ index 5: %d\n", access_int(mylist, 5));
-    // printf("@ Illegal Index: %d\n", access_int(mylist, 1000));
+    printf("@ index 0: %d\n", access_int(mylist, 0));
+    printf("@ index 5: %d\n", access_int(mylist, 5));
+    printf("@ Illegal Index: %d\n", access_int(mylist, 1000));
 
-    // struct list *accessed = access_list(otherlist, 0);
-    // printf("@ index 5: %d\n", access_int(accessed, 5));
+    struct list *accessed = access_list(otherlist, 0);
+    printf("@ index 5: %d\n", access_int(accessed, 5));
 
-    // printf("contains_int(mylist, 5): %d\n", contains_int(mylist, 5));
-    // printf("contains_int(mylist, 10): %d\n", contains_int(mylist, 10));
+    printf("contains_int(mylist, 5): %d\n", contains_int(mylist, 5));
+    printf("contains_int(mylist, 10): %d\n", contains_int(mylist, 10));
 
-    // int test = assign_int(mylist, 1, 7);
-    // printf("Test assign return val: %d\n", test);
-    // printf("@ index 1: %d\n", access_int(mylist, 1));
-    // printf("contains_int(mylist, 1): %d\n", contains_int(mylist, 1));
+    int test = assign_int(mylist, 1, 7);
+    printf("Test assign return val: %d\n", test);
+    printf("@ index 1: %d\n", access_int(mylist, 1));
+    printf("contains_int(mylist, 1): %d\n", contains_int(mylist, 1));
 
-    // struct list *evillist = create_list("int");
-    // append_int(evillist, 100);
-    // append_int(evillist, 200);
-    // append_int(evillist, 300);
-    // struct list *testo = assign_list(otherlist, 0, evillist);
-    // printf("Test assign return list: %d\n", access_int(evillist, 0));
-    // struct list *sameto = access_list(otherlist, 0);
-    // printf("Test accessed list: %d\n", access_int(evillist, 1));
+    struct list *evillist = create_list("int");
+    append_int(evillist, 100);
+    append_int(evillist, 200);
+    append_int(evillist, 300);
+    struct list *testo = assign_list(otherlist, 0, evillist);
+    printf("Test assign return list: %d\n", access_int(evillist, 0));
+    struct list *sameto = access_list(otherlist, 0);
+    printf("Test accessed list: %d\n", access_int(evillist, 1));
 
     // struct dict *testdict = create_dict("string", "int");
     // //void* test1 = str_alloc_zone("yo");
-    // //void* test2 = int_alloc_zone(1);
-    // add_keyval(testdict, str_alloc_zone("yo"), int_alloc_zone(1));
-    // add_keyval(testdict, str_alloc_zone("gabba"), int_alloc_zone(12));
-    // printf("access_str_key(testdict, \"yo\"): %d\n", *((int *)access_str_key(testdict, "yo")));
-    // printf("access_str_key(testdict, \"yo\"): %d\n", *((int *)access_str_key(testdict, "gabba")));
+    //void* test2 = int_alloc_zone(1);
+    //add_keyval(testdict, str_alloc_zone("yo"), int_alloc_zone(1));
+    //add_keyval(testdict, str_alloc_zone("gabba"), int_alloc_zone(12));
+    //printf("access_str_key(testdict, \"yo\"): %d\n", *((int *)access_str_key(testdict, "yo")));
+    //printf("access_str_key(testdict, \"yo\"): %d\n", *((int *)access_str_key(testdict, "gabba")));
 
-    // struct dict *chrdict = create_dict("char", "int");
-    // //void* test1 = str_alloc_zone("yo");
-    // //void* test2 = int_alloc_zone(1);
-    // add_keyval(chrdict, char_alloc_zone('A'), int_alloc_zone(7));
-    // add_keyval(chrdict, char_alloc_zone('B'), int_alloc_zone(8));
-    // printf("access_char_key(chrdict, 'A'): %d\n", *((int *)access_char_key(chrdict, 'A')));
-    // printf("access_char_key(chrdict, 'B'): %d\n", *((int *)access_char_key(chrdict, 'B')));
+    struct dict *chrdict = create_dict("char", "int");
+    add_keyval(chrdict, char_alloc_zone('A'), int_alloc_zone(7));
+    add_keyval(chrdict, char_alloc_zone('B'), int_alloc_zone(8));
+    struct list* chrkeys = get_char_keys(chrdict);
+    print_char_list(chrkeys);
+    printf("access_char_key(chrdict, 'A'): %d\n", *((int *)access_char_key(chrdict, 'A')));
+    printf("access_char_key(chrdict, 'B'): %d\n", *((int *)access_char_key(chrdict, 'B')));
+
+    struct dict *strdict = create_dict("string", "int");
+    add_keyval(strdict, str_alloc_zone("AAA"), int_alloc_zone(7));
+    add_keyval(strdict, str_alloc_zone("BBB"), int_alloc_zone(8));
+    struct list* strkeys = get_str_keys(strdict);
+    print_str_list(strkeys);
 
     struct list *chrlist = create_list("char");
     append_char(chrlist, 'a');
     append_char(chrlist, 'b');
     append_char(chrlist, 'c');
     access_char(chrlist, 0);
-    // print_char_list(chrlist);
+    print_char_list(chrlist);
+
+    struct list *intlist = create_list("int");
+    append_int(intlist, 1);
+    append_int(intlist, 2);
+    append_int(intlist, 3);
+    print_int_list(intlist);
+
+    struct list *strlist = create_list("string");
+    append_str(strlist, "aaa");
+    append_str(strlist, "bbb");
+    append_str(strlist, "ccc");
+    print_str_list(strlist);
 }
 #endif
