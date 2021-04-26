@@ -84,4 +84,65 @@ let clean_normal_function fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=
 
 let clean_function fdecl = if fdecl.autoreturn then reshape_arrow_function fdecl else clean_normal_function fdecl
 
-let desugar (stmts, functions) = (clean_statements stmts, (List.map clean_function functions))
+(*
+let rec eliminate_ternaries stmts =
+  let new_functions = [] in
+
+  let rec eliminate_ternaries_from_expr expr = match expr with
+      Ternop(e, e1, e2) -> (* Do something here, return append_function_call + do recursively *)
+    | _ -> expr
+  in 
+
+  let rec clean_statement = match stmt with
+    Expr(e) -> eliminate_ternaries_from_expr e
+  | _ -> stmt
+  in
+
+  let cleaned_stmts = List.map clean_statement stmts in
+  (cleaned_stmts, new_functions)
+*)
+
+let rec sanitize_expr e = match e with
+    Binop(e1, op, e2) -> Binop((sanitize_expr e1), op, (sanitize_expr e2))
+  | Unop(op, e) -> Unop(op, (sanitize_expr e))
+
+  | Assign(n, e) -> Assign(n, (sanitize_expr e))
+  | OpAssign(n, o, e) -> OpAssign(n, o, (sanitize_expr e))
+  | DecAssign(t, n, e) -> DecAssign(t, n, (sanitize_expr e))
+  | AccessAssign(e1, e2, e3) -> AccessAssign((sanitize_expr e1), (sanitize_expr e2), (sanitize_expr e3))
+  
+  | Call(n, l) -> Call(n, (List.map sanitize_expr l))
+  | AttributeCall(e, f, args) -> Call(f, List.map sanitize_expr (e::args))
+  | Ternop(e, e1, e2) -> Id("ternop_tempvar")
+  | _ -> e
+
+let rec decompose_nested_ternary e e1 e2 = match e2 with
+    Ternop(e', e1', e2') -> If(e, Expr(Assign("ternop_tempvar", e1)), (decompose_nested_ternary e' e1' e2'))
+  | _ -> If(e, Expr(Assign("ternop_tempvar", e1)), Expr(Assign("ternop_tempvar", e2)))
+
+let rec check_for_ternary e t = match e with
+    DecAssign(t, n, e) -> check_for_ternary e t
+  | Ternop(e, e1, e2) -> (true, decompose_nested_ternary e e1 e2, "ternary_tmpvar", t)
+  | _ -> (false, PretendBlock([]), "ternary_tempvar_none", Int)
+
+let sanitize_ternaries stmts =
+    let generate_pb_if_needed e =
+        let (to_sanitize, required_stmt, name, t) = (check_for_ternary e Int) in
+        if to_sanitize then PretendBlock([ Dec(t, "ternop_tempvar"); required_stmt; Expr(sanitize_expr e) ]) else Expr(e)
+    in
+
+    (* int a = TERNARY *)
+    let check_stmt stmt = match stmt with
+    Expr(e) -> generate_pb_if_needed e 
+  | _ -> stmt
+
+    in List.map check_stmt stmts
+
+let sanitize_ternaries_f fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=fdecl.fname; body = (sanitize_ternaries fdecl.body); autoreturn=fdecl.autoreturn; }
+
+let desugar (stmts, functions) = 
+  let cleaned_statements = clean_statements stmts in
+  let cleaned_functions = List.map clean_function functions in
+  let adjusted_statements = sanitize_ternaries cleaned_statements in
+  let adjusted_functions = List.map sanitize_ternaries_f cleaned_functions in
+  (adjusted_statements, adjusted_functions)

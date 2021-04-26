@@ -136,6 +136,8 @@ let rec get_stmt_decs scope stmt =
   | While(e, s, _) -> 
     let while_scope = get_expr_decs new_scope e in 
     let _ = get_stmt_decs while_scope s in scope
+  | PretendBlock(s_list) -> 
+    let _ = List.fold_left get_stmt_decs new_scope s_list in scope
   | _ -> scope
 
 (* Driver for getting declarations from a list of statements *)

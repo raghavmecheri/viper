@@ -3,7 +3,6 @@ open Sast
 open Boolcheck
 open Rhandlhand 
 open Decs 
-open Semant
  
 let check (statements, functions) = 
 
@@ -23,11 +22,12 @@ let check_expr_scope scope = function
     DecAssign(ty, s, _) -> add_symbol_driver s ty scope 
   | _ -> scope in 
 
-let check_stmt_scope scope = function 
+let rec check_stmt_scope scope = function 
     Expr(e) -> check_expr_scope scope e 
   | Dec(ty, s) -> add_symbol_driver s ty scope 
   | While(p, _, _) -> check_expr_scope scope p
   | If(p, _, _) -> check_expr_scope scope p
+  | PretendBlock(sl) -> List.fold_left (fun m f -> check_stmt_scope m f) scope sl
   | _ -> scope in
 
 (* Bug fix for function return type mismatching *)
@@ -168,13 +168,14 @@ let rec expr scope deepscope e = match e with
       (check_assign ft et, e') in 
       let args' = List.map2 check_call (StringMap.bindings fd.formals.variables) args
       in (return_func fd.ret_typ, SAttributeCall(expr scope deepscope e, fname, args')) 
+  (*
   | Ternop(e1, e2, e3) -> 
       let (e1t, e1') = expr scope deepscope e1 in
       if e1t != Bool then raise (Failure "Error: expected bool in first expression of ternary operator") else
       let (e2t, e2') = expr scope deepscope e2 
       and (e3t, e3') = expr scope deepscope e3 in
       if e2t != e3t then raise (Failure ("Error: ternary operator types " ^ string_of_typ e2t ^ " and " ^ string_of_typ e3t ^ " do not match"))
-      else (e2t, STernop((e1t, e1'), (e2t, e2'), (e3t, e3')))
+      else (e2t, STernop((e1t, e1'), (e2t, e2'), (e3t, e3'))) *)
   | _  -> raise (Failure "expression is not an expression")  
 in 
 
@@ -203,11 +204,13 @@ let rec check_stmt scope inloop s =
       let rec check_stmt_list blockscope = function
           [Return _ as s] -> [check_stmt blockscope inloop s]
         | Return _ :: _   -> raise (Failure "nothing may follow a return")
-        | Block s :: ss   -> check_stmt_list blockscope (s @ ss) (* Flatten blocks *)
+        (*| Block s :: ss   -> check_stmt_list blockscope (s @ ss)  Flatten blocks 
+        | PretendBlock sl :: ss -> check_stmt_list blockscope (sl @ ss)  Flatten blocks *)
         | s :: ss         -> check_stmt blockscope inloop s :: check_stmt_list blockscope ss 
         | [] -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
-  | PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
+  | PretendBlock sl -> 
+         SBlock(List.map (check_stmt scope inloop) sl)
   | Dec(ty, l) -> SDec(ty, l)
   | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in
@@ -233,11 +236,13 @@ let rec check_stmt_func scope inloop ret =
       let rec check_stmt_list blockscope = function
           [Return _ as s] -> [check_stmt_func blockscope inloop ret s]
         | Return _ :: _   -> raise (Failure "nothing may follow a return")
-        | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
+        (*| Block sl :: ss  -> check_stmt_list blockscope (sl @ ss)  Flatten blocks 
+        | PretendBlock sl :: ss -> check_stmt_list blockscope (sl @ ss)  Flatten blocks *)
         | s :: ss         -> check_stmt_func blockscope inloop ret s :: check_stmt_list blockscope ss
         | []              -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
-  | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) (List.rev sl))
+  | PretendBlock sl -> 
+      SBlock(List.map (check_stmt_func scope inloop ret) sl)
   | Dec(ty, l) -> SDec(ty, l)
   | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in
