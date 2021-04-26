@@ -60,7 +60,7 @@ let clean_statements stmts =
     let rec clean_statement stmt = match stmt with
         Block(s) -> Block(List.map clean_statement s)
       | Expr(expr) -> Expr(clean_expression expr) 
-      | For(e1, e2, e3, s) -> Block( [ Expr(e1); While(e2, Block([ (clean_statement s); Expr(e3)]), Expr(e3))  ])
+      | For(e1, e2, e3, s) -> Block([Expr(e1); While(e2, Block([ (clean_statement s); Expr(e3)]), Expr(e3))])
       | ForIter(name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_foriter name e2 (clean_statement s)]) 
       | DecForIter(t, name, e2, s) -> Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_decforiter t name e2 (clean_statement s)])
       | DeconstForIter(p, e, s) ->  Block([ Expr(DecAssign(Int, "dfi_tmp_idx", IntegerLiteral(0))); decompose_deconstforiter p e (clean_statement s)])

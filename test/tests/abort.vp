@@ -30,13 +30,13 @@ if (a > 9) {
 print();
 print("testing skip and abort with nested loops:"); 
 int x = -1;
-int i;
 while (x < 10) {
     x += 1;
     if (x == 3) {
         skip;
     }
-    for (i = 0; i < 10; i += 1) {
+    int i = 0;
+    for (i; i < 10; i += 1) {
         if (x > i) {
             print(x);
             print(i);

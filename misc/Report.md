@@ -143,8 +143,13 @@ The one other reference worth mentioning is in relation to Viper's pattern-match
 
 ## `1.3` Goals - To Preserve While Becoming Compilable:
 ### `Accessibility, Readability`
+Despite changing to a statically typed language, we want to ensure that Viper code is just as readable and easy to learn as Python code. The only added level of difficulty should be with declaring and tracking static types. Any user should be able to begin their coding journey with this language, and and user should be able to read and understand another user's work without three cyphers and a thesaurus.
+
 ### `Prototyping/Writing Efficiency`
+In addition to readability, writability is also important. We want users to be able to express their ideas quickly and effectively, with common-sense, intuitive syntax. We want to preserve the idea that the thought->prototype pipeline should be as quickly traversable as possible.
+
 ### `Functionality`
+Finally, we want to make sure that in Viper, users can still do all the things they need to. While this goal is more of a continuous process rather than a current guarantee, the initial release of Viper still has a lot of the features that make languages like Python more immediately advantageous than those like C without as many supported data structures and operations.
 
 ## `1.4` How to Obtain and Use Viper
 To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
@@ -380,24 +385,6 @@ nums[2] = nums[1];   /* Sets the last element to 0 */
 nums[1] = 2;         /* Sets the middle element to 2 */
 
 int error = nums[3]; /* Throws an error */
-```
-
-### `3.2.2` `group`  
-A `group` is an immutable type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared as lists and are auto-inferred:
-```java
-(string, int) order = ["Chicken Katsu", 17];
-(float[], string, bool) = [[0.1, 2.1], "boo", false];
-```
-Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
-```java
-(int, int) paws = [3, -2];
-int x = paws[0]; /* Sets x to 3 */
-```
-Elements of `groups` can also be deconstructed into variables of their base type. These variables are then accessible within the same scope as the deconstruction.
-```python
-(int, int, int) t = [240, 130, 202];
-(int r, int g, int b) = t;
-print(r);
 ```
 
 ### `3.2.3` `dict` 
@@ -1143,8 +1130,6 @@ int[] middle_3 = nums.sub(4, 7);
 /* less_than_5 contains: [0, 1, 2, 3, 4] */
 /* middle_3 contains: [4, 5, 6]
 ```
-## `9.5` Groups
-Check back soon for the `group`s API.
 
 ## `9.6` Dicts
 Check back soon for the `dict`s API.
