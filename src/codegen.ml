@@ -94,11 +94,19 @@ let translate (_, functions) =
 
   (* BUILT-IN FUNCTIONS HERE*)
 
-  (* Define built-in functions at top of every file *)  
+  (* PRINT FUNCTIONS HERE *)
+
   let printf_t : L.lltype = 
     L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
     L.declare_function "printf" printf_t the_module in
+
+  let print_char_list_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")) |] in 
+  let print_char_list_func : L.llvalue =
+    L.declare_function "print_char_list" print_char_list_t the_module in 
+
+  (* C STANDARD LIBRARY FUNCTIONS HERE *)
 
   let pow2_t : L.lltype = 
     L.function_type float_t [| float_t |] in
@@ -210,26 +218,6 @@ let translate (_, functions) =
     and int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
     and str_format_str = L.build_global_stringptr "%s\n" "fmt" builder
     and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder
-    in
-
-    (* determines appropriate printf format string for given literal *)
-    (* TODO: type inference for which print format string to use*)
-    (* let get_format_str (_, params) = match params with
-        SIntegerLiteral(_) -> int_format_str
-       | SStringLiteral(_) -> str_format_str
-       | SCharacterLiteral(_) -> char_format_str
-       | SFloatLiteral(_) -> float_format_str
-       | SBoolLiteral(_) -> str_format_str
-       | _ -> raise (Error "print passed an invalid/unimplemented literal")
-       in *)
-
-    let get_format_str (t, _) = match t with
-        A.Int     -> int_format_str
-      | A.Char    -> char_format_str
-      | A.String  -> str_format_str
-      | A.Float   -> float_format_str
-      | A.Bool    -> int_format_str
-      | _ -> raise (Error "print passed an invalid type")
     in
 
     (* create empty local_vars Hashtbl*)
@@ -498,11 +486,37 @@ let translate (_, functions) =
 
       | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
 
-      (* hardcoded SCalls for built-ins *)
+      (* USER-EXPOSED BUILT-INS: Must be added to check in decs.ml *)
+
+      (* print *)
       | SCall("print", []) -> let newline = expr builder (String, SStringLiteral(""))
         in L.build_call printf_func [| str_format_str ; newline |] "printf" builder
-      | SCall("print", [params]) -> let print_value = (get_print_value builder params)
-        in L.build_call printf_func [| (get_format_str params) ; print_value |] "printf" builder
+
+      | SCall("print", [((p_t, p_v) as params)]) -> (match p_t with
+          | A.Dictionary(_,_) -> raise (Error "Printing dictionary not supported currently")
+          | A.Array(_) -> L.build_call print_char_list_func [| (expr builder params) |] "" builder
+          | _ -> 
+            let print_value = (match p_t with
+                (* pattern matching for turning bools to strings here *)
+                (* | A.Bool  -> 
+                   let t_val = (match p_v with 
+                      | SBoolLiteral(bln) -> if bln then "true" else "false")
+                      | _ -> t_val
+                   in
+                   expr builder (A.String, SStringLiteral(t_val)) *)
+                | _       -> expr builder params)
+            in 
+            let format_str = (match p_t with
+                  A.Int     -> int_format_str
+                | A.Char    -> char_format_str
+                | A.String  -> str_format_str
+                | A.Float   -> float_format_str
+                | A.Bool    -> int_format_str
+                | _ -> raise (Error "print passed an invalid type"))
+            in
+            L.build_call printf_func [| format_str ; print_value |] "printf" builder)
+
+      | SCall("print", params) -> raise (Error "print not supported with multiple params currently")
 
       (* casts *)
       | SCall("toChar", params) -> expr builder (Cast.to_char params)
@@ -555,14 +569,6 @@ let translate (_, functions) =
       | SAttributeCall(e, f, el)  -> expr builder (A.Nah, SCall(f, e::el))
       | SNoexpr                   -> L.const_int i32_t 0
       | _ -> raise (Error "Expression match not implemented")
-
-    and
-
-      (* TODO: used to map bool values to strings for printf *)
-      get_print_value builder (t, e) = match e with
-      (* SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
-         in expr builder (A.String, strlit) *)
-      | _ -> expr builder (t, e)
     in
 
     let rec stmt builder = function
@@ -624,7 +630,7 @@ let translate (_, functions) =
 
         let pred_bb = L.append_block context "while" the_function 
         and merge_bb = L.append_block context "merge" the_function in
-        
+
         ignore(L.build_br pred_bb builder);
         let body_bb = L.append_block context "while_body" the_function in
         add_terminal (loop_stmt pred_bb merge_bb (L.builder_at_end context body_bb) body)
@@ -657,40 +663,3 @@ let translate (_, functions) =
 
   (* return the LLVM module *)
   the_module
-
-
-(* Old code, may be useful if we try to implement globals *)
-
-(* Define main function for top-level, should be built like any other function *)
-(* let main_t = L.function_type i32_t [| |] in
-   let main_f = L.define_function "main" main_t the_module in
-
-   (* main function builder *)
-   let builder = L.builder_at_end context (L.entry_block main_f) in *)
-
-(* format characters for printf *)
-
-(* let build_main st = match st with 
-   | SExpr e -> ignore(expr builder e); builder
-   | _ -> raise (Error "Statement match not implemented")
-   in  *)
-
-(* 
-  let rec build_main st = function
-    | SBlock sl                               -> raise (Error "Block statement not implemented") (* List.fold_left build_main sl *)
-    | SExpr e                                 -> ignore(expr builder e); builder
-    | SDec (t, v)                             -> raise (Error "Dec statement not implemented")
-    | SReturn e                               -> raise (Error "Return statement not implemented")
-    | SSkip expr                              -> raise (Error "Skip statement not implemented")
-    | SAbort expr                             -> raise (Error "Abort statement not implemented")
-    | SPanic expr                             -> raise (Error "Panic statement not implemented")
-    | SIf (predicate, then_stmt, else_stmt)   -> raise (Error "If statement not implemented")
-    | SWhile (predicate, body)                -> raise (Error "While statement not implemented")
-    | _ -> raise (Error "Statement match not implemented for stmt builder")
-  in  *)
-
-(* build a main function around top-level statements *)
-(* let _ = List.map build_main (List.rev statements) in
-
-   (* add a return statement to the main function *)
-   let _ = L.build_ret (L.const_int i32_t 0) builder in *)

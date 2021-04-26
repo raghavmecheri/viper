@@ -2,4 +2,10 @@ int[] func returnArray() {
     return [1,2,3,4];
 }
 
-returnArray()[5];
+print(returnArray()[3]);
+
+[char: int] func returnDict() {
+    return ['A': 1, 'B': 2, 'C': 3];
+}
+
+print(returnDict()['C']);

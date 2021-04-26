@@ -23,7 +23,7 @@ let rec string_of_scope scope =
       Some(parent) -> string_of_scope parent
     | None -> ""
   in "{" ^ this_scope ^ "}\n|\nV\n{" ^ parent_scope ^ "}"  
-  
+
 
 (* Data structure that stores function declarations *)
 type func_table = {
@@ -207,6 +207,7 @@ let get_decs (s_list, f_list) =
       ("print", [Char], Nah);
       ("print", [Bool], Nah);
       ("print", [Float], Nah);
+      ("print", [Array(Char)], Nah);
       ("len", [Array(Int)], Int);
       ("len", [Array(Float)], Int);
       ("len", [Array(Bool)], Int);
