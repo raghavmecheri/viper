@@ -107,6 +107,11 @@ let translate (_, functions) =
   let print_char_list_func : L.llvalue =
     L.declare_function "print_char_list" print_char_list_t the_module in 
 
+  let print_str_list_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")) |] in 
+  let print_str_list_func : L.llvalue =
+    L.declare_function "print_str_list" print_str_list_t the_module in 
+
   (* C STANDARD LIBRARY FUNCTIONS HERE *)
 
   let pow2_t : L.lltype = 
@@ -248,7 +253,12 @@ let translate (_, functions) =
   let contains_str_key_func : L.llvalue =
     L.declare_function "contains_str_key" contains_str_key_t the_module in
 
-  (* void pointer -> type derefernce functions *)
+  (* KEYS DICT FUNCTIONS *)
+
+  let get_str_keys_t : L.lltype =
+    L.function_type (L.pointer_type (find_struct_type "list")) [| (L.pointer_type (find_struct_type "dict")) |] in 
+  let get_str_keys_func: L.llvalue =
+    L.declare_function "get_str_keys" get_str_keys_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -562,16 +572,12 @@ let translate (_, functions) =
 
       | SCall("print", [((p_t, p_v) as params)]) -> (match p_t with
           | A.Dictionary(_,_) -> raise (Error "Printing dictionary not supported currently")
-          | A.Array(_) -> L.build_call print_char_list_func [| (expr builder params) |] "" builder
+          | A.Array(arr) -> (match arr with 
+              | A.Char   -> L.build_call print_char_list_func [| (expr builder params) |] "" builder
+              | A.String -> L.build_call print_str_list_func [| (expr builder params) |] "" builder
+              | _ -> raise (Error "Print not supported for array type"))
           | _ -> 
             let print_value = (match p_t with
-                (* pattern matching for turning bools to strings here *)
-                (* | A.Bool  -> 
-                   let t_val = (match p_v with 
-                      | SBoolLiteral(bln) -> if bln then "true" else "false")
-                      | _ -> t_val
-                   in
-                   expr builder (A.String, SStringLiteral(t_val)) *)
                 | A.Float -> L.build_fpext (expr builder params) double_t "ext" builder
                 | _       -> expr builder params)
             in 
@@ -619,7 +625,7 @@ let translate (_, functions) =
         let li = expr builder (List.hd params) in
         L.build_call listlen_func [| li |] "len" builder
 
-      (* contains TODO: only works for lists *)
+      (* contains *)
       | SCall ("contains", params) ->
         let typ = (fst (List.hd params)) in
         let li = expr builder (List.hd params) in
@@ -635,6 +641,15 @@ let translate (_, functions) =
           | _             -> raise (Error "contains function not defined for type")
         in 
         L.build_call (contains_func typ) [| li; p |] "contains" builder
+
+      (* takes in a dict pointer and returns a list pointer of the keys in the dict *)
+      | SCall ("keys", [params]) ->
+        let typ = fst params in
+        (match typ with 
+         | A.Dictionary(_,_) ->
+           let dict = expr builder params in 
+           L.build_call get_str_keys_func [| dict |] "get_str_keys" builder
+         | _                 -> raise (Error "Keys only supported for Dictionaries"))
 
       (* add is a wrapper over keyval, takes in dict, void * key, void * to val *)
       | SCall ("add", params) ->
