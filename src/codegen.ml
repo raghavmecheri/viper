@@ -270,6 +270,7 @@ let translate (_, functions) =
         key_t_str ^ " " ^ val_t_str
       | A.Char  -> "char"
       | A.Int   -> "int"
+      | A.Dictionary(_,_) -> "dict"
       | _                           -> raise (Error "type string map not here yet ")
     in
 
@@ -315,8 +316,16 @@ let translate (_, functions) =
               let void_alloc ((z_t, z_x) as z) = (match z_t with
                   (* | A.Int -> raise (Error "Int alloc")
                      | A.Char -> raise (Error "Char alloc") *)
-                  | A.Int     -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
-                  | A.Char    -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
+                  | A.Int       -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
+                  | A.Char      -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
+                  | A.Array(_)  -> 
+                    let list_ptr = expr builder z in 
+                    L.build_bitcast list_ptr (L.pointer_type i8_t) (L.value_name list_ptr) builder 
+                  (* cast to void pointer here *)
+                  | A.Dictionary(_, _)  -> 
+                    let dict_ptr = expr builder z in 
+                    L.build_bitcast dict_ptr (L.pointer_type i8_t) (L.value_name dict_ptr) builder 
+                  (* cast to void pointer here *)
                   | _       -> raise (Error "No alloc function for type")) 
               in
 
@@ -441,13 +450,15 @@ let translate (_, functions) =
         in 
         (match typ with 
          | A.Dictionary(_, val_t) -> 
-          let void_ptr = L.build_call (access_func typ) [| li; index |] "access" builder in
-          (match val_t with 
+           let void_ptr = L.build_call (access_func typ) [| li; index |] "access" builder in
+           (match val_t with 
             | A.Int -> 
               let int_ptr = L.build_bitcast void_ptr (L.pointer_type (ltype_of_typ A.Int)) (L.value_name void_ptr) builder in
               L.build_load int_ptr (L.value_name int_ptr) builder
-            | A.Char -> raise (Error "val is char"))
-            | _       -> raise (Error "idk what this dict val type is chief")
+            | A.Char -> raise (Error "val is char")
+            | A.Dictionary(_, _) -> 
+              L.build_bitcast void_ptr (L.pointer_type (find_struct_type "dict")) (L.value_name void_ptr) builder
+            | _       -> raise (Error "idk what this dict val type is chief"))
          | A.Array(_)        -> L.build_call (access_func typ) [| li; index |] "access" builder
          | _                 -> raise (Error "nee nee"))
       (* | A.Dictionary(key_t, key_v) -> 
