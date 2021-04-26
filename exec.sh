@@ -1,4 +1,5 @@
 #!/bin/bash
+#./runtests.sh
 ./viper.native $1 > a.ll
 
 if [ $# -eq 2 ] && [ $2 = "-v" ];
