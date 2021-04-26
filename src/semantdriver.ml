@@ -57,7 +57,7 @@ let rec expr scope deepscope e = match e with
   | Noexpr -> (Nah, SNoexpr)
   | ListLit l -> let eval_list = List.map (expr scope deepscope) l in 
       let rec check_types = function
-          [] -> (Array(Nah), SListLiteral([]))
+          [] -> (Nah, SDictLiteral([]))
         | (t1, _) :: [] -> (Array(t1), SListLiteral(eval_list))
         |	((t1,_) :: (t2,_) :: _) when t1 != t2 ->  
 	      raise (Failure ("Error: list types " ^ string_of_typ t1 ^ " and " ^ string_of_typ t2 ^ " are inconsistent"))
@@ -68,7 +68,6 @@ let rec expr scope deepscope e = match e with
       (Group([t1; t2]), SDictElem((t1, e1), (t2, e2)))
   | DictLit l -> let eval_list = List.map (expr scope deepscope) l in 
       let rec check_types = function
-          [] -> (Dictionary(Nah, Nah), SDictLiteral([]))
         | (Group([t1; t2]), _) :: [] -> (Dictionary(t1, t2), SDictLiteral(eval_list))
         |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when not ((type_check t1 t3)) || not ((type_check t2 t4)) (*t1 != t3 || t2 != t4 *)->  
 	       raise (Failure (string_of_typ t1 ^ string_of_typ t2 ^ string_of_typ t3 ^ string_of_typ t4))
@@ -112,7 +111,10 @@ let rec expr scope deepscope e = match e with
       in (Int, SDeconstruct(l, expr scope deepscope e)) 
   | OpAssign(s, op, e) -> let (t, e1) = expr scope deepscope e in 
       if t = (toi scope s) then (t, SOpAssign(s, op, (t, e1))) else raise (Failure "types not the same") 
-  | DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
+  | DecAssign(ty, l, expr1) -> (match ty, l, expr1 with
+        (Array(t), n, ListLit([])) -> (Array(t), SDecAssign(Array(t), n, (Array(t), SListLiteral([]))))
+      | (Dictionary(t1, t2), n, DictLit([])) -> (Dictionary(t1, t2), SDecAssign(Dictionary(t1, t2), n, (Dictionary(t1, t2), SDictLiteral([]))))
+      | _ -> check_decassign ty l (expr scope deepscope expr1) )
   | Access(e1, e2) -> 
       let (t1, e1') = expr scope deepscope e1
       and (t2, e2') = expr scope deepscope e2 in 
