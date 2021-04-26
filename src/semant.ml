@@ -82,6 +82,7 @@ let clean_normal_function fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=
 
 let clean_function fdecl = if fdecl.autoreturn then reshape_arrow_function fdecl else clean_normal_function fdecl
 
+(*
 let rec eliminate_ternaries stmts =
   let new_functions = [] in
 
@@ -97,11 +98,38 @@ let rec eliminate_ternaries stmts =
 
   let cleaned_stmts = List.map clean_statement stmts in
   (cleaned_stmts, new_functions)
+*)
 
+let sanitize_expr e, x = match e with
+    Binop(e1, op, e2) -> Binop((sanitize_expr e1), op, (sanitize_expr e2))
+  | Unop(op, e) -> Unop(op, (sanitize_expr e))
+
+  | Assign(n, e) -> Assign(n, (sanitize_expr e))
+  | OpAssign(n, o, e) -> OpAssign(n, o, (sanitize_expr e))
+  | DecAssign(t, n, e) -> DecAssign(t, n, (sanitize_expr e))
+  | AccessAssign(e1, e2, e3) -> AccessAssign((sanitize_expr e1), (sanitize_expr e2), (sanitize_expr e3))
+  
+  | Call(n, l) -> Call(n, (List.map sanitize_expr l))
+  | AttributeCall(e, f, args) -> Call(f, List.map sanitize_expr (e::args))
+  | Ternop(e, e1, e2) -> (
+      let sub_e1 = sanitize_expr e1 in
+      let sub_e2 = sanitize_expr e2 in
+      (true, If(e, Expr(Assign(x, sub_e1)), Expr(Assign(x, sub_e2))), Id(x))
+    )
+  | _ -> (false, PretendBlock([]), e)
+
+let sanitize_ternaries stmts = 
+  let check_stmt stmt = match stmt with
+    Expr(e) -> (
+      let (is_fixed, required_stmt, expr) = sanitize_expr e
+    in
+    if is_fixed then PretendBlock([ required_stmt, expr ]) else expr
+    )
+  | _ -> stmt
+in List.map check_stmt stmts
 
 let desugar (stmts, functions) = 
   let cleaned_statements = clean_statements stmts in
   let cleaned_functions = List.map clean_function functions in
-  let (adjusted_statements, new_functions) = eliminate_ternaries cleaned_statements in
-  let adusted_functions = add_adjusted_functions cleaned_functions new_functions
-  (adjusted_statements, adusted_functions)
+  let adjusted_statements = sanitize_ternaries cleaned_statements in
+  (adjusted_statements, cleaned_functions)
