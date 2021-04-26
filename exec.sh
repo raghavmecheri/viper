@@ -1,5 +1,5 @@
 #!/bin/bash
-src/viper.native $1 > a.ll
+./viper.native $1 > a.ll
 
 if [ $# -eq 2 ] && [ $2 = "-v" ];
 then
