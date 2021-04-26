@@ -1,7 +1,0 @@
-int a = 10;
-
-int result = a > 10 ? 1 : 2;
-
-int nested = a > 10 ? a > 20 ? 2 : 1 : 0;
-
-nested = a > 10 ? (a > 20 ? 2 : 1) : 0;
