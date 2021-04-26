@@ -132,10 +132,38 @@ Authors:
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
 
 ## `1.1` Background
+Modern day scripting languages like Python and Javascript are incredibly convenient. They make it incredibly easy to write short, readable code that makes both prototyping and collaboration a breeze. The issue, however, is that this level of convenience and accesibility comes at a cost: computational efficiency. While simple, forgiving, dynamically-typed languages like the previously mentioned are useful, it requires one to forgo the traditional compiler, and instead use an interpreter when attempting to execute code. The process of simultaneously translating into machine code and executing takes orders of magnitude more time then executing a pre-compiled piece of code, and even the efforts of just-in-time compilers like PyPy have been unsuccessful in completely bridging the gap. To achieve similar efficiency to languages like C and C++, a proper compiler is a necessity.
+
+We set into this project with exactly that in mind: come up with a language that retains all of the simplicity, ease-of-use, and functionality of modern scripting languages, while introducing a proper static typing system to allow for efficient compilation. We wanted it to feel like you are writing in Python or Javascript, but then afterwards to feel like you are running a C program. With that in mind, we first thought about all the features we wanted to carry over from the dynamic scripting languages. First, a user has to be able to open a file and just start typing. The top-level should be a place where code is directly executed, without the need for any complex class-structure. Additionlly, we would require a lot of syntactic sugar for different means of iteration, declaration, and assignment. We would also need to include the functionality of mechanics like arrow functions and ternaries, as well as standard data structures like lists and dictionaries. At this point, we also had some new ideas for features like pattern matching to replace nested ternaries and switches, and built-in index values for iterators. All together, these core ideas came to be what we now call Viper.
 
 ## `1.2` Related Work
+Most features found in Viper derive from one or more of Python, Javascript, or C. While our scoping and execution rules match Python closest, Viper does not use whitespace to identify scoping, but instead uses the standard brace notation from the other two languages. Additionally, while more abstract than C (as memory allocation is handled for the user), Viper also requires static typing for all variables upon declaration. Operator precedence and applicative-order reduction is the same in Viper as one might expect from any of the aforementioned programming languages.
 
-## `1.1` Goals
+The one other reference worth mentioning is in relation to Viper's pattern-matching eyntax. While not exactly the same functionally, we got the idea to include this feature after extensive use of pattern matching in OCaml. Additionally, OCaml was used in almost all components of the Viper compiler pipeline, with the exception of the standard library being written in C.
+
+## `1.3` Goals - To Preserve While Becoming Compilable:
+### `Accessibility, Readability`
+Despite changing to a statically typed language, we want to ensure that Viper code is just as readable and easy to learn as Python code. The only added level of difficulty should be with declaring and tracking static types. Any user should be able to begin their coding journey with this language, and and user should be able to read and understand another user's work without three cyphers and a thesaurus.
+
+### `Prototyping/Writing Efficiency`
+In addition to readability, writability is also important. We want users to be able to express their ideas quickly and effectively, with common-sense, intuitive syntax. We want to preserve the idea that the thought->prototype pipeline should be as quickly traversable as possible.
+
+### `Functionality`
+Finally, we want to make sure that in Viper, users can still do all the things they need to. While this goal is more of a continuous process rather than a current guarantee, the initial release of Viper still has a lot of the features that make languages like Python more immediately advantageous than those like C without as many supported data structures and operations.
+
+## `1.4` How to Obtain and Use Viper
+To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
+ - Once cloned, type `cd src && make && cd ..`
+ - There should now be a viper.native file in your current directory, as well as an exec.sh
+ - Next, write some Viper code in a (filename).vp file (details on how to write Viper in next sections)
+     - For an example, open a `test.vp` and inside write `print("hello world");`
+ - Running `./viper.native test.vp` will output the llvm code if desired
+ - Running `./exec.sh test.vp` will generate three files:
+     - `a.ll` = llvm code
+     - `a.s` = assembly code
+     - `a.exe` = executable for code
+ - NOTE: Using `exec.sh` will also run `a.exe` for you
+ - If you add `-v`, like: `./exec.sh test.vp -v`, you will also receive the llvm output `viper.native` would provide
 
 [↩️  Back to Contents 📌](#0-contents)
 
@@ -357,24 +385,6 @@ nums[2] = nums[1];   /* Sets the last element to 0 */
 nums[1] = 2;         /* Sets the middle element to 2 */
 
 int error = nums[3]; /* Throws an error */
-```
-
-### `3.2.2` `group`  
-A `group` is an immutable type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared as lists and are auto-inferred:
-```java
-(string, int) order = ["Chicken Katsu", 17];
-(float[], string, bool) = [[0.1, 2.1], "boo", false];
-```
-Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
-```java
-(int, int) paws = [3, -2];
-int x = paws[0]; /* Sets x to 3 */
-```
-Elements of `groups` can also be deconstructed into variables of their base type. These variables are then accessible within the same scope as the deconstruction.
-```python
-(int, int, int) t = [240, 130, 202];
-(int r, int g, int b) = t;
-print(r);
 ```
 
 ### `3.2.3` `dict` 
@@ -1120,8 +1130,6 @@ int[] middle_3 = nums.sub(4, 7);
 /* less_than_5 contains: [0, 1, 2, 3, 4] */
 /* middle_3 contains: [4, 5, 6]
 ```
-## `9.5` Groups
-Check back soon for the `group`s API.
 
 ## `9.6` Dicts
 Check back soon for the `dict`s API.
