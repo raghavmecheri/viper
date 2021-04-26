@@ -241,6 +241,13 @@ let translate (_, functions) =
   let str_alloc_func : L.llvalue =
     L.declare_function "str_alloc_zone" str_alloc_t the_module in
 
+  (* CONTAINS DICT FUNCTIONS HERE *)
+
+  let contains_str_key_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "dict")); (L.pointer_type (ltype_of_typ A.Char)) |] in 
+  let contains_str_key_func : L.llvalue =
+    L.declare_function "contains_str_key" contains_str_key_t the_module in
+
   (* void pointer -> type derefernce functions *)
 
   (* Define each function (arguments and return type) so we can 
@@ -624,6 +631,7 @@ let translate (_, functions) =
           | A.String      -> contains_str_func
           | A.Nah         -> raise (Error "No such thing as nah contains function")
           | A.Array(arr)  -> (contains_func arr)
+          | A.Dictionary(_,_) -> contains_str_key_func
           | _             -> raise (Error "contains function not defined for type")
         in 
         L.build_call (contains_func typ) [| li; p |] "contains" builder
