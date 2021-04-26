@@ -100,7 +100,7 @@ let rec eliminate_ternaries stmts =
   (cleaned_stmts, new_functions)
 *)
 
-let sanitize_expr e, x = match e with
+let rec sanitize_expr e = match e with
     Binop(e1, op, e2) -> Binop((sanitize_expr e1), op, (sanitize_expr e2))
   | Unop(op, e) -> Unop(op, (sanitize_expr e))
 
@@ -111,25 +111,32 @@ let sanitize_expr e, x = match e with
   
   | Call(n, l) -> Call(n, (List.map sanitize_expr l))
   | AttributeCall(e, f, args) -> Call(f, List.map sanitize_expr (e::args))
-  | Ternop(e, e1, e2) -> (
-      let sub_e1 = sanitize_expr e1 in
-      let sub_e2 = sanitize_expr e2 in
-      (true, If(e, Expr(Assign(x, sub_e1)), Expr(Assign(x, sub_e2))), Id(x))
-    )
-  | _ -> (false, PretendBlock([]), e)
+  | Ternop(e, e1, e2) -> Id("ternop_tempvar")
+  | _ -> e
 
-let sanitize_ternaries stmts = 
-  let check_stmt stmt = match stmt with
-    Expr(e) -> (
-      let (is_fixed, required_stmt, expr) = sanitize_expr e
+let rec check_for_ternary expr = match expr with
+    Assign(n, e) -> check_for_ternary e
+  | DecAssign(t, n, e) -> check_for_ternary e
+  | Ternop(e, e1, e2) -> (true,  If(e, Expr(Assign("ternop_tempvar", sanitize_expr e1)), Expr(Assign("ternop_tempvar", sanitize_expr e2))), "ternary_tmpvar")
+  | _ -> (false, PretendBlock([]), "ternary_tempvar_none")
+
+let sanitize_ternaries stmts =
+    let generate_pb_if_needed e =
+        let (to_sanitize, required_stmt, name) = check_for_ternary e in
+        if to_sanitize then PretendBlock([ required_stmt; Expr(sanitize_expr e) ]) else Expr(e)
     in
-    if is_fixed then PretendBlock([ required_stmt, expr ]) else expr
-    )
+
+    let check_stmt stmt = match stmt with
+    Expr(e) -> generate_pb_if_needed e 
   | _ -> stmt
-in List.map check_stmt stmts
+
+    in List.map check_stmt stmts
+
+let clean_adjust_function fdecl = { typ=fdecl.typ; formals=fdecl.formals; fname=fdecl.fname; body = (sanitize_ternaries fdecl.body); autoreturn=fdecl.autoreturn; }
 
 let desugar (stmts, functions) = 
   let cleaned_statements = clean_statements stmts in
   let cleaned_functions = List.map clean_function functions in
   let adjusted_statements = sanitize_ternaries cleaned_statements in
-  (adjusted_statements, cleaned_functions)
+  let cleaned_adjusted_functions = List.map clean_adjust_function cleaned_functions in
+  (adjusted_statements, cleaned_adjusted_functions)

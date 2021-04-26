@@ -317,6 +317,8 @@ let translate (_, functions) =
          | A.Decr                 -> raise (Error "Decr not implemented")
         ) e' "tmp" builder
 
+    
+      (*
       | STernop(predicate, e1, e2) ->
         let e1' = expr builder e1 in
         let e2' = expr builder e2 in
@@ -335,6 +337,7 @@ let translate (_, functions) =
            ignore(L.build_cond_br bool_val then_bb else_bb builder);
            L.builder_at_end context merge_bb*)
         e1'
+        *)
 
       | SAssign (s, e)            -> 
         let e' = expr builder e in
