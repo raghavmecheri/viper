@@ -515,6 +515,11 @@ void print_char_list(struct list *inlist)
     printf("]\n");
 }
 
+int void_to_int(void *v_ptr)
+{
+    return *((int *)v_ptr);
+}
+
 double pow2(double base)
 {
     return pow(base, 2);
@@ -547,6 +552,13 @@ float ptrunc(float input, int decs)
 
 void testy()
 {
+    int a = 0;
+    a++;
+    a--;
+}
+
+void listy()
+{
     struct list *chrlist = create_list("char");
     append_char(chrlist, 'a');
     append_char(chrlist, 'b');
@@ -555,9 +567,25 @@ void testy()
     // print_char_list(chrlist);
 }
 
+void dicty()
+{
+    struct dict *chardict = create_dict("char", "int");
+    // void* test1 = char_alloc_zone('A');
+    // void* test2 = int_alloc_zone(0);
+    add_keyval(chardict, char_alloc_zone('A'), int_alloc_zone(3));
+    // printf("access_char_key(chrdict, 'A'): %d\n", void_to_int(access_char_key(testdict, 'A')));
+    // printf("access_char_key(chrdict, 'A'): %d\n", *((int *)(access_char_key(testdict, 'A'))));
+
+    struct dict *testdict = create_dict("char", "dict");
+    add_keyval(testdict, char_alloc_zone('Z'), (void *)chardict);
+    struct dict *char_dict_ptr = (struct dict *)access_char_key(testdict, 'Z');
+    printf("access_char_key(chrdict, 'A'): %d\n", void_to_int(access_char_key(char_dict_ptr, 'A')));
+}
+
 #ifdef BUILD_TEST
 int main(void)
 {
+    dicty();
     // printf("sqrt(100) = %f\n", sqrt(100));
     // printf("sqrt(100.7) = %f\n", sqrt(100.7));
     // printf("pow(100, 3) = %f\n", pow(100, 3));

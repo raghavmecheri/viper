@@ -77,7 +77,7 @@ let translate (_, functions) =
     | A.Array(_)                -> (L.pointer_type (find_struct_type "list"))
     | A.Function(_)             -> raise (Error "fucntion lltype? idk chief") (* (ltype_of_typ t) *)
     | A.Group(_)                -> raise (Error "Group lltype not implemented")
-    | A.Dictionary(_, _)  -> (L.pointer_type (find_struct_type "dict"))
+    | A.Dictionary(_, _)        -> (L.pointer_type (find_struct_type "dict"))
   in
 
   (* Return initial value for a declaration *)
@@ -86,9 +86,9 @@ let translate (_, functions) =
     | A.Float                         -> L.const_float (ltype_of_typ typ) 0.0
     | A.String                        -> L.const_pointer_null (ltype_of_typ typ)
     (* TODO: I believe null pointers would work here, but leaving as exception *)
-    | A.Array(_)                      -> raise (Error "Array llvalue not implemented")
+    | A.Array(_)                      -> L.const_pointer_null (find_struct_type "list")
     | A.Group(_)                      -> raise (Error "Group llvalue not implemented")
-    | A.Dictionary(_, _)              -> raise (Error "Dictionary llvalue not implemented")
+    | A.Dictionary(_, _)              -> L.const_pointer_null (find_struct_type "dict")
     | A.Function(_)                   -> raise (Error "What should a function init value be ?")
   in
 
@@ -270,7 +270,7 @@ let translate (_, functions) =
         key_t_str ^ " " ^ val_t_str
       | A.Char  -> "char"
       | A.Int   -> "int"
-      | A.Dictionary(_,_) -> "dict"
+      | A.Nah   -> "nah"
       | _                           -> raise (Error "type string map not here yet ")
     in
 
@@ -283,6 +283,9 @@ let translate (_, functions) =
       | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
 
       | SListLiteral(list)        -> 
+        (* (match e_type with
+           | A.Nah -> L.const_pointer_null (find_struct_type "list")
+             | _ -> *)
         let type_string = (get_type_string e_type) in
         let type_string_ptr = expr builder (A.String, SStringLiteral(type_string)) in
         (* create empty list llvalue *)
@@ -385,15 +388,28 @@ let translate (_, functions) =
          | A.Has     -> raise (Error "Has not implemented")
         ) e1' e2' "tmp" builder
 
-      | SUnop(op, ((t, _) as e)) -> 
+      | SUnop(op, ((t, var) as e)) -> 
         let e' = expr builder e in
         (match op with
-           A.Neg when t = A.Float -> L.build_fneg 
-         | A.Neg                  -> L.build_neg
-         | A.Not                  -> L.build_not 
-         | A.Incr                 -> raise (Error "Incr not implemented")
-         | A.Decr                 -> raise (Error "Decr not implemented")
-        ) e' "tmp" builder
+           A.Neg when t = A.Float -> L.build_fneg e' "tmp" builder
+         | A.Neg                  -> L.build_neg e' "tmp" builder
+         | A.Not                  -> L.build_not e' "tmp" builder
+         (* Incr will only work with ints *)
+         | A.Incr -> 
+           let added = L.build_nsw_add e' (L.const_int (ltype_of_typ t) 1) (L.value_name e') builder in 
+           let var_name vr = (match vr with
+               | SId(s)  -> s 
+               | _       -> raise (Error "Incr can only be used with SId"))
+           in
+           L.build_store added (lookup (var_name var)) builder
+         | A.Decr ->
+           let added = L.build_nsw_add e' (L.const_int (ltype_of_typ t) (-1)) (L.value_name e') builder in 
+           let var_name vr = (match vr with
+               | SId(s)  -> s 
+               | _       -> raise (Error "Incr can only be used with SId"))
+           in
+           L.build_store added (lookup (var_name var)) builder
+        )
 
       | STernop(predicate, e1, e2) ->
         let e1' = expr builder e1 in
