@@ -23,11 +23,12 @@ let check_expr_scope scope = function
     DecAssign(ty, s, _) -> add_symbol_driver s ty scope 
   | _ -> scope in 
 
-let check_stmt_scope scope = function 
+let rec check_stmt_scope scope = function 
     Expr(e) -> check_expr_scope scope e 
   | Dec(ty, s) -> add_symbol_driver s ty scope 
   | While(p, _, _) -> check_expr_scope scope p
   | If(p, _, _) -> check_expr_scope scope p
+  | PretendBlock(sl) -> List.fold_left (fun m f -> check_stmt_scope m f) scope sl
   | _ -> scope in
 
 (* Bug fix for function return type mismatching *)
@@ -204,11 +205,13 @@ let rec check_stmt scope inloop s =
       let rec check_stmt_list blockscope = function
           [Return _ as s] -> [check_stmt blockscope inloop s]
         | Return _ :: _   -> raise (Failure "nothing may follow a return")
-        | Block s :: ss   -> check_stmt_list blockscope (s @ ss) (* Flatten blocks *)
+        (*| Block s :: ss   -> check_stmt_list blockscope (s @ ss)  Flatten blocks 
+        | PretendBlock sl :: ss -> check_stmt_list blockscope (sl @ ss)  Flatten blocks *)
         | s :: ss         -> check_stmt blockscope inloop s :: check_stmt_list blockscope ss 
         | [] -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
-  | PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
+  | PretendBlock sl -> 
+         SBlock(List.map (check_stmt scope inloop) sl)
   | Dec(ty, l) -> SDec(ty, l)
   | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in
@@ -234,11 +237,13 @@ let rec check_stmt_func scope inloop ret =
       let rec check_stmt_list blockscope = function
           [Return _ as s] -> [check_stmt_func blockscope inloop ret s]
         | Return _ :: _   -> raise (Failure "nothing may follow a return")
-        | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
+        (*| Block sl :: ss  -> check_stmt_list blockscope (sl @ ss)  Flatten blocks 
+        | PretendBlock sl :: ss -> check_stmt_list blockscope (sl @ ss)  Flatten blocks *)
         | s :: ss         -> check_stmt_func blockscope inloop ret s :: check_stmt_list blockscope ss
         | []              -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
-  | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) (List.rev sl))
+  | PretendBlock sl -> 
+      SBlock(List.map (check_stmt_func scope inloop ret) sl)
   | Dec(ty, l) -> SDec(ty, l)
   | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in
