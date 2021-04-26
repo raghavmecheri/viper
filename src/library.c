@@ -594,7 +594,6 @@ struct list *get_str_keys(struct dict *indict)
 }
 
 void remove_str_key(struct dict* indict, char* key){
-    void *toremove = NULL;
     int index_to_remove = -1;
     for (int i = 0; i < indict->pairs->size; i++)
     {
@@ -614,7 +613,6 @@ void remove_str_key(struct dict* indict, char* key){
 }
 
 void remove_char_key(struct dict* indict, char key){
-    void *toremove = NULL;
     int index_to_remove = -1;
     for (int i = 0; i < indict->pairs->size; i++)
     {
@@ -631,6 +629,28 @@ void remove_char_key(struct dict* indict, char key){
     }
 
     indict->pairs->size -= 1;
+}
+
+int contains_str_key(struct dict* indict, char* key){
+    for (int i = 0; i < indict->pairs->size; i++)
+    {
+        if (!strcmp((char *)access_pair(indict->pairs, i)->key, key))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int contains_char_key(struct dict* indict, char key){
+    for (int i = 0; i < indict->pairs->size; i++)
+    {
+        if (*((char *)access_pair(indict->pairs, i)->key) != key)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int void_to_int(void *v_ptr)
@@ -790,6 +810,7 @@ int main(void)
     print_char_list(chrkeys);
     printf("access_char_key(chrdict, 'A'): %d\n", *((int *)access_char_key(chrdict, 'A')));
     printf("access_char_key(chrdict, 'B'): %d\n", *((int *)access_char_key(chrdict, 'B')));
+    printf("contains_char_key(chrdict, 'A'): %d\n", contains_char_key(chrdict, 'A'));
 
     struct dict *strdict = create_dict("string", "int");
     add_keyval(strdict, str_alloc_zone("AAA"), int_alloc_zone(7));
@@ -797,9 +818,11 @@ int main(void)
     add_keyval(strdict, str_alloc_zone("CCC"), int_alloc_zone(8));
     struct list* strkeys = get_str_keys(strdict);
     print_str_list(strkeys);
+    printf("contains_str_key(strdict, 'CCC'): %d\n", contains_str_key(strdict, "CCC"));
     remove_str_key(strdict, "CCC");
     struct list* strkeys2 = get_str_keys(strdict);
     print_str_list(strkeys2);
+    printf("contains_str_key(strdict, 'CCC'): %d\n", contains_str_key(strdict, "CCC"));
 
     // struct list *intlist = create_list("int");
     // append_int(intlist, 1);
