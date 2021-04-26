@@ -114,16 +114,16 @@ let rec sanitize_expr e = match e with
   | Ternop(e, e1, e2) -> Id("ternop_tempvar")
   | _ -> e
 
-let rec check_for_ternary expr = match expr with
-    Assign(n, e) -> check_for_ternary e
-  | DecAssign(t, n, e) -> check_for_ternary e
-  | Ternop(e, e1, e2) -> (true,  If(e, Expr(Assign("ternop_tempvar", sanitize_expr e1)), Expr(Assign("ternop_tempvar", sanitize_expr e2))), "ternary_tmpvar")
-  | _ -> (false, PretendBlock([]), "ternary_tempvar_none")
+let rec check_for_ternary e t = match e with
+   (* Assign(n, e) -> check_for_ternary e *)
+    DecAssign(t, n, e) -> check_for_ternary e t
+  | Ternop(e, e1, e2) -> (true,  If(e, Expr(Assign("ternop_tempvar", sanitize_expr e1)), Expr(Assign("ternop_tempvar", sanitize_expr e2))), "ternary_tmpvar", t)
+  | _ -> (false, PretendBlock([]), "ternary_tempvar_none", Int)
 
 let sanitize_ternaries stmts =
     let generate_pb_if_needed e =
-        let (to_sanitize, required_stmt, name) = check_for_ternary e in
-        if to_sanitize then PretendBlock([ required_stmt; Expr(sanitize_expr e) ]) else Expr(e)
+        let (to_sanitize, required_stmt, name, t) = (check_for_ternary e Int) in
+        if to_sanitize then PretendBlock([ Dec(t, "ternop_tempvar"); required_stmt; Expr(sanitize_expr e) ]) else Expr(e)
     in
 
     let check_stmt stmt = match stmt with
