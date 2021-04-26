@@ -203,7 +203,7 @@ let rec check_stmt scope inloop s =
       let rec check_stmt_list blockscope = function
           [Return _ as s] -> [check_stmt blockscope inloop s]
         | Return _ :: _   -> raise (Failure "nothing may follow a return")
-        | Block s :: ss   -> check_stmt_list blockscope (List.rev (s @ ss)) (* Flatten blocks *)
+        | Block s :: ss   -> check_stmt_list blockscope (s @ ss) (* Flatten blocks *)
         | s :: ss         -> check_stmt blockscope inloop s :: check_stmt_list blockscope ss 
         | [] -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
@@ -237,7 +237,7 @@ let rec check_stmt_func scope inloop ret =
         | s :: ss         -> check_stmt_func blockscope inloop ret s :: check_stmt_list blockscope ss
         | []              -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
-  | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
+  | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) (List.rev sl))
   | Dec(ty, l) -> SDec(ty, l)
   | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in

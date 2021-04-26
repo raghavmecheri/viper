@@ -606,18 +606,16 @@ let translate (_, functions) =
             | SAbort _ -> ignore(L.build_br exit_bb builder); builder
             | _ as e -> stmt builder e) in
 
+        let pred_bb = L.append_block context "while" the_function 
+        and merge_bb = L.append_block context "merge" the_function in
         
-        
-        let pred_bb = L.append_block context "while" the_function in
-        let pred_builder = L.builder_at_end context pred_bb in
-        let bool_val = expr pred_builder predicate in
-        let merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_br pred_bb builder);
         let body_bb = L.append_block context "while_body" the_function in
         add_terminal (loop_stmt pred_bb merge_bb (L.builder_at_end context body_bb) body)
           (L.build_br pred_bb);
 
-        
+        let pred_builder = L.builder_at_end context pred_bb in
+        let bool_val = expr pred_builder predicate in
 
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
