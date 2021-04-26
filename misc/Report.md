@@ -387,24 +387,6 @@ nums[1] = 2;         /* Sets the middle element to 2 */
 int error = nums[3]; /* Throws an error */
 ```
 
-### `3.2.2` `group`  
-A `group` is an immutable type-specified collection of data. Any number of types can be specified, but their order is fixed. `group`s are declared as lists and are auto-inferred:
-```java
-(string, int) order = ["Chicken Katsu", 17];
-(float[], string, bool) = [[0.1, 2.1], "boo", false];
-```
-Elements of `group`s can be accessed by passing an index into a set of parentheses. Like `list` indices, `group` indices are zero-indexed and must be in the range [0, length - 1).
-```java
-(int, int) paws = [3, -2];
-int x = paws[0]; /* Sets x to 3 */
-```
-Elements of `groups` can also be deconstructed into variables of their base type. These variables are then accessible within the same scope as the deconstruction.
-```python
-(int, int, int) t = [240, 130, 202];
-(int r, int g, int b) = t;
-print(r);
-```
-
 ### `3.2.3` `dict` 
 A `dict` is a mapping of key-value pairs. The types of both keys and values must be specified at creation, and keys must be unique. `dict` literals are defined with square brackets (`[]`), in which a colon (`:`) separates key and values, and commas separate key-value pairs.
 ```java
@@ -1148,8 +1130,6 @@ int[] middle_3 = nums.sub(4, 7);
 /* less_than_5 contains: [0, 1, 2, 3, 4] */
 /* middle_3 contains: [4, 5, 6]
 ```
-## `9.5` Groups
-Check back soon for the `group`s API.
 
 ## `9.6` Dicts
 Check back soon for the `dict`s API.
