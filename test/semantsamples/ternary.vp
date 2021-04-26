@@ -1,3 +1,0 @@
-bool b = true;
-
-int a = b ? : "4" : 3;

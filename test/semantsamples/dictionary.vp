@@ -1,3 +1,0 @@
-[int: string] map = [1: "one", 2: "two", 3: "three"]; 
-
-[bool : char] empt = [];

@@ -8,6 +8,4 @@
 [string: int] b_words = wordmap['b'];
 b_words["blob"] = 4;
 
-/*
 int no_no = b_words["blob"];
-*/
