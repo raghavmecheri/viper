@@ -16,6 +16,15 @@ type scope_table = {
   parent : scope_table option;
 }
 
+let rec string_of_scope scope = 
+  let print_bind name ty str = ("(" ^ name ^ ": " ^ (string_of_typ ty) ^ ")\n" ^ str) in
+  let this_scope = StringMap.fold (fun k t s -> print_bind k t s) scope.variables "" in 
+  let parent_scope = match scope.parent with
+      Some(parent) -> string_of_scope parent
+    | None -> ""
+  in "{" ^ this_scope ^ "}\n|\nV\n{" ^ parent_scope ^ "}"  
+  
+
 (* Data structure that stores function declarations *)
 type func_table = {
   formals : scope_table;

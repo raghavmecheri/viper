@@ -218,7 +218,7 @@ let translate (_, functions) =
     (* Return the value for a variable or formal argument *)
     (* let print_vars key value = print_string (key ^ " " ^ value ^ "\n") in *)
     let lookup n = try Hashtbl.find local_vars n
-      with Not_found -> raise (Error "variable not found in locals map")
+      with Not_found -> raise (Error ("variable " ^ n ^ " not found in locals map"))
     in
 
     (* LLVM insists each basic block end with exactly one "terminator" 
@@ -463,7 +463,7 @@ let translate (_, functions) =
         ignore(L.build_cond_br bool_val then_bb else_bb builder);
         L.builder_at_end context merge_bb
 
-      | SWhile (predicate, body, increment) ->
+      | SWhile (predicate, body, increment) -> 
         let rec loop_stmt loop_bb exit_bb builder = (function
               SBlock(sl) -> List.fold_left (fun b s -> loop_stmt loop_bb exit_bb b s) builder sl
             | SIf (predicate, then_stmt, else_stmt)   -> 
@@ -490,15 +490,18 @@ let translate (_, functions) =
             | SAbort _ -> ignore(L.build_br exit_bb builder); builder
             | _ as e -> stmt builder e) in
 
-        let pred_bb = L.append_block context "while" the_function 
-        and merge_bb = L.append_block context "merge" the_function in
+        
+        
+        let pred_bb = L.append_block context "while" the_function in
+        let pred_builder = L.builder_at_end context pred_bb in
+        let bool_val = expr pred_builder predicate in
+        let merge_bb = L.append_block context "merge" the_function in
         ignore(L.build_br pred_bb builder);
         let body_bb = L.append_block context "while_body" the_function in
         add_terminal (loop_stmt pred_bb merge_bb (L.builder_at_end context body_bb) body)
           (L.build_br pred_bb);
 
-        let pred_builder = L.builder_at_end context pred_bb in
-        let bool_val = expr pred_builder predicate in
+        
 
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
