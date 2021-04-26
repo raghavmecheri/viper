@@ -1,0 +1,23 @@
+string[] names = ["trey"];
+print(names[0]);
+
+names.append("ratghav");
+print(names[1]);
+
+int[] nums = [1];
+print(nums[0]);
+
+nums.append(2);
+print(nums[1]);
+
+char[] chars = ['A'];
+print(chars[0]);
+
+chars.append('B');
+print(chars[1]);
+
+float[] nums2 = [1.0];
+print(nums2[0]);
+
+nums2.append(2.0);
+print(nums2[1]);

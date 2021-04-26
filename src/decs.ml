@@ -214,13 +214,10 @@ let get_decs (s_list, f_list) =
       ("len", [Array(String)], Int);
       ("len", [Array(Char)], Int);
       ("append", [Array(Char); Char], Nah);
-
-      (* ("contains", [Array(Int); Int], Int);
-         ("contains", [Array(Float); Float], Int);
-         ("contains", [Array(String); String], Int);
-         ("contains", [Array(Bool); Bool], Int); *)
+      ("append", [Array(String); String], Nah);
+      ("append", [Array(Int); Int], Nah);
+      ("append", [Array(Float); Float], Nah);
       ("contains", [Array(Char); Char], Int);
-
       ("toInt", [Float], Int);
       ("toInt", [String], Int);
       ("toInt", [Char], Int);
@@ -248,7 +245,6 @@ let get_decs (s_list, f_list) =
       ("toNah", [Bool], Nah);
       ("pow2", [Float], Float);
       ("pow2", [Int], Float);
-
     ] 
   in
 

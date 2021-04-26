@@ -1,12 +1,14 @@
 int func count_words(string[] str) {
 	[string: int] word_counts;
+	
 	for(string x in str) {
 		if(word_counts.contains(x)) {
-			word_counts[x] += 1;
+			word_counts[x] = word_counts[x] + 1;
 		} else {
-			word_counts.add(x);
+			word_counts.add(x, 1);
 		}
 	}
+
 	return word_counts;
 }
 

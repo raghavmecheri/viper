@@ -24,7 +24,8 @@ let translate (_, functions) =
   and i16_t      = L.i16_type    context
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
-  and float_t    = L.double_type context
+  and float_t    = L.float_type  context
+  and double_t   = L.double_type context
   and void_t     = L.void_type   context 
   and struct_t   = L.struct_type context in
   let str_t      = L.pointer_type i8_t
@@ -121,6 +122,8 @@ let translate (_, functions) =
   let create_list_func : L.llvalue = 
     L.declare_function "create_list" create_list_t the_module in
 
+  (* ACCESS LIST FUNCTIONS HERE*)
+
   (* takes in a list and an int and returns the index of the list *)
   let access_char_t : L.lltype =
     L.function_type (ltype_of_typ A.Char) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
@@ -133,6 +136,18 @@ let translate (_, functions) =
   let access_int_func : L.llvalue = 
     L.declare_function "access_int" access_int_t the_module in
 
+  let access_str_t : L.lltype =
+    L.function_type (ltype_of_typ A.String) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int)|] in
+  let access_str_func : L.llvalue = 
+    L.declare_function "access_str" access_str_t the_module in
+
+  let access_float_t : L.lltype =
+    L.function_type (ltype_of_typ A.Float) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int)|] in
+  let access_float_func : L.llvalue = 
+    L.declare_function "access_float" access_float_t the_module in
+
+  (* APPEND LIST FUNCTIONS HERE *)
+
   (* takes in a list and a char to append *)
   let append_char_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
@@ -144,6 +159,18 @@ let translate (_, functions) =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
   let append_int_func : L.llvalue = 
     L.declare_function "append_int" append_int_t the_module in
+
+  let append_str_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.String) |] in
+  let append_str_func : L.llvalue = 
+    L.declare_function "append_str" append_str_t the_module in
+
+  let append_float_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Float) |] in
+  let append_float_func : L.llvalue = 
+    L.declare_function "append_float" append_float_t the_module in
+
+  (* CONTAINS LIST FUNCTIONS HERE *)
 
   (* takes a list and a character and returns 1 if in, 0 otherwise*)
   let contains_char_t : L.lltype =
@@ -182,6 +209,11 @@ let translate (_, functions) =
   let access_char_key_func : L.llvalue = 
     L.declare_function "access_char_key" access_char_key_t the_module in
 
+  let access_str_key_t : L.lltype =
+    L.function_type (L.pointer_type i8_t) [| (L.pointer_type (find_struct_type "dict")); (L.pointer_type (ltype_of_typ A.Char)) |] in
+  let access_str_key_func : L.llvalue = 
+    L.declare_function "access_str_key" access_str_key_t the_module in
+
   (* type -> void pointer alloc funtions *)
   let int_alloc_t : L.lltype =
     L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Int) |] in 
@@ -192,6 +224,11 @@ let translate (_, functions) =
     L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Char) |] in 
   let char_alloc_func : L.llvalue =
     L.declare_function "char_alloc_zone" char_alloc_t the_module in
+
+  let str_alloc_t : L.lltype =
+    L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.String) |] in 
+  let str_alloc_func : L.llvalue =
+    L.declare_function "str_alloc_zone" str_alloc_t the_module in
 
   (* void pointer -> type derefernce functions *)
 
@@ -256,10 +293,12 @@ let translate (_, functions) =
         let key_t_str = get_type_string key_t in
         let val_t_str = get_type_string val_t in
         key_t_str ^ " " ^ val_t_str
-      | A.Char  -> "char"
-      | A.Int   -> "int"
-      | A.Nah   -> "nah"
-      | _                           -> raise (Error "type string map not here yet ")
+      | A.Char    -> "char"
+      | A.Int     -> "int"
+      | A.Nah     -> "nah"
+      | A.String  -> "string"
+      | A.Float   -> "float"
+      | _                           -> raise (Error "type string map not implemented")
     in
 
     (* this returns an llvalue *)
@@ -269,7 +308,6 @@ let translate (_, functions) =
       | SBoolLiteral(bln)         -> L.const_int (ltype_of_typ A.Bool) (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
       | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
-
       | SListLiteral(list)        -> 
         (* (match e_type with
            | A.Nah -> L.const_pointer_null (find_struct_type "list")
@@ -282,8 +320,10 @@ let translate (_, functions) =
         let rec append_func typ = match typ with
             A.Int         -> append_int_func
           | A.Char        -> append_char_func
-          | A.Nah         -> raise (Error "No such thing as nah append function")
+          | A.String      -> append_str_func
+          | A.Float       -> append_float_func
           | A.Array(arr)  -> (append_func arr)
+          | A.Nah         -> raise (Error "No such thing as nah append function")
           | _             -> raise (Error "list append function not defined for type")
         in
         let appender c = L.build_call (append_func e_type) [| li; (expr builder c) |] "" builder in
@@ -309,6 +349,7 @@ let translate (_, functions) =
                      | A.Char -> raise (Error "Char alloc") *)
                   | A.Int       -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
                   | A.Char      -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
+                  | A.String    -> L.build_call str_alloc_func [| (expr builder z) |] "str_alloc" builder
                   | A.Array(_)  -> 
                     let list_ptr = expr builder z in 
                     L.build_bitcast list_ptr (L.pointer_type i8_t) (L.value_name list_ptr) builder 
@@ -444,15 +485,19 @@ let translate (_, functions) =
         let rec access_func typ = match typ with
             A.Int         -> access_int_func
           | A.Char        -> access_char_func
-          | A.Nah         -> raise (Error "No such thing as nah access function")
+          | A.String      -> access_str_func
+          | A.Float       -> access_float_func
           | A.Array(arr)  -> (access_func arr)
           | A.Dictionary(key_t, key_v) -> (match key_t with
-              | A.Char -> access_char_key_func
+              | A.Char    -> access_char_key_func
+              | A.String  -> access_str_key_func
               | _     -> raise (Error "dictionary access function not defined for key type")
             )
+          | A.Nah         -> raise (Error "No such thing as nah access function") 
           | _             -> raise (Error "list access function not defined for type")
         in 
-        (match typ with 
+        (match typ with
+         (* Dictionary access requires pointer bitcasting *)
          | A.Dictionary(_, val_t) -> 
            let void_ptr = L.build_call (access_func typ) [| li; index |] "access" builder in
            (match val_t with 
@@ -463,8 +508,9 @@ let translate (_, functions) =
             | A.Dictionary(_, _) -> 
               L.build_bitcast void_ptr (L.pointer_type (find_struct_type "dict")) (L.value_name void_ptr) builder
             | _       -> raise (Error "idk what this dict val type is chief"))
+         (* Array access is a simple function call*)
          | A.Array(_)        -> L.build_call (access_func typ) [| li; index |] "access" builder
-         | _                 -> raise (Error "nee nee"))
+         | _                 -> raise (Error "SAccess on something that isn't a list or a dictionary not supported"))
       (* | A.Dictionary(key_t, key_v) -> 
          (* key can be a number of things*)
          let key            = expr builder l in
@@ -504,6 +550,7 @@ let translate (_, functions) =
                       | _ -> t_val
                    in
                    expr builder (A.String, SStringLiteral(t_val)) *)
+                | A.Float -> L.build_fpext (expr builder params) double_t "ext" builder
                 | _       -> expr builder params)
             in 
             let format_str = (match p_t with
@@ -532,9 +579,18 @@ let translate (_, functions) =
 
       (* append *)
       | SCall ("append", params)  ->
-        let li = expr builder (List.hd params) in
-        let p = expr builder (List.nth params 1) in
-        L.build_call append_char_func [| li; p |] "" builder
+        let li_e = List.hd params in
+        let p_e = List.nth params 1 in
+        let li = expr builder li_e in
+        let p = expr builder p_e in
+        let append_func = (match p_e with
+            | (A.Char, _)    -> append_char_func
+            | (A.String, _)  -> append_str_func
+            | (A.Int, _)     -> append_int_func
+            | (A.Float, _)   -> append_float_func
+            | _         -> raise (Error "Append parameter type invalid"))
+        in
+        L.build_call append_func [| li; p |] "" builder
 
       (* len *)
       | SCall ("len", params)  ->
