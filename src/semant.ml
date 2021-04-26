@@ -114,10 +114,14 @@ let rec sanitize_expr e = match e with
   | Ternop(e, e1, e2) -> Id("ternop_tempvar")
   | _ -> e
 
+let rec decompose_nested_ternary e e1 e2 = match e2 with
+    Ternop(e', e1', e2') -> If(e', Expr(Assign("ternop_tempvar", e1')), decompose_nested_ternary e' e1' e2')
+  | _ -> If(e, Expr(Assign("ternop_tempvar", e1)), Expr(Assign("ternop_tempvar", e2)))
+
 let rec check_for_ternary e t = match e with
    (* Assign(n, e) -> check_for_ternary e *)
     DecAssign(t, n, e) -> check_for_ternary e t
-  | Ternop(e, e1, e2) -> (true,  If(e, Expr(Assign("ternop_tempvar", sanitize_expr e1)), Expr(Assign("ternop_tempvar", sanitize_expr e2))), "ternary_tmpvar", t)
+  | Ternop(e, e1, e2) -> (true, decompose_nested_ternary e e1 e2, "ternary_tmpvar", t)
   | _ -> (false, PretendBlock([]), "ternary_tempvar_none", Int)
 
 let sanitize_ternaries stmts =
