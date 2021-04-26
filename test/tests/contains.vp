@@ -1,0 +1,11 @@
+int[] ints = [1];
+print(ints.contains(1));
+
+string[] names = ["ratghav"];
+print(names.contains("ratghav"));
+
+float[] floats = [1.2];
+print(floats.contains(1.2));
+
+char[] chars = ['A'];
+print(chars.contains('A'));

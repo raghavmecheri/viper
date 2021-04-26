@@ -593,7 +593,8 @@ struct list *get_str_keys(struct dict *indict)
     return keys;
 }
 
-void remove_str_key(struct dict* indict, char* key){
+void remove_str_key(struct dict *indict, char *key)
+{
     int index_to_remove = -1;
     for (int i = 0; i < indict->pairs->size; i++)
     {
@@ -604,7 +605,8 @@ void remove_str_key(struct dict* indict, char* key){
         }
     }
 
-    for (int i = index_to_remove; i < indict->pairs->size - 1; i++){
+    for (int i = index_to_remove; i < indict->pairs->size - 1; i++)
+    {
         access_pair(indict->pairs, i)->key = access_pair(indict->pairs, i + 1)->key;
         access_pair(indict->pairs, i)->val = access_pair(indict->pairs, i + 1)->val;
     }
@@ -612,7 +614,8 @@ void remove_str_key(struct dict* indict, char* key){
     indict->pairs->size -= 1;
 }
 
-void remove_char_key(struct dict* indict, char key){
+void remove_char_key(struct dict *indict, char key)
+{
     int index_to_remove = -1;
     for (int i = 0; i < indict->pairs->size; i++)
     {
@@ -623,7 +626,8 @@ void remove_char_key(struct dict* indict, char key){
         }
     }
 
-    for (int i = index_to_remove; i < indict->pairs->size - 1; i++){
+    for (int i = index_to_remove; i < indict->pairs->size - 1; i++)
+    {
         access_pair(indict->pairs, i)->key = access_pair(indict->pairs, i + 1)->key;
         access_pair(indict->pairs, i)->val = access_pair(indict->pairs, i + 1)->val;
     }
@@ -631,7 +635,8 @@ void remove_char_key(struct dict* indict, char key){
     indict->pairs->size -= 1;
 }
 
-int contains_str_key(struct dict* indict, char* key){
+int contains_str_key(struct dict *indict, char *key)
+{
     for (int i = 0; i < indict->pairs->size; i++)
     {
         if (!strcmp((char *)access_pair(indict->pairs, i)->key, key))
@@ -642,7 +647,8 @@ int contains_str_key(struct dict* indict, char* key){
     return 0;
 }
 
-int contains_char_key(struct dict* indict, char key){
+int contains_char_key(struct dict *indict, char key)
+{
     for (int i = 0; i < indict->pairs->size; i++)
     {
         if (*((char *)access_pair(indict->pairs, i)->key) != key)
@@ -658,7 +664,7 @@ int void_to_int(void *v_ptr)
     return *((int *)v_ptr);
 }
 
-double pow2(double base)
+float pow2(float base)
 {
     return pow(base, 2);
 }
@@ -806,7 +812,7 @@ int main(void)
     struct dict *chrdict = create_dict("char", "int");
     add_keyval(chrdict, char_alloc_zone('A'), int_alloc_zone(7));
     add_keyval(chrdict, char_alloc_zone('B'), int_alloc_zone(8));
-    struct list* chrkeys = get_char_keys(chrdict);
+    struct list *chrkeys = get_char_keys(chrdict);
     print_char_list(chrkeys);
     printf("access_char_key(chrdict, 'A'): %d\n", *((int *)access_char_key(chrdict, 'A')));
     printf("access_char_key(chrdict, 'B'): %d\n", *((int *)access_char_key(chrdict, 'B')));
@@ -816,11 +822,11 @@ int main(void)
     add_keyval(strdict, str_alloc_zone("AAA"), int_alloc_zone(7));
     add_keyval(strdict, str_alloc_zone("BBB"), int_alloc_zone(8));
     add_keyval(strdict, str_alloc_zone("CCC"), int_alloc_zone(8));
-    struct list* strkeys = get_str_keys(strdict);
+    struct list *strkeys = get_str_keys(strdict);
     print_str_list(strkeys);
     printf("contains_str_key(strdict, 'CCC'): %d\n", contains_str_key(strdict, "CCC"));
     remove_str_key(strdict, "CCC");
-    struct list* strkeys2 = get_str_keys(strdict);
+    struct list *strkeys2 = get_str_keys(strdict);
     print_str_list(strkeys2);
     printf("contains_str_key(strdict, 'CCC'): %d\n", contains_str_key(strdict, "CCC"));
 

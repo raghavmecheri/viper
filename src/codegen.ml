@@ -183,6 +183,17 @@ let translate (_, functions) =
   let contains_int_func : L.llvalue =
     L.declare_function "contains_int" contains_int_t the_module in
 
+  let contains_str_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.String) |] in
+  let contains_str_func : L.llvalue =
+    L.declare_function "contains_str" contains_str_t the_module in
+
+  let contains_float_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Float) |] in
+  let contains_float_func : L.llvalue =
+    L.declare_function "contains_float" contains_float_t the_module in
+
+
   (* given a pointer to list, returns length*)
   let listlen_t : L.lltype =
     L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")) |] in
@@ -353,6 +364,7 @@ let translate (_, functions) =
                   | A.Array(_)  -> 
                     let list_ptr = expr builder z in 
                     L.build_bitcast list_ptr (L.pointer_type i8_t) (L.value_name list_ptr) builder 
+
                   (* cast to void pointer here *)
                   | A.Dictionary(_, _)  -> 
                     let dict_ptr = expr builder z in 
@@ -440,7 +452,7 @@ let translate (_, functions) =
            L.build_store added (lookup (var_name var)) builder
         )
 
-    
+
       (*
       | STernop(predicate, e1, e2) ->
         let e1' = expr builder e1 in
@@ -600,19 +612,51 @@ let translate (_, functions) =
         let li = expr builder (List.hd params) in
         L.build_call listlen_func [| li |] "len" builder
 
-      (* contains *)
-      | SCall ("contains", params)  ->
+      (* contains TODO: only works for lists *)
+      | SCall ("contains", params) ->
         let typ = (fst (List.hd params)) in
         let li = expr builder (List.hd params) in
         let p = expr builder (List.nth params 1) in
         let rec contains_func typ = match typ with
             A.Int         -> contains_int_func
           | A.Char        -> contains_char_func
+          | A.Float       -> contains_float_func
+          | A.String      -> contains_str_func
           | A.Nah         -> raise (Error "No such thing as nah contains function")
           | A.Array(arr)  -> (contains_func arr)
           | _             -> raise (Error "contains function not defined for type")
         in 
         L.build_call (contains_func typ) [| li; p |] "contains" builder
+
+      (* add is a wrapper over keyval, takes in dict, void * key, void * to val *)
+      | SCall ("add", params) ->
+        let ds = expr builder (List.hd params) in 
+        let key = (List.nth params 1) in 
+        let value = (List.nth params 2) in
+
+        let void_alloc ((z_t, z_x) as z) = (match z_t with
+            (* | A.Int -> raise (Error "Int alloc")
+               | A.Char -> raise (Error "Char alloc") *)
+            | A.Int       -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
+            | A.Char      -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
+            | A.String    -> L.build_call str_alloc_func [| (expr builder z) |] "str_alloc" builder
+            | A.Array(_)  -> 
+              let list_ptr = expr builder z in 
+              L.build_bitcast list_ptr (L.pointer_type i8_t) (L.value_name list_ptr) builder 
+
+            (* cast to void pointer here *)
+            | A.Dictionary(_, _)  -> 
+              let dict_ptr = expr builder z in 
+              L.build_bitcast dict_ptr (L.pointer_type i8_t) (L.value_name dict_ptr) builder 
+            (* cast to void pointer here *)
+            | _       -> raise (Error "No alloc function for type"))
+        in
+
+        (* cast key and value pointers to void pointers*)
+        let key_void_ptr = (void_alloc key) in
+        let value_void_ptr = (void_alloc value) in
+
+        L.build_call add_keyval_func [| ds; key_void_ptr; value_void_ptr |] "" builder
 
       (* SCall for user defined functions *)
       | SCall (f, args)           -> 
