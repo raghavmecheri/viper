@@ -1,24 +1,22 @@
 [string: int] func count_words(string[] str) {
-	[string: int] word_counts;
-
+	[string: int] word_counts = [];
 	for(string x in str) {
-		if(word_counts.contains(x) == 1) {			
+		if(word_counts.contains(x) == 1) {
 			word_counts.add(x, word_counts[x] + 1);
 		} else {
 			word_counts.add(x, 1);
 		}
 	}
-
 	return word_counts;
 }
 
-string [] test = ["Hello", "world", "I", "am", "world", "hello", "world", "viper", "Viper", "viper"];
+string [] test = ["Hello", "world", "sugma", "am", "world", "hello", "world", "viper", "Viper", "viper"];
 
 [string: int] counts = count_words(test);
 
-/* string[] keys = counts.keys(); */
-
 for(string key in test) {
 	print(key);
-	print(counts[key]);
+	print("=");
+    print(counts[key]);
+    print("|");
 }

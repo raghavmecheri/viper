@@ -31,7 +31,7 @@ let rec clean_expression expr = match expr with
   | _ -> expr
 
 let decompose_deconstforiter n e s = 
-    let comparison = Binop(Id("dfi_tmp_idx"), Leq, Call("len", [e]))
+    let comparison = Binop(Id("dfi_tmp_idx"), Less, Call("len", [e]))
     in
     let (idx_t, idx_name) = List.hd n
     in
@@ -42,7 +42,7 @@ let decompose_deconstforiter n e s =
     While(comparison, exec, Expr(Noexpr))
 
 let decompose_foriter n e s = 
-    let comparison = Binop(Id("dfi_tmp_idx"), Leq, Call("len", [e]))
+    let comparison = Binop(Id("dfi_tmp_idx"), Less, Call("len", [e]))
     in
     let (iterator : Ast.stmt) = Expr(Unop(Incr, Id("dfi_tmp_idx"))) in
     let exec = Block([ Expr(Assign(n, Access(e, Id("dfi_tmp_idx")))); s; iterator])
@@ -50,7 +50,7 @@ let decompose_foriter n e s =
     While(comparison, exec, iterator)
 
 let decompose_decforiter t n e s = 
-    let comparison = Binop(Id("dfi_tmp_idx"), Leq, Call("len", [e]))
+    let comparison = Binop(Id("dfi_tmp_idx"), Less, Call("len", [e]))
     in
     let exec = Block([ Expr(DecAssign(t, n, Access(e, Id("dfi_tmp_idx")))); s; Expr(Unop(Incr, Id("dfi_tmp_idx")))  ])
     in
