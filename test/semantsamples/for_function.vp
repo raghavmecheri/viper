@@ -1,7 +1,0 @@
-int func tester(){
-  int a = 10;
-  for(int i = 0; i<10; i++) {
-    a = a + 5;
-  }
-  return a;
-}

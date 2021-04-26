@@ -1,0 +1,5 @@
+int[] list = [1,2,3,4,5];
+for (int i in list){
+    if (i == 3){ skip; }
+    else if (i == 4){ abort; }
+}
