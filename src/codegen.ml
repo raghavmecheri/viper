@@ -174,7 +174,7 @@ let translate (_, functions) =
   let access_char_key_func : L.llvalue = 
     L.declare_function "access_char_key" access_char_key_t the_module in
 
-  (* void pointer cast alloc funtions *)
+  (* type -> void pointer alloc funtions *)
   let int_alloc_t : L.lltype =
     L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Int) |] in 
   let int_alloc_func : L.llvalue =
@@ -184,6 +184,8 @@ let translate (_, functions) =
     L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Char) |] in 
   let char_alloc_func : L.llvalue =
     L.declare_function "char_alloc_zone" char_alloc_t the_module in
+
+  (* void pointer -> type derefernce functions *)
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -418,10 +420,13 @@ let translate (_, functions) =
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
 
-      | SAccess((typ, _) as e, l) ->
-        (* index is an int for lists, can be a number of things for dicts *)
+      (* typ will be a dictionary or a dict *)
+      | SAccess((typ, _) as e, l) -> 
+        (* (match typ with
+           | A.Array(arr_t) ->  *)
+        (* index is an int for lists *)
         let index       = expr builder l in
-        (* li could be a dict, list, or a var for either *)
+        (* li is the list to pass to access*)
         let li          = expr builder e in
         let rec access_func typ = match typ with
             A.Int         -> access_int_func
@@ -434,7 +439,35 @@ let translate (_, functions) =
             )
           | _             -> raise (Error "list access function not defined for type")
         in 
-        L.build_call (access_func typ) [| li; index |] "access" builder
+        (match typ with 
+         | A.Dictionary(_, val_t) -> 
+          let void_ptr = L.build_call (access_func typ) [| li; index |] "access" builder in
+          (match val_t with 
+            | A.Int -> 
+              let int_ptr = L.build_bitcast void_ptr (L.pointer_type (ltype_of_typ A.Int)) (L.value_name void_ptr) builder in
+              L.build_load int_ptr (L.value_name int_ptr) builder
+            | A.Char -> raise (Error "val is char"))
+            | _       -> raise (Error "idk what this dict val type is chief")
+         | A.Array(_)        -> L.build_call (access_func typ) [| li; index |] "access" builder
+         | _                 -> raise (Error "nee nee"))
+      (* | A.Dictionary(key_t, key_v) -> 
+         (* key can be a number of things*)
+         let key            = expr builder l in
+         (* dict is the dict to pass to access *)
+         let dict          = expr builder e in
+         let rec access_func typ = match typ with
+            A.Int         -> access_int_func
+          | A.Char        -> access_char_func
+          | A.Nah         -> raise (Error "No such thing as nah access function")
+          | A.Array(arr)  -> (access_func arr)
+          (*  | A.Dictionary(key_t, key_v) -> (match key_t with
+              | A.Char -> access_char_key_func
+              | _     -> raise (Error "dictionary access function not defined for key type")
+              ) *)
+          | _             -> raise (Error "list access function not defined for type")
+         in 
+         L.build_call (access_func typ) [| li; index |] "access" builder *)
+      (* | _ -> raise (Error "Access only supported for lists and dicts")) *)
 
       | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
 
