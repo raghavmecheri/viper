@@ -1,3 +1,11 @@
 float a = pow2(2.0);
 print(a);
 
+float b = pow2(a);
+
+print(b);
+
+float c = pow2(876.0);
+print(c);
+
+

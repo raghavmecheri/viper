@@ -26,6 +26,8 @@ let check_expr_scope scope = function
 let check_stmt_scope scope = function 
     Expr(e) -> check_expr_scope scope e 
   | Dec(ty, s) -> add_symbol_driver s ty scope 
+  | While(p, _, _) -> check_expr_scope scope p
+  | If(p, _, _) -> check_expr_scope scope p
   | _ -> scope in
 
 (* Bug fix for function return type mismatching *)
@@ -46,7 +48,7 @@ let type_check t1 t2 =
 in
 
 (* Driver for semantically checking expressions *)
-let rec expr scope deepscope  = function 
+let rec expr scope deepscope e = match e with
     IntegerLiteral l -> (Int, SIntegerLiteral l)
   | CharacterLiteral l -> (Char, SCharacterLiteral l)
   | BoolLit l -> (Bool, SBoolLiteral l) 
@@ -55,7 +57,7 @@ let rec expr scope deepscope  = function
   | Noexpr -> (Nah, SNoexpr)
   | ListLit l -> let eval_list = List.map (expr scope deepscope) l in 
       let rec check_types = function
-          [] -> (Array(Nah), SListLiteral([]))
+          [] -> (Nah, SDictLiteral([]))
         | (t1, _) :: [] -> (Array(t1), SListLiteral(eval_list))
         |	((t1,_) :: (t2,_) :: _) when t1 != t2 ->  
 	      raise (Failure ("Error: list types " ^ string_of_typ t1 ^ " and " ^ string_of_typ t2 ^ " are inconsistent"))
@@ -66,7 +68,6 @@ let rec expr scope deepscope  = function
       (Group([t1; t2]), SDictElem((t1, e1), (t2, e2)))
   | DictLit l -> let eval_list = List.map (expr scope deepscope) l in 
       let rec check_types = function
-          [] -> (Dictionary(Nah, Nah), SDictLiteral([]))
         | (Group([t1; t2]), _) :: [] -> (Dictionary(t1, t2), SDictLiteral(eval_list))
         |	((Group([t1; t2]), _) :: (Group([t3; t4]), _) :: _) when not ((type_check t1 t3)) || not ((type_check t2 t4)) (*t1 != t3 || t2 != t4 *)->  
 	       raise (Failure (string_of_typ t1 ^ string_of_typ t2 ^ string_of_typ t3 ^ string_of_typ t4))
@@ -110,15 +111,18 @@ let rec expr scope deepscope  = function
       in (Int, SDeconstruct(l, expr scope deepscope e)) 
   | OpAssign(s, op, e) -> let (t, e1) = expr scope deepscope e in 
       if t = (toi scope s) then (t, SOpAssign(s, op, (t, e1))) else raise (Failure "types not the same") 
-  | DecAssign(ty, l, expr1) -> check_decassign ty l (expr scope deepscope expr1) 
+  | DecAssign(ty, l, expr1) -> (match ty, l, expr1 with
+        (Array(t), n, ListLit([])) -> (Array(t), SDecAssign(Array(t), n, (Array(t), SListLiteral([]))))
+      | (Dictionary(t1, t2), n, DictLit([])) -> (Dictionary(t1, t2), SDecAssign(Dictionary(t1, t2), n, (Dictionary(t1, t2), SDictLiteral([]))))
+      | _ -> check_decassign ty l (expr scope deepscope expr1) )
   | Access(e1, e2) -> 
       let (t1, e1') = expr scope deepscope e1
       and (t2, e2') = expr scope deepscope e2 in 
       (match t1 with
           Array(t) when t2 = Int -> (t, SAccess((t1, e1'), (t2, e2')))
-        | Array(_) -> raise (Failure ("Error: Integer required for Array access, given type " ^ string_of_typ t2))
+        | Array(_) -> raise (Failure ("Error: integer required for array access, given type " ^ string_of_typ t2))
         | Dictionary((key_t, value_t)) when t2 = key_t -> (value_t, SAccess((t1, e1'), (t2, e2')))
-        | Dictionary((key_t, _)) -> raise (Failure ("Error: " ^ string_of_typ key_t ^ " required for Dictionary access, given type " ^ string_of_typ t2))
+        | Dictionary((key_t, _)) -> raise (Failure ("Error: " ^ string_of_typ key_t ^ " required for dictionary access, given type " ^ string_of_typ t2))
         | _ -> raise (Failure ("Error: access not invalid for type " ^ string_of_typ t1)))
   | AccessAssign(e1, e2, e3) ->       
       let (t1, e1') = expr scope deepscope e1
@@ -175,26 +179,33 @@ let rec expr scope deepscope  = function
 in 
 
 (* Driver for semantically checking statements *)
-let rec check_stmt scope inloop = 
+let rec check_stmt scope inloop s =
   let new_scope = {
     variables = StringMap.empty;
     parent = Some(scope);
-  } in function 
+  } in match s with 
     Expr e -> SExpr (expr scope inloop e) 
   | Skip e -> if inloop then SSkip (expr scope inloop e) else raise (Failure "skip not in a loop")  
   | Abort e -> if inloop then SAbort (expr scope inloop e) else raise (Failure "abort not in a loop")  
   | Panic e -> SPanic (expr scope inloop e) 
-  | If(p, b1, b2) -> SIf(check_bool (expr scope inloop p), check_stmt scope inloop b1, check_stmt scope inloop b2) 
-  | While(p, s, inc) -> SWhile(check_bool (expr scope inloop p), check_stmt new_scope true s, check_stmt scope inloop inc) 
+  | If(p, b1, b2) as i -> 
+      let scope = get_expr_decs scope p in
+      let pred = check_bool (expr scope inloop p) 
+      and t = check_stmt scope inloop b1
+      and f = check_stmt scope inloop b2 in SIf(pred, t, f) 
+  | While(p, s, inc) -> 
+      let scope = get_expr_decs scope p in
+      let pred = check_bool (expr scope inloop p)
+      and loop = check_stmt scope true s in SWhile(pred, loop, check_stmt scope inloop inc) 
   | For(e1, e2, e3, s) -> raise (Failure ("Error: nested for loops currently broken"))
   | Return _ -> raise (Failure "return outside a function")
   | Block sl -> 
       let rec check_stmt_list blockscope = function
           [Return _ as s] -> [check_stmt blockscope inloop s]
         | Return _ :: _   -> raise (Failure "nothing may follow a return")
-        | Block sl :: ss  -> check_stmt_list blockscope (sl @ ss) (* Flatten blocks *)
-        | s :: ss         -> check_stmt blockscope inloop s :: check_stmt_list blockscope ss
-        | []              -> []
+        | Block s :: ss   -> check_stmt_list blockscope (s @ ss) (* Flatten blocks *)
+        | s :: ss         -> check_stmt blockscope inloop s :: check_stmt_list blockscope ss 
+        | [] -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
   | PretendBlock sl -> SBlock (List.map (check_stmt scope false) sl )
   | Dec(ty, l) -> SDec(ty, l)
@@ -226,7 +237,7 @@ let rec check_stmt_func scope inloop ret =
         | s :: ss         -> check_stmt_func blockscope inloop ret s :: check_stmt_list blockscope ss
         | []              -> []
       in SBlock(check_stmt_list (List.fold_left (fun m f -> check_stmt_scope m f) new_scope sl) sl)
-  | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) sl )
+  | PretendBlock sl -> SBlock(List.map (check_stmt_func scope false ret) (List.rev sl))
   | Dec(ty, l) -> SDec(ty, l)
   | _ as s -> raise (Failure ("statement " ^ string_of_stmt s ^ " is not a statement"))
 in

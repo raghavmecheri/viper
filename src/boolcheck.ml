@@ -1,4 +1,6 @@
 open Ast 
+open Sast
+open Decs
 
 let check_bool e = 
     match e with

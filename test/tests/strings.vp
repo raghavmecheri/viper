@@ -1,16 +1,13 @@
-string test;
+string test = "bla";
+print(test);
 string test2 = "hi";
 string test3 = test2;
+print(test3);
 
 test = "hello";
+print(test);
 
-string[] list = ["hi", "hello", test, test3];
-for (string check in list){
-    if (check == "bye"){
-        panic "AHHHH this is broken!";
-    }
-}
 
-"@!#$*(YW(EF*H))";
-"\rwow\twow\nwow\rwow\twow\nwow";
-"11234569097654";
+print("@!#$*(YW(EF*H))");
+print("\rwow\twow\nwow\rwow\twow\nwow");
+print("11234569097654");
