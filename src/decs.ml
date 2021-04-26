@@ -231,6 +231,7 @@ let get_decs (s_list, f_list) =
 
       ("add", [String; Int], Nah);
       ("add", [Dictionary(String, Int); String; Int], Nah);
+      ("add", [Dictionary(Char, Int); Char; Int], Nah);
 
       ("keys", [Dictionary(String, Int)], Array(String));
 

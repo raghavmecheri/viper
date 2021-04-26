@@ -700,6 +700,7 @@ let translate (_, functions) =
     let rec stmt builder = function
       | SBlock sl                               -> List.fold_left stmt builder sl
       | SExpr e                                 -> ignore(expr builder e); builder
+      (* this doesnt work for list dict *)
       | SDec (t, n)                             -> 
         let local_var = L.build_alloca (ltype_of_typ t) n builder
         in Hashtbl.add local_vars n local_var; builder
