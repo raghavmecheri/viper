@@ -143,8 +143,13 @@ The one other reference worth mentioning is in relation to Viper's pattern-match
 
 ## `1.3` Goals - To Preserve While Becoming Compilable:
 ### `Accessibility, Readability`
+Despite changing to a statically typed language, we want to ensure that Viper code is just as readable and easy to learn as Python code. The only added level of difficulty should be with declaring and tracking static types. Any user should be able to begin their coding journey with this language, and and user should be able to read and understand another user's work without three cyphers and a thesaurus.
+
 ### `Prototyping/Writing Efficiency`
+In addition to readability, writability is also important. We want users to be able to express their ideas quickly and effectively, with common-sense, intuitive syntax. We want to preserve the idea that the thought->prototype pipeline should be as quickly traversable as possible.
+
 ### `Functionality`
+Finally, we want to make sure that in Viper, users can still do all the things they need to. While this goal is more of a continuous process rather than a current guarantee, the initial release of Viper still has a lot of the features that make languages like Python more immediately advantageous than those like C without as many supported data structures and operations.
 
 ## `1.4` How to Obtain and Use Viper
 To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
