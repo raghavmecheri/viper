@@ -141,7 +141,10 @@ Most features found in Viper derive from one or more of Python, Javascript, or C
 
 The one other reference worth mentioning is in relation to Viper's pattern-matching eyntax. While not exactly the same functionally, we got the idea to include this feature after extensive use of pattern matching in OCaml. Additionally, OCaml was used in almost all components of the Viper compiler pipeline, with the exception of the standard library being written in C.
 
-## `1.3` Goals
+## `1.3` Goals - To Preserve While Becoming Compilable:
+### `Accessibility, Readability`
+### `Prototyping/Writing Efficiency`
+### `Functionality`
 
 ## `1.4` How to Obtain and Use Viper
 To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
