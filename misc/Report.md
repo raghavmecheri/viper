@@ -141,13 +141,24 @@ Most features found in Viper derive from one or more of Python, Javascript, or C
 
 The one other reference worth mentioning is in relation to Viper's pattern-matching eyntax. While not exactly the same functionally, we got the idea to include this feature after extensive use of pattern matching in OCaml. Additionally, OCaml was used in almost all components of the Viper compiler pipeline, with the exception of the standard library being written in C.
 
-## `1.3` Goals
+## `1.3` Goals - To Preserve While Becoming Compilable:
+### `Accessibility, Readability`
+### `Prototyping/Writing Efficiency`
+### `Functionality`
 
 ## `1.4` How to Obtain and Use Viper
 To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
  - Once cloned, type `cd src && make && cd ..`
  - There should now be a viper.native file in your current directory, as well as an exec.sh
- - (TO BE CONTINUED) 
+ - Next, write some Viper code in a (filename).vp file (details on how to write Viper in next sections)
+     - For an example, open a `test.vp` and inside write `print("hello world");`
+ - Running `./viper.native test.vp` will output the llvm code if desired
+ - Running `./exec.sh test.vp` will generate three files:
+     - `a.ll` = llvm code
+     - `a.s` = assembly code
+     - `a.exe` = executable for code
+ - NOTE: Using `exec.sh` will also run `a.exe` for you
+ - If you add `-v`, like: `./exec.sh test.vp -v`, you will also receive the llvm output `viper.native` would provide
 
 [↩️  Back to Contents 📌](#0-contents)
 
