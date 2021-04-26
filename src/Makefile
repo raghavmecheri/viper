@@ -9,7 +9,7 @@ all : viper.native library.o
 
 .PHONY: viper.native
 viper.native :
-	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4-42-45 \
+	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis,str -cflags -w,+a-4-42-45 \
 		viper.native
 
 # "make clean" removes all generated files

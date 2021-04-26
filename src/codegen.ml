@@ -1,5 +1,6 @@
 module L = Llvm
 module A = Ast
+module Str = Str
 open Cast
 open Sast
 
@@ -67,16 +68,16 @@ let translate (_, functions) =
 
   (* Return the LLVM lltype for a Viper type *)
   let rec ltype_of_typ = function
-      A.Int               -> i32_t
-    | A.Bool              -> i1_t
-    | A.Nah               -> void_t
-    | A.Char              -> i8_t
-    | A.Float             -> float_t
-    | A.String            -> str_t
-    | A.Array(_)          -> (L.pointer_type (find_struct_type "list"))
-    | A.Function(t)       -> (ltype_of_typ t)
-    | A.Group(_)          -> raise (Error "Group lltype not implemented")
-    | A.Dictionary(_, _)  -> raise (Error "Dictionary lltype not implemented")
+      A.Int                     -> i32_t
+    | A.Bool                    -> i1_t
+    | A.Nah                     -> void_t
+    | A.Char                    -> i8_t
+    | A.Float                   -> float_t
+    | A.String                  -> str_t
+    | A.Array(_)                -> (L.pointer_type (find_struct_type "list"))
+    | A.Function(_)             -> raise (Error "fucntion lltype? idk chief") (* (ltype_of_typ t) *)
+    | A.Group(_)                -> raise (Error "Group lltype not implemented")
+    | A.Dictionary(_, _)  -> (L.pointer_type (find_struct_type "dict"))
   in
 
   (* Return initial value for a declaration *)
@@ -84,6 +85,7 @@ let translate (_, functions) =
       A.Int | A.Bool | A.Nah | A.Char -> L.const_int (ltype_of_typ typ) 0
     | A.Float                         -> L.const_float (ltype_of_typ typ) 0.0
     | A.String                        -> L.const_pointer_null (ltype_of_typ typ)
+    (* TODO: I believe null pointers would work here, but leaving as exception *)
     | A.Array(_)                      -> raise (Error "Array llvalue not implemented")
     | A.Group(_)                      -> raise (Error "Group llvalue not implemented")
     | A.Dictionary(_, _)              -> raise (Error "Dictionary llvalue not implemented")
@@ -168,9 +170,20 @@ let translate (_, functions) =
 
   (* takes in a dict and a char key and returns a void pointer to the value *)
   let access_char_key_t : L.lltype =
-    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "dict")); (ltype_of_typ A.Char) |] in
-  let access_char_func : L.llvalue = 
+    L.function_type (L.pointer_type i8_t) [| (L.pointer_type (find_struct_type "dict")); (ltype_of_typ A.Char) |] in
+  let access_char_key_func : L.llvalue = 
     L.declare_function "access_char_key" access_char_key_t the_module in
+
+  (* void pointer cast alloc funtions *)
+  let int_alloc_t : L.lltype =
+    L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Int) |] in 
+  let int_alloc_func : L.llvalue =
+    L.declare_function "int_alloc_zone" int_alloc_t the_module in
+
+  let char_alloc_t : L.lltype =
+    L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Char) |] in 
+  let char_alloc_func : L.llvalue =
+    L.declare_function "char_alloc_zone" char_alloc_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -246,24 +259,28 @@ let translate (_, functions) =
         Some _ -> ()
       | None -> ignore (instr builder) in
 
-    let get_type_string_of_array e_type = match e_type with
-      | A.Array (li)   -> (match li with
-          | A.Char  -> "char"
-          | A.Int   -> "int"
-          | _       -> raise (Error "array type string nah"))
-      | _ -> raise (Error "type string map not here yet ")
+    (* maps a Viper type to a string for use in array/dict functions *)
+    let rec get_type_string e_type = match e_type with
+      | A.Array (li_t)              -> get_type_string li_t
+      | A.Dictionary (key_t, val_t) -> 
+        let key_t_str = get_type_string key_t in
+        let val_t_str = get_type_string val_t in
+        key_t_str ^ " " ^ val_t_str
+      | A.Char  -> "char"
+      | A.Int   -> "int"
+      | _                           -> raise (Error "type string map not here yet ")
     in
 
     (* this returns an llvalue *)
-    (* raise (Error "SListLiteral not implemented") *)
     let rec expr builder ((e_type, e) : sexpr) = match e with
         SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
       | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
       | SBoolLiteral(bln)         -> L.const_int (ltype_of_typ A.Bool) (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
       | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
+
       | SListLiteral(list)        -> 
-        let type_string = (get_type_string_of_array e_type) in
+        let type_string = (get_type_string e_type) in
         let type_string_ptr = expr builder (A.String, SStringLiteral(type_string)) in
         (* create empty list llvalue *)
         let li = L.build_call create_list_func [| type_string_ptr |] "create_list" builder in
@@ -273,14 +290,48 @@ let translate (_, functions) =
           | A.Char        -> append_char_func
           | A.Nah         -> raise (Error "No such thing as nah append function")
           | A.Array(arr)  -> (append_func arr)
-          | _             -> raise (Error "append function not defined for type")
+          | _             -> raise (Error "list append function not defined for type")
         in
         let appender c = L.build_call (append_func e_type) [| li; (expr builder c) |] "" builder in
         (List.map appender list); li
-      (* return the list *)
+
+      | SDictLiteral(dict_elem_list)        -> (* raise (Error "SDictLiteral not implemented") *)
+        (* returns a list of [key_type_string, val_type_string] *)
+        let dict_type_string_tup  = Str.split (Str.regexp " ") (get_type_string e_type) in
+        let key_type_string       = List.hd dict_type_string_tup in
+        let key_type_string_ptr   = expr builder (A.String, SStringLiteral(key_type_string)) in
+        let val_type_string       = List.nth dict_type_string_tup 1 in
+        let val_type_string_ptr   = expr builder (A.String, SStringLiteral(val_type_string)) in
+
+        (* create empty dict llvalue *)
+        let dict = L.build_call create_dict_func [| key_type_string_ptr; val_type_string_ptr |] "create_dict" builder in
+
+        (* takes in a SDictElem *)
+        let adder (dict_elem_t, dict_elem) = (match dict_elem with 
+            | SDictElem(key, value) ->
+              (* takes in (typ,sx) and returns a build_call *)
+              let void_alloc ((z_t, z_x) as z) = (match z_t with
+                  (* | A.Int -> raise (Error "Int alloc")
+                     | A.Char -> raise (Error "Char alloc") *)
+                  | A.Int     -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
+                  | A.Char    -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
+                  | _       -> raise (Error "No alloc function for type")) 
+              in
+
+              (* call alloc functions for the key and value in the dict element*)
+              let key_ll = (void_alloc key) in
+              let val_ll = (void_alloc value) in
+
+              (* call add_keyval_func *)
+              L.build_call add_keyval_func [| dict; key_ll; val_ll |] "" builder 
+
+            | _             -> raise(Error "not a dict-elem??? this shouldn't happen")
+          ) in
+
+        (* map over list of dict elements to add them to dict *)
+        (List.map adder dict_elem_list); dict
 
       | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
-      | SDictLiteral(list)        -> raise (Error "SDictLiteral not implemented")
 
       | SId s                     -> L.build_load (lookup s) s builder
 
@@ -368,14 +419,20 @@ let translate (_, functions) =
         ignore(L.build_store e' (lookup s) builder); e'
 
       | SAccess((typ, _) as e, l) ->
+        (* index is an int for lists, can be a number of things for dicts *)
         let index       = expr builder l in
+        (* li could be a dict, list, or a var for either *)
         let li          = expr builder e in
         let rec access_func typ = match typ with
             A.Int         -> access_int_func
           | A.Char        -> access_char_func
           | A.Nah         -> raise (Error "No such thing as nah access function")
           | A.Array(arr)  -> (access_func arr)
-          | _             -> raise (Error "access function not defined for type")
+          | A.Dictionary(key_t, key_v) -> (match key_t with
+              | A.Char -> access_char_key_func
+              | _     -> raise (Error "dictionary access function not defined for key type")
+            )
+          | _             -> raise (Error "list access function not defined for type")
         in 
         L.build_call (access_func typ) [| li; index |] "access" builder
 
@@ -445,7 +502,7 @@ let translate (_, functions) =
       get_print_value builder (t, e) = match e with
       (* SBoolLiteral(bln) -> let strlit = (SStringLiteral (if bln then "true" else "false"))
          in expr builder (A.String, strlit) *)
-        | _ -> expr builder (t, e)
+      | _ -> expr builder (t, e)
     in
 
     let rec stmt builder = function
@@ -460,7 +517,6 @@ let translate (_, functions) =
           (* Build return statement *)
           | _ -> L.build_ret (expr builder e) builder );
         builder
-      | SPanic expr                             -> raise (Error "Panic statement not implemented")
 
       (* this if and while is straight from microc if issues arise *)
       | SIf (predicate, then_stmt, else_stmt)   -> 
@@ -498,11 +554,11 @@ let translate (_, functions) =
               ignore(L.build_cond_br bool_val then_bb else_bb builder);
               L.builder_at_end context merge_bb
             | SSkip _ -> 
-                let skip_bb = L.append_block context "skip" the_function in 
-                ignore (L.build_br skip_bb builder);
-                let skip_builder = (L.builder_at_end context skip_bb) in
-                add_terminal (loop_stmt loop_bb exit_bb skip_builder increment) (L.build_br loop_bb);
-                builder 
+              let skip_bb = L.append_block context "skip" the_function in 
+              ignore (L.build_br skip_bb builder);
+              let skip_builder = (L.builder_at_end context skip_bb) in
+              add_terminal (loop_stmt loop_bb exit_bb skip_builder increment) (L.build_br loop_bb);
+              builder 
             | SAbort _ -> ignore(L.build_br exit_bb builder); builder
             | _ as e -> stmt builder e) in
 
@@ -518,9 +574,10 @@ let translate (_, functions) =
 
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
-      | SSkip _  -> raise (Failure "Error: skip occurs outside of loop")
-      | SAbort _ -> raise (Failure "Error: abort occurs outside of loop")
-      | _ -> raise (Error "Statement match not implemented")
+      | SSkip _     -> raise (Failure "Error: skip occurs outside of loop")
+      | SAbort _    -> raise (Failure "Error: abort occurs outside of loop")
+      | SPanic expr -> raise (Error "Panic statement not implemented")
+      | _           -> raise (Error "Statement match for stmt builder not implemented")
     in 
 
     (* Build the code for each statement in the function *)
