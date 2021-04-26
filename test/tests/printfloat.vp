@@ -1,1 +1,4 @@
 print(3.0);
+print(38264.1);
+print(0.0);
+print(-99.9);

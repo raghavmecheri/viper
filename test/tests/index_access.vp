@@ -1,7 +1,9 @@
 int[] d = [1,2,3,4];
+char[] c = ['a'];
 
-nah func test(int x) {
-    print(x);
-}
+print(d[2]);
+print(c[0]);
 
-test(d[2]);
+/* throws error 
+print(c[-1]);
+*/

@@ -2,4 +2,31 @@ int func test(int x) {
     return x * x;
 }
 
+int func sumOfList(int[] l) {
+    int sum = 0;
+    int i;
+    for (i = 0; i < len(l); i+=1) {
+        sum += l[i];
+    }
+    return sum;
+}
+
+bool func isIndexOfGreatest(int index, int[] l) {
+    if (len(l) == 0) return false;
+    int i;
+    for (i = 0; i < len(l); i+=1) {
+        if (l[i] > l[index]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 print(test(10));
+
+int[] fib = [1, 1, 2, 3, 5, 8, 13, 21];
+print(sumOfList(fib));
+
+int[] t = [1, 2, 3, 4, 5, 6, 7, 8];
+print(isIndexOfGreatest(7, t));
+print(isIndexOfGreatest(2, t));

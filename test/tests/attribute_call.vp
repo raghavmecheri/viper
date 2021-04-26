@@ -2,4 +2,14 @@ int func tester(int x) {
   return 42;
 }
 
+bool func least(int a, int b, int d, int e, int f) {
+  return a > b;
+}
+
 int z = 42.tester();
+print("testing with no parameters:");
+print(z);
+
+print("testing with many parameters:");
+int isLeast = 5;
+print(isLeast.least(6, 3, -9, 88));

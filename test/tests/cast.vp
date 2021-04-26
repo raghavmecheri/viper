@@ -1,10 +1,9 @@
-int b = toInt(9.34);
-string c = toString(888);
-string d = toString(false);
-bool e = toBool(400);
-bool f = toBool("");
-float h = toFloat(8);
-char j = toChar(255);
-
-int a2 = 4;
-string k = toString(a2);
+print(toInt(9.34));
+print(toInt('c'));
+print(toString(888));
+print(toString(false));
+print(toBool(400));
+print(toBool(""));
+print(toFloat(8));
+print(toChar(100));
+print(toChar("hi"));
