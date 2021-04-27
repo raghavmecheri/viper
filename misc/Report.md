@@ -1437,7 +1437,11 @@ Tommy - The beauty of this course is that it bridges the gap between programmer 
 
 Advice: My advice to future students would be to start with a smaller set of language functionality. We started by brainstorming our favorite features of many different languages, and then sought to encapsulate them all in Viper. This seemed really cool at first, but we didn’t realize how much work it would create in the future. By the time we got to code generation, we were stretched pretty thin, and we weren’t able to flush out all of our language’s features as fully as I would have liked. I also would recommend not using as much desugaring as we did. While desugars seemed like clever and efficient ways to bring new features to Viper’s syntax, they proved to be difficult to maintain in semantic checking and LLVM generation. Keeping them as their own statements makes for more work, but allows for better control and understanding of the language as a whole.
 
-Trey - 
+Trey - Many classes throughout college leave you feeling like you didn't really learn much. Much of my time at Columbia has been cramming finals and assignments last second. This is not a project you can do that with. This project is very hands on and forces you to learn about every single part of the compiler to work efficiently and effectively. MicroC shows you hints at where to start but that is a mere drop in the bucket for what is required to make the entire language. Coming out on the other side of this project, I can honestly say that I learned a lot about how to effectively manage a group project, my personal programming interests, how to work with documentation that is quite weak, and solve deep problems that require a lot of thinking. Overall, a solid project.
+
+Advice: Whoever is lucky enough to work on codegen, I am about to spill the secret. When the way to write the llvm bindings to create the underlying llvm is not immediately clear, use the clang compiler to compile a similar C function. This will show you how to create the necessary instructions in LLVM. Then CTRL-F for the instruction in the OCaml LLVM bindings to see how they are used. Then write the instructions into codegen. LEARN HOW TO USE LLTYPES AND LLVALUES. Once you do this, codegen is a breeze. :)
+
+
 # `16` Appendix
 
 
