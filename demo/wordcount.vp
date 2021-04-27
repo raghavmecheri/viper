@@ -17,6 +17,7 @@ string[] unique_keys = counts.keys();
 
 print("Word list:");
 print(test);
+print();
 
 print("Counts of keys:");
 for(string key in unique_keys) {

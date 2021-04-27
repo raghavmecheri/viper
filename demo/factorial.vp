@@ -4,8 +4,7 @@ int func factorial(int target) {
         return target;
     }
     
-    int sub = factorial(target-1);
-    int res = target * sub;
+    int res = target * factorial(target-1);
     print(res);
     return res;
 }
