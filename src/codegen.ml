@@ -140,6 +140,12 @@ let translate (_, functions) =
   let create_list_func : L.llvalue = 
     L.declare_function "create_list" create_list_t the_module in
 
+  (* given a pointer to list, returns length attribute out of struct *)
+  let listlen_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")) |] in
+  let listlen_func : L.llvalue =
+    L.declare_function "listlen" listlen_t the_module in
+
   (* ACCESS LIST FUNCTIONS HERE*)
 
   (* takes in a char[] list and an int and returns the value at the index *)
@@ -194,7 +200,6 @@ let translate (_, functions) =
 
   (* CONTAINS LIST FUNCTIONS HERE *)
 
-  (* takes a list and a character and returns 1 if in, 0 otherwise*)
   let contains_char_t : L.lltype =
     L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
   let contains_char_func : L.llvalue =
@@ -216,16 +221,11 @@ let translate (_, functions) =
     L.declare_function "contains_float" contains_float_t the_module in
 
   (* ASSIGN LIST FUNCTIONS HERE *)
+
   let assign_int_t : L.lltype =
     L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int); (ltype_of_typ A.Int) |] in 
   let assign_int_func : L.llvalue =
     L.declare_function "assign_int" assign_int_t the_module in
-
-  (* given a pointer to list, returns length*)
-  let listlen_t : L.lltype =
-    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")) |] in
-  let listlen_func : L.llvalue =
-    L.declare_function "listlen" listlen_t the_module in
 
   (* BUILTIN DICT FUNCTIONS HERE *)
 
@@ -241,6 +241,8 @@ let translate (_, functions) =
   let add_keyval_func : L.llvalue = 
     L.declare_function "add_keyval" add_keyval_t the_module in
 
+  (* DICT ACCESS FUNCTIONS HERE *)
+
   (* takes in a dict and a char key and returns a void pointer to the value *)
   let access_char_key_t : L.lltype =
     L.function_type (L.pointer_type i8_t) [| (L.pointer_type (find_struct_type "dict")); (ltype_of_typ A.Char) |] in
@@ -252,7 +254,8 @@ let translate (_, functions) =
   let access_str_key_func : L.llvalue = 
     L.declare_function "access_str_key" access_str_key_t the_module in
 
-  (* Type Alloc funtions *)
+  (* TYPE ALLOC FUNCTIONS HERE *)
+
   let int_alloc_t : L.lltype =
     L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Int) |] in 
   let int_alloc_func : L.llvalue =
@@ -275,7 +278,7 @@ let translate (_, functions) =
   let contains_str_key_func : L.llvalue =
     L.declare_function "contains_str_key" contains_str_key_t the_module in
 
-  (* KEYS DICT FUNCTIONS *)
+  (* GET DICT FUNCTIONS *)
 
   let get_str_keys_t : L.lltype =
     L.function_type (L.pointer_type (find_struct_type "list")) [| (L.pointer_type (find_struct_type "dict")) |] in 
@@ -300,17 +303,17 @@ let translate (_, functions) =
     in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    (* TODO: move this so it wont get redefined for every function declaration *)
+    (* define global stringptr's for format str *)
     let char_format_str = L.build_global_stringptr "%c\n" "fmt" builder
     and int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
     and str_format_str = L.build_global_stringptr "%s\n" "fmt" builder
     and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder
     in
 
-    (* create empty local_vars Hashtbl*)
+    (* create empty local_vars Hashtbl to track vars llvalue *)
     let local_vars:(string, L.llvalue) Hashtbl.t = Hashtbl.create 50 in
 
-    (* function takes in a formal binding and parameter values to add to map*)
+    (* function takes in a formal binding and parameter values to add to locals map *)
     let add_formal (t, n) p = 
       L.set_value_name n p;
       let local = L.build_alloca (ltype_of_typ t) n builder in
@@ -321,8 +324,7 @@ let translate (_, functions) =
     (* iterate over the list of formal bindings and their values to add to local_vars *)
     let _ = List.iter2 add_formal fdecl.sformals (Array.to_list (L.params the_function)) in
 
-    (* Return the value for a variable or formal argument *)
-    (* let print_vars key value = print_string (key ^ " " ^ value ^ "\n") in *)
+    (* Return the llvalue for a variable or formal argument *)
     let lookup n = try Hashtbl.find local_vars n
       with Not_found -> raise (Error ("variable " ^ n ^ " not found in locals map"))
     in
@@ -336,7 +338,7 @@ let translate (_, functions) =
         Some _ -> ()
       | None -> ignore (instr builder) in
 
-    (* maps a Viper type to a string for use in array/dict functions *)
+    (* maps a Viper type to a string for use in create array/dict functions *)
     let rec get_type_string e_type = match e_type with
       | A.Array (li_t)              -> get_type_string li_t
       | A.Dictionary (key_t, val_t) -> 
@@ -348,20 +350,18 @@ let translate (_, functions) =
       | A.Nah     -> "nah"
       | A.String  -> "string"
       | A.Float   -> "float"
-      | _                           -> raise (Error "type string map not implemented")
+      | _         -> raise (Error "type string map not implemented")
     in
 
-    (* this returns an llvalue *)
+    (* returns an llvalue for an expression, builds necessary instructions for evaluation *)
     let rec expr builder ((e_type, e) : sexpr) = match e with
         SIntegerLiteral(num)      -> L.const_int (ltype_of_typ A.Int) num
       | SCharacterLiteral(chr)    -> L.const_int (ltype_of_typ A.Char) (Char.code chr)
       | SBoolLiteral(bln)         -> L.const_int (ltype_of_typ A.Bool) (if bln then 1 else 0)
       | SFloatLiteral(flt)        -> L.const_float (ltype_of_typ A.Float) flt
       | SStringLiteral(str)       -> L.build_global_stringptr str "" builder
+
       | SListLiteral(list)        -> 
-        (* (match e_type with
-           | A.Nah -> L.const_pointer_null (find_struct_type "list")
-             | _ -> *)
         let type_string = (get_type_string e_type) in
         let type_string_ptr = expr builder (A.String, SStringLiteral(type_string)) in
         (* create empty list llvalue *)
@@ -379,53 +379,43 @@ let translate (_, functions) =
         let appender c = L.build_call (append_func e_type) [| li; (expr builder c) |] "" builder in
         (List.map appender list); li
 
-      | SDictLiteral(dict_elem_list)        -> (* raise (Error "SDictLiteral not implemented") *)
-        (* returns a list of [key_type_string, val_type_string] *)
+      | SDictLiteral(dict_elem_list)        -> 
         let dict_type_string_tup  = Str.split (Str.regexp " ") (get_type_string e_type) in
         let key_type_string       = List.hd dict_type_string_tup in
         let key_type_string_ptr   = expr builder (A.String, SStringLiteral(key_type_string)) in
         let val_type_string       = List.nth dict_type_string_tup 1 in
         let val_type_string_ptr   = expr builder (A.String, SStringLiteral(val_type_string)) in
-
         (* create empty dict llvalue *)
         let dict = L.build_call create_dict_func [| key_type_string_ptr; val_type_string_ptr |] "create_dict" builder in
-
-        (* takes in a SDictElem *)
+        (* takes in a SDictElem, adds its key and value to the dict above*)
         let adder (dict_elem_t, dict_elem) = (match dict_elem with 
             | SDictElem(key, value) ->
-              (* takes in (typ,sx) and returns a build_call *)
+              (* takes in (typ,sx) and returns a build_call to allocate space for values in dict*)
               let void_alloc ((z_t, z_x) as z) = (match z_t with
-                  (* | A.Int -> raise (Error "Int alloc")
-                     | A.Char -> raise (Error "Char alloc") *)
                   | A.Int       -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
                   | A.Char      -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
                   | A.String    -> L.build_call str_alloc_func [| (expr builder z) |] "str_alloc" builder
                   | A.Array(_)  -> 
                     let list_ptr = expr builder z in 
                     L.build_bitcast list_ptr (L.pointer_type i8_t) (L.value_name list_ptr) builder 
-
-                  (* cast to void pointer here *)
                   | A.Dictionary(_, _)  -> 
                     let dict_ptr = expr builder z in 
                     L.build_bitcast dict_ptr (L.pointer_type i8_t) (L.value_name dict_ptr) builder 
-                  (* cast to void pointer here *)
                   | _       -> raise (Error "No alloc function for type")) 
               in
-
               (* call alloc functions for the key and value in the dict element*)
               let key_ll = (void_alloc key) in
               let val_ll = (void_alloc value) in
-
               (* call add_keyval_func *)
               L.build_call add_keyval_func [| dict; key_ll; val_ll |] "" builder 
 
-            | _             -> raise(Error "not a dict-elem??? this shouldn't happen")
+            | _             -> raise(Error "Dictionary should never add non dict-elements. How did you get here???")
           ) in
 
         (* map over list of dict elements to add them to dict *)
         (List.map adder dict_elem_list); dict
 
-      | SDictElem(e1, e2)         -> raise (Error "SDictElem not implemented")
+      | SDictElem(e1, e2)         -> raise (Error "Dict Elements should never be encountered. How did you get here???")
 
       | SId s                     -> L.build_load (lookup s) s builder
 
@@ -445,7 +435,7 @@ let translate (_, functions) =
          | A.Geq     -> L.build_fcmp L.Fcmp.Oge
          | A.Mod     -> L.build_frem
          | A.And | A.Or | A.Has ->
-           raise (Failure "internal error: semant should have rejected and/or on float")
+           raise (Error "Invalid expressions for Binary operator between floats, semant should have stopped this")
         ) e1' e2' "tmp" builder
 
       | SBinop (e1, op, e2) ->
@@ -465,7 +455,7 @@ let translate (_, functions) =
          | A.Greater -> L.build_icmp L.Icmp.Sgt
          | A.Geq     -> L.build_icmp L.Icmp.Sge
          | A.Mod     -> L.build_srem
-         | A.Has     -> raise (Error "Has not implemented")
+         | A.Has     -> raise (Error "Has should have been desugared. How did you get here???")
         ) e1' e2' "tmp" builder
 
       | SUnop(op, ((t, var) as e)) -> 
@@ -474,49 +464,27 @@ let translate (_, functions) =
            A.Neg when t = A.Float -> L.build_fneg e' "tmp" builder
          | A.Neg                  -> L.build_neg e' "tmp" builder
          | A.Not                  -> L.build_not e' "tmp" builder
-         (* Incr will only work with ints *)
          | A.Incr -> 
            let added = L.build_nsw_add e' (L.const_int (ltype_of_typ t) 1) (L.value_name e') builder in 
            let var_name vr = (match vr with
                | SId(s)  -> s 
-               | _       -> raise (Error "Incr can only be used with SId"))
+               | _       -> raise (Error "Incr should only be used with variables."))
            in
            L.build_store added (lookup (var_name var)) builder
+
          | A.Decr ->
            let added = L.build_nsw_add e' (L.const_int (ltype_of_typ t) (-1)) (L.value_name e') builder in 
            let var_name vr = (match vr with
                | SId(s)  -> s 
-               | _       -> raise (Error "Incr can only be used with SId"))
+               | _       -> raise (Error "Decr should only be used with variables."))
            in
            L.build_store added (lookup (var_name var)) builder
         )
 
-
-      (*
-      | STernop(predicate, e1, e2) ->
-        let e1' = expr builder e1 in
-        let e2' = expr builder e2 in
-        (* let bool_val = expr builder predicate in
-           let merge_bb = L.append_block context "merge" the_function in
-           let build_br_merge = L.build_br merge_bb in (* partial function *)
-
-           let then_bb = L.append_block context "then" the_function in
-           add_terminal (expr (L.builder_at_end context then_bb) e1')
-           build_br_merge;
-
-           let else_bb = L.append_block context "else" the_function in
-           add_terminal (expr (L.builder_at_end context else_bb) e2')
-           build_br_merge;
-
-           ignore(L.build_cond_br bool_val then_bb else_bb builder);
-           L.builder_at_end context merge_bb*)
-        e1'
-        *)
-
       | SAssign (s, e)            -> 
         let e' = expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
-      | SDeconstruct(v, e)        -> raise (Error "SDeconstruct not implemented")
+      | SDeconstruct(v, e)        -> raise (Error "Deconstruct should have been removed")
       | SOpAssign(v, o, e)        ->
         (* compute value to assign *)
         let value = expr builder (A.Nah, SBinop( (A.Nah, SId(v)), o, e)) in
@@ -530,11 +498,7 @@ let translate (_, functions) =
 
       (* typ will be a dictionary or a dict *)
       | SAccess((typ, _) as e, l) -> 
-        (* (match typ with
-           | A.Array(arr_t) ->  *)
-        (* index is an int for lists *)
         let index       = expr builder l in
-        (* li is the list to pass to access*)
         let li          = expr builder e in
         let rec access_func typ = match typ with
             A.Int         -> access_int_func
@@ -565,24 +529,6 @@ let translate (_, functions) =
          (* Array access is a simple function call*)
          | A.Array(_)        -> L.build_call (access_func typ) [| li; index |] "access" builder
          | _                 -> raise (Error "SAccess on something that isn't a list or a dictionary not supported"))
-      (* | A.Dictionary(key_t, key_v) -> 
-         (* key can be a number of things*)
-         let key            = expr builder l in
-         (* dict is the dict to pass to access *)
-         let dict          = expr builder e in
-         let rec access_func typ = match typ with
-            A.Int         -> access_int_func
-          | A.Char        -> access_char_func
-          | A.Nah         -> raise (Error "No such thing as nah access function")
-          | A.Array(arr)  -> (access_func arr)
-          (*  | A.Dictionary(key_t, key_v) -> (match key_t with
-              | A.Char -> access_char_key_func
-              | _     -> raise (Error "dictionary access function not defined for key type")
-              ) *)
-          | _             -> raise (Error "list access function not defined for type")
-         in 
-         L.build_call (access_func typ) [| li; index |] "access" builder *)
-      (* | _ -> raise (Error "Access only supported for lists and dicts")) *)
 
       | SAccessAssign(i, idx, e) ->
         let li = expr builder i in 
@@ -685,15 +631,12 @@ let translate (_, functions) =
         let value = (List.nth params 2) in
 
         let void_alloc ((z_t, z_x) as z) = (match z_t with
-            (* | A.Int -> raise (Error "Int alloc")
-               | A.Char -> raise (Error "Char alloc") *)
             | A.Int       -> L.build_call int_alloc_func [| (expr builder z) |] "int_alloc" builder
             | A.Char      -> L.build_call char_alloc_func [| (expr builder z) |] "char_alloc" builder
             | A.String    -> L.build_call str_alloc_func [| (expr builder z) |] "str_alloc" builder
             | A.Array(_)  -> 
               let list_ptr = expr builder z in 
               L.build_bitcast list_ptr (L.pointer_type i8_t) (L.value_name list_ptr) builder 
-
             (* cast to void pointer here *)
             | A.Dictionary(_, _)  -> 
               let dict_ptr = expr builder z in 
@@ -701,11 +644,9 @@ let translate (_, functions) =
             (* cast to void pointer here *)
             | _       -> raise (Error "No alloc function for type"))
         in
-
         (* cast key and value pointers to void pointers*)
         let key_void_ptr = (void_alloc key) in
         let value_void_ptr = (void_alloc value) in
-
         L.build_call add_keyval_func [| ds; key_void_ptr; value_void_ptr |] "" builder
 
       (* SCall for user defined functions *)
@@ -719,6 +660,7 @@ let translate (_, functions) =
             | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
 
+      (* clever desugar *)
       | SAttributeCall(e, f, el)  -> expr builder (A.Nah, SCall(f, e::el))
       | SNoexpr                   -> L.const_int i32_t 0
       | _ -> raise (Error "Expression match not implemented")
@@ -727,7 +669,6 @@ let translate (_, functions) =
     let rec stmt builder = function
       | SBlock sl                               -> List.fold_left stmt builder sl
       | SExpr e                                 -> ignore(expr builder e); builder
-      (* this doesnt work for list dict *)
       | SDec (t, n)                             -> 
         let local_var = L.build_alloca (ltype_of_typ t) n builder
         in Hashtbl.add local_vars n local_var; builder
@@ -738,7 +679,6 @@ let translate (_, functions) =
           | _ -> L.build_ret (expr builder e) builder );
         builder
 
-      (* this if and while is straight from microc if issues arise *)
       | SIf (predicate, then_stmt, else_stmt)   -> 
         let bool_val = expr builder predicate in
         let merge_bb = L.append_block context "merge" the_function in
@@ -805,7 +745,6 @@ let translate (_, functions) =
     let builder = stmt builder (SBlock fdecl.sbody) in
 
     (* Add a return if the last block falls off the end *)
-    (* TODO: do we need this or does semantic checking check for this? *)
     add_terminal builder (match fdecl.styp with
           A.Nah -> L.build_ret_void
         | A.Float -> L.build_ret (L.const_float float_t 0.0)

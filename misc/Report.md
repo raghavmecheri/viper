@@ -569,6 +569,18 @@ int func y(int x, int y, int func z) {
 int func times (int a, int b) => a * b;
 y(10, 20, times);
 ```
+### `5.4.2` Attribute Calls
+Viper supports attribute calls using a Java-like syntax with a period and parentheses in parameters. For example,
+```
+int[] list = [1,2,3,4];
+list.contains(4); /*Attribute call of contains on list. */
+```
+An attribute call is equivalent to a stand-alone function call that prepends the calling object to the front of its list of parameters. The following two calls are equivalent:
+```
+list.contains(4);
+contains(list, 4);
+```
+
 [↩️  Back to Contents 📌](#0-contents)
 
 # `6` Expressions 🖥
@@ -1354,6 +1366,7 @@ As we continued working on semantic checks, codegen, and the standard library, w
 ## `12.2` Development Process
 Development followed the stages of the compiler architecture. We began with the scanner, parser, and ast, with the three honestly being quite simultaneous, although each individual change occurred in that order. We then got `print(“hello world”)` working in codegen while simultaneously working on semantic checking. After hello world, we shifted into first desugaring syntax in layer one of semantic analysis, then type/validity checking in layer two. From here progress continued on updated iterations of semantic checking, while the rest of codegen and the standard library began to ramp up. The standard library was completed before the codegen, which was our final push on the project. It is worth noting that there was overlap in these tasks (they were not completed in isolation), and testing was set up at each one of these checkpoints that allowed us to easily identify where blocks were occurring. 
 ## `12.3` Testing Process
+Viper’s test suite supports testing for semantic analysis and LLVM code generation. The test suite can also run both types of tests sequentially, allowing a complete end-to-end check of the compiler. Semantic checks scan and parse a program into an AST, desugar applicable nodes in the AST, and then semantically check the AST. Upon success, the check produces no output, indicating that the program is semantically valid and is ready to be broken down into LLVM. Upon failure, the check will print an error corresponding to the step that failed. LLVM tests have a few options. One test simply prints the LLVM of the code created in codegen.ml, allowing analysis of the generated basic blocks. The other option executes the LLVM and prints the corresponding output if valid, or a Codgen error if invalid. Testing all of our test programs runs this last option, and compares each program’s output to the corresponding .out file. If all outputs match their .out files, the test succeeds, but if any one fails, an error message is displayed describing the file that failed and the exception that resulted in failure. 
 ## `12.4` Team Responsibilities 
 Raghav - Lexer, Parser, AST, Desugaring  
 Mustafa - Lexer, Parser, AST, C Libraries  
@@ -1368,6 +1381,12 @@ Trey - Code Generation, Documentation
 | April 16th    | Semantic Checking Implemented                    |
 | April 25th    | Codegen Implemented                              |
 ## `12.6` Software Development Environment
+We had the following programming and development environment: 
+
+Programming language for building compiler : Ocaml version 4.05.0  
+
+Development environments: We used vscode and vim.
+
 ## `12.7` Programming Style
 We generally wrote code according to the following style guidelines: 
 
