@@ -1410,6 +1410,18 @@ Trey - Code Generation, Documentation
 | April 7th     | Desugar Implemented              |
 | April 16th    | Semantic Checking Implemented    |
 | April 25th    | Codegen Implemented              |
+## `12.6` Software Development Environment
+## `12.7` Programming Style
+We generally wrote code according to the following style guidelines: 
+
+Some files begin with multi-line OCaml functions that describe their purpose, especially when the file name is vague.  
+Open and import statements are the first lines of compiled code in every file.  
+Modules, types, data structures, exceptions, and global variables follow open statements.  
+Non-nested global function declarations are preceded by multi-line OCaml comments describing general behavior.  
+Nested functions are only used in their parent function, and usually don’t include descriptive comments. Particularly important nested functions include comments.  OCaml “in” statements appear at the end of lines (when applicable), allowing following “let” statements to begin the next line.  
+Pattern matching guard statements for S/AST elements appear in the same order that they are defined in the S/AST.  
+Pattern matching on elements with tuples uses parentheses (for example, For(e1, e2, e3, s) instead of For e1, e2, e3, s.).  
+Lines generally wrap at around 80 characters, when applicable.
 
 
 [↩️  Back to Contents 📌](#0-contents)
