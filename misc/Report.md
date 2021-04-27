@@ -1422,6 +1422,19 @@ Nested functions are only used in their parent function, and usually don’t inc
 Pattern matching guard statements for S/AST elements appear in the same order that they are defined in the S/AST.  
 Pattern matching on elements with tuples uses parentheses (for example, For(e1, e2, e3, s) instead of For e1, e2, e3, s.).  
 Lines generally wrap at around 80 characters, when applicable.
+# `13` Architectural Design
+## `13.1` The Compiler
+## `13.2` The Lexer
+## `13.3` The Parser
+## `13.4` Desugaring
+## `13.5` The Semantic Checker
+## `13.6` The Code Generator
+## `13.7` C Libraries 
+# `14` Testing
+## `14.1` Scanner, Parser, AST 
+## `14.2` Semantic Checker
+## `14.3` Code Generation 
+
 
 
 [↩️  Back to Contents 📌](#0-contents)
