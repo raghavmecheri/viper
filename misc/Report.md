@@ -13,8 +13,12 @@ Authors:
 
 
 # `0` Contents 📌
-1. [Overview 🚁](#1-overview)  
-2. [Lexical Coventions 📝](#2-lexical-conventions)  
+1. [Overview 🚁](#1-overview)    
+    1. [Background]
+    2. [Related work]
+    3. [Goals]
+    4. [How to Obtain and Use Viper] 
+2. [Lexical Coventions 📝](#2-lexical-conventions)  
     1. [Comments](#21-comments)  
     2. [Identifiers](#22-identifiers)  
     3. [Reserved Keywords](#23-reserved-keywords)
@@ -53,6 +57,7 @@ Authors:
         2. [abort](#532-abort-statement)
     4. [Function Statement](#54-function-statement)
         1. [Arrow Functions](#541-arrow-functions)
+        2. [Attribute Calls]
 6. [Expressions 🖥](#6-expressions)
     1. [Truth-Value Expressions](#61-truth-value-expressions)
     3. [Guard Expressions](#62-guard-expressions)
@@ -102,11 +107,11 @@ Authors:
         7. [max()](#917-max)
         8. [trunc()](#918-trunc)
     2. [Primitive Type Casting Functions](#92-primitive-type-casting-functions)
-        1. [char()](#921-char)
-        2. [int()](#922-int)
-        3. [float()](#923-float)
-        4. [bool()](#924-bool)
-        5. [str()](#925-str)
+        1. [toChar()](#921-char)
+        2. [toInt()](#922-int)
+        3. [toFloat()](#923-float)
+        4. [toBool()](#924-bool)
+        5. [toString()](#925-str)
     3. [Miscellaneous Functions](#9.3-miscellaneous-functions)
         1. [print()](#931-print)
         2. [len()](#932-len)
@@ -117,11 +122,36 @@ Authors:
         1. [add()](#941-add)
         2. [keys()](#942-keys)
         3. [contains()](#943-contains)
-10. [Sample Code 🧩](#10-sample-code)
-    1. [Fizzbuzz](#101-fizzbuzz-examples)
-    2. [Calculate Function Example](#calculate-function-example)
-    3. [Wordcounts in a string array](#103-wordcounts-in-a-string-array)
+10. [Sample Code 🧩](#10-sample-code) 
+    1. [Fizzbuzz](#101-fizzbuzz-examples) 
+    3. [Calculate Function Example](#calculate-function-example)
+    4. [Wordcounts in a string array](#103-wordcounts-in-a-string-array)
 11. [Language Grammar](#11-language-grammar)
+12. [Project Plan]
+    12.1 [Specification Process]
+    12.2 [Development Process]
+    12.3 [Testing Process]
+    12.4 [Team Responsibilities]
+    12.5 [Project Timeline]
+    12.6 [SDE]
+    12.7 [Programming Style]
+13. [Architectural Design]
+    13.1 [The Compiler]
+    13.2 [The Lexer]
+    13.3 [The Parser]
+    13.4 [Desugaring]
+    13.5 [The Semantic Checker]
+    13.6 [The Code Generator]
+    13.7 [C Libraries]
+14. [Testing]
+    14.1 [Scanner, Parser, AST]
+    14.2 [Semantic Checker]
+    14.3 [Code Generation]
+15. [Lessons Learned]
+16. [Appendix]
+    16.1 [Git logs]
+    16.2 [Source Code]
+
 
 # `1` Overview  🚁
 Viper is a statically-typed imperative programming language that incorporates powerful functionality into a clean syntax. By requiring users to declare the types of functions and variables, Viper benefits from the safety mechanisms and increased efficiency of type checking. It also includes useful features like pattern matching, arrow functions, and an intuitive standard library. See the following sections for a complete introduction to the language.
@@ -1400,9 +1430,7 @@ Pattern matching on elements with tuples uses parentheses (for example, For(e1, 
 Lines generally wrap at around 80 characters, when applicable.
 # `13` Architectural Design
 ## `13.1` The Compiler
-Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details.
-<br />
-<img src = "https://i.imgur.com/Rawoen7.png" />
+Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details. 
 ## `13.2` The Lexer
 The first step of the compiler is the lexer. The lexer scans the program and creates tokens based on spaces. The tokens include common tokens such as assignment(=), operations(+,-,) etc. Some of the less common tokens Viper accepts are guards(|) and ternaries(??).
 ## `13.3` The Parser
