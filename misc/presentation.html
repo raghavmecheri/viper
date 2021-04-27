@@ -9,7 +9,7 @@
         <section>
           <section>
             <h1>Viper</h1>
-            An amalgamation of our favourite programming quirks
+            An amalgamation of our favorite programming quirks
           </section>
           <section>
             Tommy Gomez, Trey Gilliland, Mustafa Eyeceoz, Matthew Ottomano, Raghav Mecheri
@@ -20,47 +20,27 @@
             <h2>An Overview</h2>
           </section>
           <section>
-            <h3>Type System</h3>
+            <h3>Why Viper?</h3>
             <ul>
-              <li>Viper is strongly statically typed, with type checking performed at compile-time</li>
-              <li>Support for primitive mainstream data-types</li>
-              <li>Library support for data-structures</li>
+              <li>Tradeoff: compiled vs interpreted</li>
+              <li>Finding the perfect compromise for speed vs convenience</li>
             </ul>
           </section>
           <section>
-            <h3>Ternary Operators & Guard Expressions</h3>
+            <h3>What did we want?</h3>
             <ul>
-              <li>Viper comes with support for both ternary operators, and a modified form of guard expressions</li>
-              <li>Guard expressions are an alternative way of using conditional statements. Think of them as more powerful, more flexible, and better looking switch-case statements(example to follow)</li>
+              <li>Top level executed code</li>
+              <li>In built data structures</li>
+              <li>Static typing for both speed and eliminating errors</li>
             </ul>
           </section>
           <section>
-            <h3>Arrow Functions</h3>
-            <ul>
-              <li>Viper comes with support for Arrow functions, for one line function definitions</li>
-            </ul>
-          </section>
-          <section>
-            <h3>Scope</h3>
-            <ul>
-              <li>Moving away from the Pythonic indent system, Viper goes back to curly braces to define scope</li>
-              <li>An easy way to get rid of tabs vs spaces arguements</li>
-            </ul>
-          </section>
-          <section>
-            <h3>In-built functions</h3>
-            <ul>
-              <li>Support for Math functions like ceil, floor, round, min, max, trunc</li>
-              <li>Support for a couple of in-built functions you've just got to have: len() and print()</li>
-              <li>Support for typecasting functions like toInt(), toFloat(), toChar()</li>
-            </ul>
-          </section>
-          <section>
-            <h3>Iterators</h3>
-            <ul>
-              <li>Viper also has built-in support for loop iterators</li>
-              <li>Support for iterating directly across values via syntactic sugar</li>
-            </ul>
+            <h3>Viper</h3>
+            <li>Strongly, statically, typed</li>
+            <li>Library support for data-structures</li>
+            <li>Support for ternaries/guard expresions, loop iterators + syntactic sugar</li>
+            <li>Support for arrow functions</li>
+            <li>Restrictive scoping to allow for namespace conflicts</li>
           </section>
         </section>
         <section>
@@ -76,10 +56,17 @@
             </ul>
           </section>
           <section>
+            <h3>Function calls</h3>
+            <ul>
+              <li>Support for function definitions and function calls</li>
+              <li>Support for arrow functions</li>
+            </ul>
+          </section>
+          <section>
             <h3>Control Flow/Iteration</h3>
             <ul>
               <li>Support for if statements, as well as guards and ternary operators</li>
-              <li>Supports for standard looping as well as iterators</li>
+              <li>Supports for standard looping as well as iterators (for...in)</li>
               <li>Support for skip (continue in Java) and abort (break in Java)</li>
             </ul>
           </section>
@@ -149,8 +136,8 @@
           <section>
             <ul>
               <li>Viper uses the Viper C standard library as an API to enable in-memory data structures</li>
-              <li>Support for lists, dicts, and type-casting</li>
-              <li>Build in functions like print</li>
+              <li>Support for lists, dicts, math functions, and type-casting</li>
+              <li>Built-in functions like print</li>
             </ul>
           </section>
           <section>
@@ -249,9 +236,21 @@
           </section>
           <section>
             <h3>Highlights</h3>
+            <ul>
+              <li>Checks for duplicate and nah declarations</li>
+              <li>Allows for function overloading</li>
+              <li>Global statements</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>Declarations inside of loops</li>
+              <li>Entirely complete representation of anything that the AST throws at it</li>
+            </ul>
           </section>
           <section>
             <h3>Challenges Faced</h3>
+            The scoping for Viper is difficult to semantically check since we allow declarations inside of loops. Each time we enter a loop, we need to scan the declarations to add to the symbol table incase they are called in the loop. Using symbol table parents allow us to keep track of declarations outside of the current scope and throws array deeper scopes once the program leaves a loop. 
           </section>
         </section>
 
@@ -261,9 +260,34 @@
           </section>
           <section>
             <h3>Highlights</h3>
+            <ul>
+              <li>
+                Once I understood the workflow and how to use our C standard library functions I covered ground very quickly
+              </li>
+              <li>
+                Efficient implementation for operations like Incr, Decr, OpAssigns
+              </li>
+              <li>
+                Pointer Casting written in bindings for SAccess and other expressions
+              </li>
+              <li>
+                Skip/Abort implemented!
+              </li>
+            </ul>
           </section>
           <section>
             <h3>Challenges Faced</h3>
+            <ul>
+              <li>
+                Majority of codegen work done very late in the process due to needing types of expressions from SAST
+              </li>
+              <li>
+                OCAML LLVM Documentation is very sparse
+              </li>
+              <li>
+                Figuring out the LLVM workflow (write program -> compile to llvm with clang -> lookup instructions in documentation -> build similar instructions using OCaml bindings) 
+              </li>
+            </ul>
           </section>
         </section>
 
