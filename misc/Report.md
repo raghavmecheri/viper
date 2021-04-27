@@ -1398,11 +1398,7 @@ As we continued working on semantic checks, codegen, and the standard library, w
 Development followed the stages of the compiler architecture. We began with the scanner, parser, and ast, with the three honestly being quite simultaneous, although each individual change occurred in that order. We then got `print(“hello world”)` working in codegen while simultaneously working on semantic checking. After hello world, we shifted into first desugaring syntax in layer one of semantic analysis, then type/validity checking in layer two. From here progress continued on updated iterations of semantic checking, while the rest of codegen and the standard library began to ramp up. The standard library was completed before the codegen, which was our final push on the project. It is worth noting that there was overlap in these tasks (they were not completed in isolation), and testing was set up at each one of these checkpoints that allowed us to easily identify where blocks were occurring. 
 ## `12.3` Testing Process
 ## `12.4` Team Responsibilities 
-Raghav - Lexer, Parser, AST, Desugaring
-Mustafa - Lexer, Parser, AST, C Libraries
-Matthew - Semantics, Documentation
-Tommy - Semantics, Documentation
-Trey - Code Generation, Documentation
+Raghav - Lexer, Parser, AST, Desugaring  Mustafa - Lexer, Parser, AST, C Libraries  Matthew - Semantics, Documentation  Tommy - Semantics, Documentation  Trey - Code Generation, Documentation
 ## `12.5` Project Timeline
 | Date          | Milestone                        |
 |---------------|----------------------------------|
