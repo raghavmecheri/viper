@@ -569,6 +569,18 @@ int func y(int x, int y, int func z) {
 int func times (int a, int b) => a * b;
 y(10, 20, times);
 ```
+### `5.4.2` Attribute Calls
+Viper supports attribute calls using a Java-like syntax with a period and parentheses in parameters. For example,
+```
+int[] list = [1,2,3,4];
+list.contains(4); /*Attribute call of contains on list. */
+```
+An attribute call is equivalent to a stand-alone function call that prepends the calling object to the front of its list of parameters. The following two calls are equivalent:
+```
+list.contains(4);
+contains(list, 4);
+```
+
 [↩️  Back to Contents 📌](#0-contents)
 
 # `6` Expressions 🖥
