@@ -1400,7 +1400,8 @@ Pattern matching on elements with tuples uses parentheses (for example, For(e1, 
 Lines generally wrap at around 80 characters, when applicable.
 # `13` Architectural Design
 ## `13.1` The Compiler
-Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details. 
+Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details.
+<img src = "https://i.imgur.com/Rawoen7.png" />
 ## `13.2` The Lexer
 The first step of the compiler is the lexer. The lexer scans the program and creates tokens based on spaces. The tokens include common tokens such as assignment(=), operations(+,-,) etc. Some of the less common tokens Viper accepts are guards(|) and ternaries(??).
 ## `13.3` The Parser
