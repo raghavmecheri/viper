@@ -1430,7 +1430,9 @@ Pattern matching on elements with tuples uses parentheses (for example, For(e1, 
 Lines generally wrap at around 80 characters, when applicable.
 # `13` Architectural Design
 ## `13.1` The Compiler
-Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details. 
+Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details.
+<br />
+<img src = "https://i.imgur.com/Rawoen7.png" />
 ## `13.2` The Lexer
 The first step of the compiler is the lexer. The lexer scans the program and creates tokens based on spaces. The tokens include common tokens such as assignment(=), operations(+,-,) etc. Some of the less common tokens Viper accepts are guards(|) and ternaries(??).
 ## `13.3` The Parser
@@ -1476,7 +1478,3551 @@ Advice: Whoever is lucky enough to work on codegen, I am about to spill the secr
 # `16` Appendix
 ## `16.1` Git Logs
 ```
-Logs go here
+commit c69cc86bc7b2bbb43cede87ce2255e42792eed34
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 20:42:32 2021 -0700
+
+    Update Report.md
+
+commit 6bdc171792ee3cfc9c5e495496696da4cd60aa07
+Merge: 9ebcf15 2dd7396
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 20:40:46 2021 -0700
+
+    Merge pull request #57 from raghavmecheri/tgomezzzz-patch-1
+    
+    update table of contents
+
+commit 2dd739660f8631c97afc782904e4978ba5828b6b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 20:40:38 2021 -0700
+
+    update table of contents
+
+commit 9ebcf1512a3cd97ebbd7d2893a401665b5d3b485
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Mon Apr 26 21:39:30 2021 -0600
+
+    Update Report.md
+
+commit cd2819853a1024d675571360d75b584e759cb57e
+Merge: 2635853 04cc8e0
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:37:15 2021 -0600
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit 2635853648eca77c3e98586995678b235d4fb452
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:37:09 2021 -0600
+
+    Added report image
+
+commit 04cc8e0f400e3d7efde05e3ecdfbf315cf73c87c
+Merge: a633311 7757028
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 23:32:31 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit a6333112af45db5b65b44f49c5841fe25191b67b
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 23:32:24 2021 -0400
+
+    Added Codegen section
+
+commit 7757028e2f09885f675784084aec154f2d7725e6
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:30:01 2021 -0600
+
+    Added src
+
+commit 3fe21c77812c70413811a7638d699d292dcd25f5
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:26:51 2021 -0600
+
+    nuked extra files
+
+commit bff065d80946b2bd189127926d7bd3591bb63676
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 23:24:34 2021 -0400
+
+    Added advice and lessons
+
+commit ce640008f8ea771be807e47146056797326acaf3
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:19:30 2021 -0600
+
+    Test suite
+
+commit e12f296aae95e2cbb22681d4915116db741bea3a
+Merge: c9dd5b5 1d17b1f
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:16:27 2021 -0600
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit c9dd5b54e9b16de0b645e9c613a4198dc722c09c
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 21:16:24 2021 -0600
+
+    Eh
+
+commit 1d17b1ffefddb1448c6974ce37c81513081e0de4
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 23:15:18 2021 -0400
+
+    testing process and sde
+
+commit 5fb396c4a1b91d39f7a228e31e18bca3e5dbadff
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Mon Apr 26 23:12:54 2021 -0400
+
+    Update Report.md
+
+commit cf71b95a1da4f869d0dad09e521f751e10061f6c
+Merge: 8cb9cf4 0cf7cc2
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 23:09:47 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 8cb9cf4b394fc4e2e4ee8aa8224e3c4a5d464074
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 23:09:36 2021 -0400
+
+    Final documentation cleanup for codegen
+
+commit 0cf7cc2b985eb50f8ed5197dec6050a10f325069
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Mon Apr 26 23:01:49 2021 -0400
+
+    Update Report.md
+
+commit d1bf544c5ff602731be84d668d9482b1af32799e
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Mon Apr 26 22:56:30 2021 -0400
+
+    Update Report.md
+
+commit 26a3061594bf7eddbaec59d23858b4ea7774d592
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Mon Apr 26 22:54:47 2021 -0400
+
+    Update Report.md
+
+commit a6731f55f741f095d1861a9610cd6b6a4041b40d
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Mon Apr 26 22:52:52 2021 -0400
+
+    Update Report.md
+
+commit 82d5136395ad1f93dddaf23c56573051dcfcceba
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 22:51:20 2021 -0400
+
+    moved from google doc to markdown
+
+commit f825d7379c87bf9d6747d17f09c71cc986b4326f
+Merge: eab8435 3fa0bb7
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 22:40:21 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 3fa0bb742ec5fd14391297bfbd1a90b192a1ed5e
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:59:31 2021 -0400
+
+    Headers done
+
+commit eab8435180463b3317ed9f263e0cd831fbf1a42a
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 21:54:24 2021 -0400
+
+    Finishing touches on demos
+
+commit 16d2cc6ded7706ba8290edd4fd9ca055b224d595
+Merge: 6b3b71d aeeb16f
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 19:44:28 2021 -0600
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit 6b3b71d1f34803cc1f486ea8d1cb86116cd45498
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 19:44:26 2021 -0600
+
+    Report
+
+commit aeeb16f42c9bea101390e811dd6a963e2332a3a2
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:44:05 2021 -0400
+
+    Added testing and architecture
+
+commit 684a81119f810dbe6c73c8c9778f176642d12aa6
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 21:43:30 2021 -0400
+
+    Updated Makefile
+
+commit 30c3e43fe5b0473e948e4b3690e40c4dd38759fe
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 19:43:03 2021 -0600
+
+    Updated presentation
+
+commit eb774d5a72aad18a0a55510e3ef647ba5cea8b96
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 21:41:01 2021 -0400
+
+    Updated README
+
+commit 626483c718f996e9543446258fd49ee1895a14a6
+Merge: 272ca16 e181863
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 21:38:24 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 272ca165796f34a4fb3cb9340ddaa0892949f957
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 21:38:16 2021 -0400
+
+    Prettified the demos, added int list prints
+
+commit e181863e71de83070803d06182bd4f19bbb2e769
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:28:35 2021 -0400
+
+    Added LRM in project timeline
+
+commit 6a0e6617d7dbe5f3e40188af92d8c646001c45e8
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:26:03 2021 -0400
+
+    Project plan mostly done, must do project log
+
+commit e179bd716d1ada9c55d163f558b329e4e5390818
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:16:34 2021 -0400
+
+    Newline
+
+commit cf8d9196dc87731b44929f050e9ccbc839e1a732
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:14:57 2021 -0400
+
+    Fixed newline for team responsibilities
+
+commit c8fdbea382fc8bdefc160d3dd21d487f6b27ae6d
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 21:11:03 2021 -0400
+
+    Added project plan
+
+commit ec25d7e21772d090b7703f63a45ebbb6d96bd4cc
+Merge: 85d5f4e ce76bce
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 18:48:05 2021 -0600
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit 85d5f4e9f52508a972d8ea67ed89ec0d4c158bd9
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 18:47:56 2021 -0600
+
+    Bump slides + add comments at top of file
+
+commit ce76bce46569f693b753aa068a9ba0e41645332e
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 20:44:18 2021 -0400
+
+    Started documenting codegen amongst A BUNCH OF CHANGES
+
+commit 8d0d10f3605ffbcd347f37aad1b860733c3796af
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 26 20:40:24 2021 -0400
+
+    Unique fix
+
+commit 111f51bb97b8780701af6d4b7d5ca8ad3fc30c6f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 19:46:43 2021 -0400
+
+    Updated list printing functionality
+
+commit 7009eaf013d8e0f32a0a43874b9b14f6298d6f5a
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 19:43:58 2021 -0400
+
+    another mergey boy
+
+commit 3e600308f67516012af538f9f998c36c6554e6fc
+Merge: 6183ad4 2d6bd7c
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 19:43:00 2021 -0400
+
+    mergey
+
+commit 6183ad49cd63f37f4fce551edb50fc1414ad445b
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 19:41:42 2021 -0400
+
+    Added keys functions, print for string lists, etc.
+
+commit 2d6bd7c6a3fdfb6ae3fb1e5bdd68fdee7fd499f6
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 17:05:09 2021 -0600
+
+    Removed semanttest folder + added contents.py
+
+commit 1fba933ada7c5b7d04ee5114edf6b098d7c0f0bb
+Merge: 58b9aea 1e8e52c
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Mon Apr 26 18:51:39 2021 -0400
+
+    Merge pull request #56 from raghavmecheri/fix/parser
+    
+    Merged parser
+
+commit 1e8e52c79b7f88790374acbac2b7c93cf27c4b2f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 18:49:58 2021 -0400
+
+    Wagu u silly boy
+
+commit 41e9f5db01720b1aa50a2375fbae112036218fce
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 18:46:22 2021 -0400
+
+    Added comment for bug
+
+commit a737f61cf2da86fc32563837c720005636dba569
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 22:44:45 2021 +0000
+
+    Fixed wordcount shit
+
+commit fd54573d60544f833e46c96dc000e19279b40528
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 22:38:17 2021 +0000
+
+    Decfor fix
+
+commit 632f5109a1eeec56542eb3ef2e657be30e24a7b1
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 18:34:47 2021 -0400
+
+    DEEP IN BUG WORLD BOYOS
+
+commit 94c4fcde064ac9d51658028828a9109dbaebaff0
+Merge: 7fdbf7e 58b9aea
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 18:05:54 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into fix/parser
+
+commit 58b9aea51f4ed67ce67e7540947df54571d1441e
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 17:59:34 2021 -0400
+
+    Committing before branch switch
+
+commit 7fdbf7e8c78ab8bd7ceb9ee7c19625f4c0fc47dd
+Merge: 94be1d9 f8dc246
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 15:58:57 2021 -0600
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into fix/parser
+
+commit 94be1d944304b9b76156abfef6dfc7855137764f
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 15:58:52 2021 -0600
+
+    Parser fix?
+
+commit e0170fbf50e7f9b6a645b439498eca3cf7680be1
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 15:58:41 2021 -0600
+
+    Updated pres
+
+commit f8dc246e76b927a0557394de5de2982cb82d5153
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 17:32:42 2021 -0400
+
+    Yet again, I have added SO MUCH, contains for all lists works
+
+commit 9f4b333090989cbb7fa3a7deb3d4fe9d86aa2535
+Merge: a362a49 7912de9
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 21:12:43 2021 +0000
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit a362a496bd927743e49a3b3f6415bd48f45d6e32
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 21:12:28 2021 +0000
+
+    Cleanup
+
+commit 7912de9c84decbb86d1d9da6552381a954cf5417
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 26 17:09:10 2021 -0400
+
+    Added contains for dicts
+
+commit 270da9793dd3b9d35a3d794f3f7256af9c2443b8
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 26 16:21:56 2021 -0400
+
+    REMOVE DICT KEYS WORKS
+
+commit 081799e78bc9b0d143e3232be8434fe1a78c01be
+Merge: fc6b470 0a473c9
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 20:17:06 2021 +0000
+
+    Merge branch 'fix/ternary_desugar' into main
+
+commit 0a473c9eb1cec1e4a89bb0203a1109b44ced1388
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 20:16:47 2021 +0000
+
+    Fixes
+
+commit fc6b4702433be49d1b49d1ce97d211f280c0020f
+Merge: a25fe53 1bc36ee
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Mon Apr 26 16:00:53 2021 -0400
+
+    Merge pull request #55 from raghavmecheri/fix/ternary_desugar
+    
+    Fix/ternary desugar
+
+commit a25fe5390f4d3364b50a8c806ed1ead19800883c
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 15:59:46 2021 -0400
+
+    Added literally so much, all lists work (wow), string dicts (holy), this is great
+
+commit 1bc36ee5c256301607d41d4a8d734757c0b5f778
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 19:56:22 2021 +0000
+
+    Fixed shit
+
+commit ed448be16e8eb3c07e36469c2a9f0257fd54b2ab
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 19:47:30 2021 +0000
+
+    Updated demo
+
+commit 57aae1ab4612a426b724701d51fe98c6ad265d90
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 26 15:38:06 2021 -0400
+
+    Fixed ternaries
+
+commit 1fd65ff843f3d37f7466945c0220d583e1b4b8c9
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 13:31:15 2021 -0400
+
+    Added 2 new tests, character list printing, reformated print standard lib call
+
+commit 7b5a16cb43f45e894ae1814761a52449453961e4
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 11:29:37 2021 -0600
+
+    Added wordcount demo
+
+commit 290f02b583397dff9302b80383ff2427ba7e7e0d
+Merge: d9b62f9 b8c6f49
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Mon Apr 26 11:09:30 2021 -0600
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit bcdee53fd70ffcb96f3857985b562a1d5dd4a7f9
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 17:08:04 2021 +0000
+
+    Renamed semant stuff
+
+commit 9ebe3e9643d257b21ec1bc2ff4f64fd4b6bd5de8
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 15:10:46 2021 +0000
+
+    Removed call to runtests from exec
+
+commit b4eb48ae039dfe1113c778dc469e8f231954e5fa
+Merge: 2cb49f2 b8c6f49
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 15:09:06 2021 +0000
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into fix/ternary_desugar
+
+commit 2cb49f283f736df77333f491c7fb5d1017f4d6f4
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 15:03:04 2021 +0000
+
+    Fixed nested ternary
+
+commit 413c892f43c894587aeaf6da076262e8c6f4be0d
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 14:45:09 2021 +0000
+
+    Fixed semant for decassign + ternop
+
+commit b8c6f4923ee820579fdb6bebf2c8bcb04b4f9cc3
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 26 10:35:06 2021 -0400
+
+    Added .keys() to dicts
+
+commit 39ece16e7fd4c03f91deff23404920067fc744c9
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 26 14:21:53 2021 +0000
+
+    Broken code
+
+commit 1526114ab4637f033c43920152670a7b0c00fd79
+Merge: 55ba632 f63ac08
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 01:47:32 2021 -0700
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 55ba6328e112f7d84b6a04ef8d405aad8e8a351a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 01:47:16 2021 -0700
+
+    beef up test suite
+
+commit f63ac08d092384b722f745b7655b6285709a9c0d
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 04:37:58 2021 -0400
+
+    Added Incr/Decr
+
+commit 3f063727beadf63c3e5b9eb63f5596dafbfadaf4
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 00:58:49 2021 -0700
+
+    fix for loops
+
+commit b285d4cb0f70870f3231369fac4637d2c13890fc
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 26 00:25:15 2021 -0700
+
+    support dict/array literals
+
+commit 04e6141080ba571f504f3e6c8e29297f394a6d4f
+Merge: 037d7e9 b5bc4ca
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 02:14:34 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 037d7e9580c4aef41c72dd458a7a99f0994b1c59
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 02:12:54 2021 -0400
+
+    Working on nested dicts
+
+commit b5bc4cac40adeb13781b9991b47f181315c7275a
+Merge: 277da09 2179365
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 23:03:02 2021 -0700
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 277da0972b8aaba9848d5b6ecfc703430b7da18d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 23:02:57 2021 -0700
+
+    loop fixes
+
+commit 21793654eee3fb267e3c2a2212031afe1e04583c
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 26 01:27:02 2021 -0400
+
+    Removed Groups from Report
+
+commit 58daf8a68876d1406403d1132274d3ab54b7114d
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 26 01:24:25 2021 -0400
+
+    Added goal section
+
+commit 3b2d7fcaefb666ba31ea78b8f6a4ba40da4b9e50
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 26 00:55:23 2021 -0400
+
+    I finally understand how the llvm bindings work, char: int dicts work lol
+
+commit ce645221ef7803bd7d9e6feb388c443ab1b163db
+Merge: d5d87e2 12fc99a
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sun Apr 25 23:37:01 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit d5d87e27e2df34449da6879b266c9c9d2df3f6e4
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sun Apr 25 23:36:59 2021 -0400
+
+    Added Str library to viper.native and working on dicts. about to mess with access
+
+commit 12fc99a9290f1377d4c44741fc9a75315983e94f
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 23:20:31 2021 -0400
+
+    Goal Headers
+
+commit c0cedc2f754dd9919a313a051db0eeeee23b131a
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 23:06:08 2021 -0400
+
+    Finished how to use secion
+
+commit 8fd592d4a01c63d42d6865a8ac95ce9b91e242f4
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Sun Apr 25 21:37:39 2021 -0400
+
+    Attempt for framework for desugared ternaries
+
+commit 5e212c381e0524810b7467e342d69eb11ae80f61
+Merge: 7f6a4be 8bce824
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sun Apr 25 19:20:59 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 7f6a4be80bac4d0b9eefe18cfc939cfb501e58a5
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sun Apr 25 19:20:55 2021 -0400
+
+    Added dict functions
+
+commit 8bce824a097ba5afe1d2e80aa73f23879618deee
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 18:30:01 2021 -0400
+
+    Use pt. 1
+
+commit 0769781081b5c6e55e3a629cf860a62f46994e4d
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 18:18:25 2021 -0400
+
+    Added related work section
+
+commit 929bc2696d3f3cc14896ed2a7c7d3166b78f78ee
+Merge: 1b0f2db d2b880f
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 17:34:59 2021 -0400
+
+    Added background to final report
+
+commit 1b0f2dbf6e56fba945462d7fdff13730fc599a58
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 17:34:49 2021 -0400
+
+    Added background
+
+commit d2b880f06b795b8658a57081701a25aab6a881c1
+Merge: 19365fc 6dc2822
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 14:26:33 2021 -0700
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 19365fcb6ed6c6942088f174f28d81ca15357b4a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 14:26:23 2021 -0700
+
+    test nested skip and while statements
+
+commit f22a17e2d2d77a5c615be9691198817169d6f0d0
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 14:26:11 2021 -0700
+
+    desugar blocks of if and while statements
+
+commit e519f8c51769103ba0b890fd7a72f3b84c36c14f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 14:24:51 2021 -0700
+
+    include empty print statements that just print new lines
+
+commit 6dc2822d785b10e850d0135da13baa2438196b0d
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 25 17:08:27 2021 -0400
+
+    Added final report file
+
+commit bdd3be0e764fa91e112c652212befc763e0e86a6
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Sun Apr 25 10:54:54 2021 -0400
+
+    Skeleton code
+
+commit d9b62f98799451de3237576bdbb948bdbb473652
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Sun Apr 25 10:54:36 2021 -0400
+
+    Presentation updates
+
+commit 769db7b51e2f68d53e46b2ccab85482fdb037d7d
+Merge: ffe3617 bb3c8bf
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 00:22:56 2021 -0700
+
+    Merge pull request #54 from raghavmecheri/feature/abort
+    
+    implement abort
+
+commit bb3c8bf213fa83f58e79a5e440be36908ce83d1c
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 25 00:22:09 2021 -0700
+
+    implement abort
+
+commit ffe3617583e0c8e84a04991e8209a79a5c928157
+Merge: 6778a50 65816f1
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 23:11:35 2021 -0700
+
+    Merge pull request #52 from raghavmecheri/feature/skip
+    
+    Feature/skip
+
+commit 65816f10cd4cbdbf16a3c18ff81cc15fb84e010f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 23:10:09 2021 -0700
+
+    skip tests
+
+commit 3b99a753452a36f3cb908ca6ee7cf73c1dc75c7b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 23:07:10 2021 -0700
+
+    implement basic block logic for skip
+
+commit 7c48da88467b6a008a6a44bb6959b1160b197aae
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 23:06:57 2021 -0700
+
+    update definition of While()
+
+commit 1c12af775de2e4212a3a8bdc9861a4ed47ca22e5
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 23:06:29 2021 -0700
+
+    include secret incrementer in while, used for skip
+
+commit 358d8e5a8941fe6e25e4e7dcb745c37a2537476a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 19:12:39 2021 -0700
+
+    update while to take 3rd param for incrementation
+
+commit 6778a50f3cefcec7f1a61d3c5f49610bcdad5752
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 22:39:24 2021 +0000
+
+    Fixed exec code
+
+commit bd0027d5d063b90b514f572e61b58c34a423554b
+Merge: f7d1c77 a448c9f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 18:22:47 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit f7d1c77647744600ee30b55235d90d973bf5eaca
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 18:22:38 2021 -0400
+
+    got more demos working
+
+commit a448c9fe4dcdd6c3ffe1ad91e0359e966eb00122
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 22:03:08 2021 +0000
+
+    Removed random top level files
+
+commit e22f285195b971343b01419a960aabcf7db8be8b
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 17:14:48 2021 -0400
+
+    removed print, added contains and len
+
+commit ff7e843f9f31f984e57826f91dc8cbf557c06ea7
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 21:12:56 2021 +0000
+
+    Removed some prints
+
+commit 2962205e08de2675dc79635178ff566f19ed1b69
+Merge: e0b2a11 28cef50
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 17:02:25 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit e0b2a11feadc2ba268fceff805bb4f3ee65c237e
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 17:02:04 2021 -0400
+
+    Adding exec.sh, use like ./exec.sh file.vp
+
+commit 28cef50cc9cab716bd6e4f7afd0525b85e0785a1
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 21:00:40 2021 +0000
+
+    Added binse demo
+
+commit d4a8652e9936989d1913ee893ed74e8e25d56d96
+Merge: 5a034ad 40f0da8
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 16:42:06 2021 -0400
+
+    Merge remote-tracking branch 'origin/fix/builtin' into main
+
+commit 40f0da89ccbd625f4fc74e41454de33bffced377
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 16:37:33 2021 -0400
+
+    append function fixed?
+
+commit 5a034ad823ae96c7263791aa0f36b1dc5547e907
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 20:21:41 2021 +0000
+
+    Jank ternaries + demo update
+
+commit 85ecf76d399ffc1343dac615e7c24701445e3a64
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 13:13:51 2021 -0700
+
+    fix multiple function args
+
+commit 8a6e39058bf03166f28affb473615c8304187264
+Merge: 685c480 60be2be
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 19:25:20 2021 +0000
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 685c480038a0383c08aba232db1ce1093e1b9368
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 19:25:15 2021 +0000
+
+    Working demo programs
+
+commit 2412a70c6575ec157d048a068ac216914d8476ca
+Merge: fed254c 60be2be
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 12:19:46 2021 -0700
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into fix/builtin
+
+commit 60be2bed0f6bb9d7ce49fa872b7d2f4b685f6cc0
+Merge: 6ddfe9c faf6ff0
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 15:17:00 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 6ddfe9c71151903fd34a6b8d8ce0079858b05a09
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 15:16:53 2021 -0400
+
+    Updated append to return void
+
+commit fed254c09559c76b65bff2696b8f418eb757ab4e
+Merge: c8244e7 faf6ff0
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 12:04:53 2021 -0700
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into feature/skip
+
+commit faf6ff0b828f6b693fe8ad3a6cc1494a3f071355
+Merge: fe12548 025cd14
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 18:54:34 2021 +0000
+
+    Merge
+
+commit 025cd145170ea6b49072443be15a49db3174e97c
+Merge: 5a863a8 7088cd7
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 11:54:03 2021 -0700
+
+    Merge pull request #51 from raghavmecheri/feature/ternary
+    
+    Feature/ternary
+
+commit 7088cd748a6535edf5648bb9aca8cd0c3a87a23f
+Merge: d2a8b5e 5a863a8
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 11:53:58 2021 -0700
+
+    Merge branch 'main' into feature/ternary
+
+commit fe1254863a891fa5c0a7d40f653766e3cd8de05f
+Merge: de16cdd 5a863a8
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 18:53:48 2021 +0000
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit d2a8b5e777b746c17111f3b51f9e401e2bf2f74e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 11:52:46 2021 -0700
+
+    finish ternary check
+
+commit de16cdd5eb7e2f1bbd68b62d269b899b764a108a
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 18:48:48 2021 +0000
+
+    Fixed ternary shit
+
+commit 5a863a838b1889f4722b8c5e57e10f06051ef761
+Merge: 2e8e07c c708875
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 14:44:00 2021 -0400
+
+    resolved merge
+
+commit 2e8e07c3775f32cc27c694263beab084504e368d
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 14:43:10 2021 -0400
+
+    LISTS WORKING
+
+commit 4dad6a2744690d5663d23d387db1164eeac02f4a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 11:27:51 2021 -0700
+
+    add semantic ternary operators
+
+commit c7088753a2590d8b20e19f2f08f3eb957a470893
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 18:18:50 2021 +0000
+
+    Demo folder (kinda)
+
+commit c8244e751d04e273033453cb61bbc4211bd2db68
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 11:15:31 2021 -0700
+
+    skip works, but loops need to be revisited
+
+commit 3e4d87ffe198f6214430be1ec5ee06fbe3a5acf7
+Merge: d79a1f9 8c0108b
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 17:21:06 2021 +0000
+
+    Merge
+
+commit d79a1f90cd8d0dd9ad78809d17af39c590e577c4
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 17:20:37 2021 +0000
+
+    Manipulated crap
+
+commit c48fff228dbffae9d0a391e79bb59e4475df3654
+Merge: 0030723 8c0108b
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 12:40:56 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 0030723b686d60869e20a0358eebfcac42af85ca
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 12:40:43 2021 -0400
+
+    Hella updates
+
+commit 8c0108b57fc42fb1c3abb6f599f5a9c5e3ee0248
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sat Apr 24 12:09:21 2021 -0400
+
+    List pretty print
+
+commit 3932dd166815772bdac034804b2707fee7abde0d
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 24 12:01:32 2021 -0400
+
+    built-in functions now can have multiple parameters
+
+commit c39d294e526e4af1b928c02722746ee6eb164c89
+Merge: 1958e74 1d01702
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 24 11:37:09 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+    Merge nested Dictionary
+
+commit 1958e748cac366572abf42af2770af250410e36e
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 24 11:36:54 2021 -0400
+
+    Fixed nested dictionary
+
+commit 1d017023d4c8ad7ad16832a45088291f3b2e6d33
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sat Apr 24 10:40:08 2021 -0400
+
+    Fix ternops
+
+commit 7244e12c0d78b3f8039ed62c40e65e844fcbf6d9
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 24 10:32:55 2021 -0400
+
+    decs fixed
+
+commit 7eed86a73f9e4fd6f645917e544ca76127d0531e
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 24 10:31:20 2021 -0400
+
+    decs
+
+commit 7aee7b078158588b1b2ede9c8f2e09beed0c9339
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 14:07:16 2021 +0000
+
+    Fixes
+
+commit d6ee2b6cb02ed7cb7707b248471436f0796d5b3d
+Merge: 553275e 1d62dc1
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Sat Apr 24 08:46:41 2021 -0400
+
+    Merge pull request #50 from raghavmecheri/fix/sugaring
+    
+    Fix/sugaring
+
+commit 1d62dc10129bd5471ce50670aaa371f696eb9901
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 12:41:03 2021 +0000
+
+    Added functional recursion to desugar
+
+commit 553275eed0b147ddbe70b333c0df4c0bd0893700
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 07:48:23 2021 -0400
+
+    Added more tests back into LLVM
+
+commit 21832f7fac796076a0c8ab19060ccaa1ba23e3b3
+Merge: 5cded20 7b64814
+Author: Trey Gilliland <treygilliland3@gmail.com>
+Date:   Sat Apr 24 07:17:23 2021 -0400
+
+    Merge pull request #49 from raghavmecheri/big-boy
+    
+    BIG BOY COMMIT
+
+commit 7b64814ed8ad3dea631d1d09991ef25b6d100fdb
+Merge: 7fda776 5cded20
+Author: Trey Gilliland <treygilliland3@gmail.com>
+Date:   Sat Apr 24 07:15:07 2021 -0400
+
+    Merge branch 'main' into big-boy
+
+commit 7fda77670a2812a9cc2855e30d3b5920d31d6fed
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 07:09:59 2021 -0400
+
+    BIG BOY COMMIT
+
+commit 346c71383c7ba241c0338c5167785068b14f70e4
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 24 11:09:18 2021 +0000
+
+    Sugaring fix
+
+commit 5cded20b5ae433813b2b666b434363797183a32b
+Merge: 394a485 6756f95
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 01:09:47 2021 -0700
+
+    Merge pull request #48 from raghavmecheri/feature/codegen-builtin
+    
+    Type casting on Type Literals
+
+commit 394a485fe88060a06c7c71e1d144812f99c8bafd
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 03:49:22 2021 -0400
+
+    Added mod
+
+commit 6756f95035fd5cde5401c7e36877b78872e28d58
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 00:19:28 2021 -0700
+
+    tester file for casting
+
+commit 48cab3413bf082f72cab681115a01b69faf6155f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 00:19:19 2021 -0700
+
+    create defs for casting funcs
+
+commit 7dde8427e9f49a4f0c19b0a1232087993d1323cb
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 00:19:04 2021 -0700
+
+    additional changes
+
+commit df304f81769fe4e9fb44f59f15b53a2c9329f49e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 00:18:25 2021 -0700
+
+    match for casting calls in codegen
+
+commit 1cf81fb140d59f25322ab4951ddfa830b0df13e8
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 24 00:18:09 2021 -0700
+
+    create initial casting functions
+
+commit 02298410f2c1bef4071154f44ccd3f1b6e39f50b
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sat Apr 24 02:56:39 2021 -0400
+
+    Adding in pow, in progress
+
+commit 559a71ee5902d087cbbc15b46ab231b48252aaac
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 22:22:10 2021 -0700
+
+    change names of casting functions
+
+commit 428fee6afefb0eed7a68caa076446db7bf6a2b2c
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 21:50:42 2021 -0700
+
+    finish casting funcs
+
+commit 0dd2f3d863c540ee1b5affe8f1132dd6bdda9290
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 18:35:44 2021 -0700
+
+    implement int casting
+
+commit 34ca929f01d8ed1c85e50d0ecec7cd0af2a84e94
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 18:08:29 2021 -0700
+
+    implement to_char
+
+commit b3f347e96aab6048d60857d738d71b1e60f7b6fd
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 18:00:37 2021 -0700
+
+    Update char() in LRM
+
+commit 6486009c77647932e42ce1c7e63e7dbc1ff9f120
+Merge: 7d3de7f 7dbbe03
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 17:04:19 2021 -0700
+
+    merge
+
+commit 7d3de7fef90648fa78e3e04fa0b28962fec56122
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 17:03:25 2021 -0700
+
+    djijkstra update
+
+commit 7dbbe03b69220b4745adeef8a70877eea1417f0d
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Fri Apr 23 19:32:21 2021 -0400
+
+    Added lvalue initial value type resolver
+
+commit b9d4ae925bb332582b4890f5e589b566896945fd
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Fri Apr 23 19:02:15 2021 -0400
+
+    Added all Viper types to ltype func
+
+commit 3965b43a388db92b1c68ba41cbc87bc257ce2c4c
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 15:33:23 2021 -0700
+
+    forgot a semicolon
+
+commit 40b68da5c582a471528f51ac88fc74d5c25641f7
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 15:31:17 2021 -0700
+
+    updated dijkstra demo
+
+commit 587d9d3fe0b1348116d007481c3e3bd8ae097e4c
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 14:43:21 2021 -0700
+
+    clean up decs
+
+commit f0d06f0ebdbc49110d66dd672028d65e67ce59ed
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 14:28:27 2021 -0700
+
+    clean up semant driver
+
+commit a5275c4905104b3ad3310590cbb89025bbfd37eb
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 14:16:02 2021 -0700
+
+    allow for empty dict literals
+
+commit 158b94b0c1b9c9218cd969139f5c9f44e08f99bc
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 23 14:09:45 2021 -0700
+
+    allow declarations of empty list literals
+
+commit 4522685bc8cec32d1bcd32625678c7c0f432fa98
+Merge: 5e36b70 c085326
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Thu Apr 22 18:57:18 2021 -0400
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit 5e36b70f78c30a519cddd8e77eaadbf042046a84
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Thu Apr 22 18:57:14 2021 -0400
+
+    Added initial; presentation
+
+commit c0853261a3ca2eaa91132be49094cfa4e46c74f6
+Merge: fca18f2 48b97a5
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Thu Apr 22 18:53:38 2021 -0400
+
+    Fixed char:* dicts
+    
+    Fixed char:* dicts
+
+commit 48b97a5de9f4c540401f35ee88d949cbe7ffceb8
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Thu Apr 22 18:52:42 2021 -0400
+
+    Fixed char:int dicts
+
+commit fca18f29c1200f25ac83016040cd2e9644630aba
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 22 13:43:24 2021 -0400
+
+    fixed main statement order
+
+commit c3510cff1742c4b93317cd337621c31e87b2b66f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 13:41:30 2021 -0400
+
+    Fixed empty syntax error for print type resovler
+
+commit 4ea3cadf875a4e5cef258f423bb7a70641af8378
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 13:20:24 2021 -0400
+
+    Updated print type resolver, added two .vp files for semantic bug
+
+commit d2263c2852c972bdfa052718591b666647e8056c
+Merge: 36bd54a 0af0a39
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 22 10:23:37 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+    Merge for codegen
+
+commit 36bd54ab5a2e43a0e3eda2e713b3662f21af1308
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 22 10:23:17 2021 -0400
+
+    fixed built in function declarations
+
+commit 0af0a39303861f8c6511d1644fcb0b18f379144e
+Merge: e28d86a 161a838
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Thu Apr 22 09:58:19 2021 -0400
+
+    Dict additions v1
+    
+    Dict additions v1
+
+commit 161a8388848369f1538ef385c02a54e9143a69cb
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Thu Apr 22 09:56:18 2021 -0400
+
+    Dict additions v1
+
+commit e28d86aba039f2690dac0b63a7f27b8fadc4ce7e
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 22 09:41:44 2021 -0400
+
+    fixed built-in function calls
+
+commit a91934856662726913f23e63a8a115e488834aa7
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 22 09:11:54 2021 -0400
+
+    Function return type fixed for codegen
+
+commit 67bee324a0d27e76ff191f1f9333df6e925ba4e1
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 04:54:42 2021 -0400
+
+    Added AttributeCall but it is so sketch and I cant test until function calls work
+
+commit dfd12f258df43b86fdcd6ba1165402353b144a1c
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 04:47:12 2021 -0400
+
+    Added OpAssign
+
+commit 0098083b64dd605ddf2260ae0a184bc1a2f7ed06
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 04:04:31 2021 -0400
+
+    Added formals to locals
+
+commit 68dc011cc7bf58b1ec325d0beba18270260cf476
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 03:40:48 2021 -0400
+
+    Reorganized code and added more statements/expressions we need to implement
+
+commit b8d6ec691b6347cf339e664425053f1b95a2b56f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 03:17:27 2021 -0400
+
+    removed duplicate SWhile check, added SWhile and SDecAssign
+
+commit 9effde55925d7e78b9355099ca3751c5f7fafc05
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 03:03:11 2021 -0400
+
+    added if statements, lowkey sus
+
+commit e1454a357a70a9528173dae7e9b6288a3fa60250
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 02:46:27 2021 -0400
+
+    Added local variables to functions (SId, SAssign, SDec). removed print from variable resolution in decs.ml
+
+commit 7b0d1486e2a327c54adf212a5e9c8dd2d78a8367
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Thu Apr 22 00:04:51 2021 -0400
+
+    function calls working
+
+commit bdd998fe6103b15f594592a2db85eba2652d7240
+Merge: cbd4e4f 5768b52
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Apr 21 23:18:38 2021 -0400
+
+    merge? hlp
+
+commit 5768b52ccdfdf2e8bdc818f653b008571cfc5ff6
+Merge: ae30857 63b129a
+Author: Trey Gilliland <treygilliland3@gmail.com>
+Date:   Wed Apr 21 23:08:29 2021 -0400
+
+    Merge pull request #45 from raghavmecheri/feature/mainfunc
+    
+    collect global statements into main if main isn't defined
+
+commit 63b129a2da3be4f2102459de9e6081f0cd9e0dc9
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Apr 21 19:57:25 2021 -0700
+
+    collect global stmts into main if main isn't defined
+
+commit cbd4e4f5d051d234dcd321b06fa180f8c2616015
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Apr 21 21:55:35 2021 -0400
+
+    Function declarations working
+
+commit 269dce4173281fa5c98ee224d0af947469462188
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Apr 21 20:52:50 2021 -0400
+
+    Unbroke the LLVM, going to attempt to add function declarations
+
+commit ae30857947f39f94558d94476fced3f6564d9144
+Merge: 702a568 db5db3f
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Apr 21 19:28:38 2021 -0400
+
+    Added list assignment
+    
+    Added list assignment
+
+commit db5db3f0828d22a0449ae8c88f865fe299b6092c
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Apr 21 19:27:06 2021 -0400
+
+    Added list assignment
+
+commit 702a568144430627bb31b60a2321b22dc5ce77d6
+Merge: 9b6950d 1c3f226
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Tue Apr 20 16:08:33 2021 -0400
+
+    Standard Library
+    
+    Standard Library
+
+commit 9b6950d53b5c3491fcd0a7bf6d8cda8508621cf8
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 22:48:34 2021 -0400
+
+    disabled warnings 42 and 45; not needed
+
+commit 5e52ab428e9d54b430f15283bd7c2231c174dfe0
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 21:56:50 2021 -0400
+
+    fixed applicable warnings and updated todo
+
+commit 43db32b49d37c8ce92a09a1695db58140a45e298
+Merge: b34c8bd b0db03c
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 21:50:10 2021 -0400
+
+    Merge pull request #43 from raghavmecheri/feature/semantics2
+    
+    Feature/semantics2
+
+commit b837ba28dbe9e81ca780732ed07cc0a3157dacdf
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 19 21:47:59 2021 -0400
+
+    Code is very broken, but is on the right path
+
+commit b0db03c518e8c76192f4ee238413988d5f578a45
+Merge: 9ef1f48 b34c8bd
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 21:47:47 2021 -0400
+
+    Merge branch 'main' into feature/semantics2
+
+commit b34c8bdfc70fb773e4f83d065f6bf831d115f866
+Merge: f9db679 97155d9
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 20:57:23 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+    Merge with Tommy's code
+
+commit f9db679ba83a122e3c50f4bad91caec7277f1efc
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 20:57:11 2021 -0400
+
+    Implemented attribute call
+
+commit 97155d904a8514e43198c79a2c08db0ef16f7ee8
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Mon Apr 19 16:41:31 2021 -0400
+
+    Update LRM.md
+
+commit 9ef1f48cf8817ffd033fdd664c76e7f2b07e9059
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 19 12:28:30 2021 -0700
+
+    implement Access checking
+
+commit 6dc3bec68c58a8e15836ad3f8b3c4413c7815cef
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 19 15:25:21 2021 -0400
+
+    Added temp explanatory comments to decs.ml, added SAST pretty printing to viper.ml
+
+commit fce3d48ab1eb59b4d25b4c99e52d48532866fa52
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 19 12:11:37 2021 -0700
+
+    implement accessassign
+
+commit 271137b1c9be5a40592261a16c2fd34de952949e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 19 11:04:20 2021 -0700
+
+    fix decs merge
+
+commit 91db42e99d66866eeba14fd02c7d169d3f51561a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 19 10:18:57 2021 -0700
+
+    terminate comment
+
+commit 1c59b0528de0c2a01d9fec7682276ddb1342b88d
+Merge: 165ecbe af6be04
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 19 10:16:33 2021 -0700
+
+    merge
+
+commit 165ecbee16ef8abb975e7732e4846289ec2eb720
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Apr 19 09:56:29 2021 -0700
+
+    add dictionary to access assign
+
+commit af6be0409d389de669a382045acaf13c41ea79f1
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 12:49:29 2021 -0400
+
+    fixed nah return check
+
+commit a84bc1e45c5b0df89e9730e68508e7054b7dbf09
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 12:47:37 2021 -0400
+
+    Checks for existence of return statements in functions and accessassign must be implemented for dictionaries
+
+commit 6672c335605a931647ac0f7220fa5b3fb6432c3c
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Apr 19 11:12:03 2021 -0400
+
+    Started updating codegen to use SAST
+
+commit 05b87f8320d484f2333f8c7e8a691030a39c94d7
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 10:59:29 2021 -0400
+
+    fixed warnings. The warnings that are appearing can be ignored.
+
+commit 1b58099b675884a7b5a9a263c09d3a3ad03d1885
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Apr 19 10:24:12 2021 -0400
+
+    Implemented call in semantic checker
+
+commit 7763dd8a5eb7c84d2e22c0f2178a1ec25ef9e8b5
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Apr 18 23:14:11 2021 -0400
+
+    access assign done, updated todo list, Tommy has to merge
+
+commit b4054c977843f01b2f3a613342690602fb0bf50f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 18 19:13:20 2021 -0700
+
+    check accessassign
+
+commit bd26b05bed050e6110289e71bb1a74c2278e531d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 18 18:03:21 2021 -0700
+
+    started deconstruct, ran into problems
+
+commit 9e3a9825fe98163037a764fb764211a1fc2974b3
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Apr 18 20:07:52 2021 -0400
+
+    opassign
+
+commit 7700de56e96fd111039532cbf0b9eeeae93feeef
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Apr 18 19:20:41 2021 -0400
+
+    Semantic checker: Lists, Dictionaries, Built in Function Declarations, Skip, Panic, Abort
+
+commit 5e6666884b6d1042b2df6d3d4617da53c7fc51f2
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 18 15:50:17 2021 -0700
+
+    check for built in func declarations
+
+commit 077464ee450bf8fdc2c352182ef72d8b868218ac
+Merge: 8332a58 add5c7f
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sun Apr 18 03:56:43 2021 +0000
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 8332a586d8bd602882a1f20df8250313b52f9265
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sun Apr 18 03:56:19 2021 +0000
+
+    Added sample code for dijk
+
+commit add5c7f950457a583a9744b8ef66c0c83b2a8ffc
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 19:31:28 2021 -0400
+
+    added to todo
+
+commit c99743605e60708d0e4fa8a517e95e7f9d9a99b7
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 19:24:19 2021 -0400
+
+    added and updated todo for semantic checker
+
+commit de63090060089992d7819151df0ba6cc0e3acf26
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 18:31:39 2021 -0400
+
+    fixed return types for functions
+
+commit aed5a0c59a2bdd5c59b08a7d025ea3d5ed658276
+Merge: cdb09f3 566d580
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 18:18:53 2021 -0400
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+    Semantic checker
+
+commit cdb09f37a91635267f390ab10e50e05375c0ab4a
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 18:18:33 2021 -0400
+
+    Semantic checker
+
+commit 566d58022e596635a15cf0bea637605751a13823
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 17 22:11:22 2021 +0000
+
+    Added sample code (but in Python)
+
+commit 0f31018017bcfc619655e9a38ff8d7a0af256812
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 10:34:23 2021 -0400
+
+    edited todo and fixed decs in functions
+
+commit 642ba6f6ebdf3f54096731992b4607ddcd8ee568
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 00:32:20 2021 -0400
+
+    function return types are flawed and statementlist is including statements in functionlist bodys
+
+commit 12eee0cbc70d374fad62dca2ccd79e1c81d5fb80
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sat Apr 17 00:25:15 2021 -0400
+
+    blah
+
+commit 778b21757e3e8131e7673f38d0eab2918eb6a441
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 23:02:12 2021 -0400
+
+    fixed scoping for functions, functions not working in general
+
+commit 3bc1f62fd0b09d2f2c02dbb1992a9b350f12f189
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 20:21:51 2021 -0400
+
+    updated todo
+
+commit e4c8854c3263bc0f3c4fef1e335fd7546cafb230
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 20:16:57 2021 -0400
+
+    updated todo
+
+commit 90ae300391aa9b383793c519985b2cf176006a05
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 20:16:20 2021 -0400
+
+    fixed scoping issue, now we can add declarations in while and for loops
+
+commit 741e597eeb6f03fc7dd042ca8d611e77229c5fab
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 19:35:09 2021 -0400
+
+    added skip, panic, abort to todo
+
+commit b8e53b9a190e8b94bd4e13ef73e42823b2a3ba0c
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 19:20:04 2021 -0400
+
+    added built-in funcdecls in the todolist
+
+commit 8836ec754e25a8259fdbaaf4aeda9949b4132d63
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 19:12:42 2021 -0400
+
+    fixed bugs in semantdriver and wrote some tests for the checker. Todo list was made.
+
+commit ff83f432bdc6fb761eda1bcc6125af985245de68
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 10:35:22 2021 -0400
+
+    minor tweaks to viper.ml
+
+commit 27a7189aede735f67e6e307c21c284e65772ed73
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Fri Apr 16 10:13:32 2021 -0400
+
+    semantdriver fully compiles
+
+commit c0c639951f3a20c0a9f1390856aa85171536e851
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 15 22:38:22 2021 -0400
+
+    syntax error fixed, new foundational issue with scope found in DecAssign and Dec
+
+commit 71971c1c4190fe688d04d346c1119eefa6fcee55
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 15 20:39:45 2021 -0400
+
+    syntax bug
+
+commit f7785228ea51c8b95a39bdbd94b7cf083edfae16
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 15 17:48:45 2021 -0400
+
+    fixed uop
+
+commit a4d11c486ebc927852f8a1761968b5aed17c7939
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Thu Apr 15 17:16:14 2021 -0400
+
+    Added a bunch of stuff for semantic checking. Expr needs to be completed and then functions need to be taken care of appropriately. Built in function declaration should go into decs.ml
+
+commit 9d1f57f5da76ce458f32e7cd7234a98dbea6d0f3
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Apr 14 21:03:13 2021 -0400
+
+    semant driver, updated ast and sast
+
+commit 749a9871dd1bf62ac341aef741caeb53a9aefda6
+Merge: 110312d a44466d
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Apr 13 13:12:22 2021 -0400
+
+    Merge pull request #42 from raghavmecheri/fix/decompose_sugar
+    
+    Decomposed Syntactic Sugar
+
+commit 1c3f2266cee5bc1ee2302eb263d66f68c4d9bb00
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Apr 12 00:27:59 2021 -0400
+
+    Membership checks
+
+commit a44466d326221abba3dbc20ac7dae33dc6429bc3
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sun Apr 11 03:49:19 2021 +0000
+
+    Updated SAST with the types we're going to need
+
+commit 780fe50c2e98fb225914576f091c9294eb6e3b81
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sun Apr 11 03:48:18 2021 +0000
+
+    Working de-sugaring for all the things we need
+
+commit ee3b5f0ac9f5ae286307378032498206886fed4f
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 10 22:53:52 2021 +0000
+
+    Sick this actually works that's wild
+
+commit 6f9ca763a0ad5ccf7a84070f02aad51fd2f58a53
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 10 22:49:05 2021 +0000
+
+    Initial try for ForIter + DecForIter
+
+commit 930978cf0d06da0e4d2a8b5c192071ceaefc599a
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Fri Apr 9 01:52:26 2021 -0400
+
+    Arraylists typed with access + other functions
+
+commit 856300158dce8b6303b6f657eb2b88524c669b1e
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Sun Apr 4 17:31:31 2021 -0400
+
+    Building Standard Library
+
+commit 110312d7f8b9170df824c50ee75d48348dcb5cf2
+Merge: faa5653 c0ed7a7
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Apr 6 21:47:04 2021 -0400
+
+    Merge pull request #40 from raghavmecheri/feature/cleanup_ast
+    
+    AST Cleanup
+
+commit c0ed7a7eaa21a8170b54c1ef7121f34abc8406cd
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Wed Apr 7 01:37:12 2021 +0000
+
+    Ottomano fix
+
+commit 0ef9b803058ca506557101332439ae2c18fd8693
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Apr 6 17:55:25 2021 +0000
+
+    Fixed issue with semant.ml
+
+commit 547dd8524115467f1fe9556c8a55019d5ac016e5
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Apr 5 04:19:51 2021 +0000
+
+    Working, albeit buggy semant.ml
+
+commit 7754c61704f7b44454aae215de894814d339b451
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Apr 4 22:31:40 2021 -0400
+
+    fixed bug for make
+
+commit 681ba4957cb0a1572ef7fb00c41220d0d8c82dcf
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Apr 4 17:29:53 2021 -0700
+
+    pass ast to Semant in viper.ml
+
+commit 70a2ac0404f0a98c4d09b9b3439fc0761775069c
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sun Apr 4 17:30:32 2021 +0000
+
+    Tried to get semant.ml to work
+
+commit c96f298edfe9057251f40c65ec790af4d493cc2d
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 3 22:42:31 2021 +0000
+
+    Removed de-const stuff + added it back to SAST
+
+commit 215dd0e3675a985bcedea2cc6d67b35aab66a0af
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Sat Apr 3 21:47:09 2021 +0000
+
+    Added code to pattern match + sanitize everything except foriters
+
+commit 11d73204eb573264b9c8dac6c99857e2ddfefc48
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Apr 3 10:19:54 2021 -0700
+
+    func decs dont allow for dupe local vars
+
+commit 6e9a67f3b1de9ed1a1dee79b536bd59fd086a2fa
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 2 22:24:58 2021 -0700
+
+    collect func decls
+
+commit 5dff49f4f1405963ae770c2f172e72967df3ab99
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Fri Apr 2 15:55:24 2021 -0700
+
+    symbol_table -> scope_table
+
+commit fb2f9c352beda582d0b36a4af06ba0220a73fcf7
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Apr 1 17:07:02 2021 -0700
+
+    complete variable symbol table aggregation
+
+commit 86eb0cb4023df651d076ae345bdcf138242e55ae
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Mar 31 23:13:05 2021 -0400
+
+    Update semant.ml
+
+commit 1a0b8862d4ccee250bcfac937f20da780e71d3b5
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Mar 31 23:10:26 2021 -0400
+
+    Update sast.ml
+
+commit 2b12211605c6692a220b82378ab661f6a54bb931
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Apr 1 03:09:15 2021 +0000
+
+    Laid more groundwork in semant + fixed sast.ml to remove the types that I'm getting rid of
+
+commit 4d878b642d39bbb43a1605498e311e926d2540f3
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Apr 1 01:12:00 2021 +0000
+
+    Laid the groundwork for the de-syntactic sugaring process
+
+commit 5af193247d549c0e18ad02c2f011176064a73b35
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Mar 31 17:37:08 2021 -0700
+
+    support more expr types
+
+commit 182763d7d674f87deb7f21c81f27b0d49b1960ea
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Mar 31 14:22:07 2021 -0700
+
+    simplify get_stmt_decs
+
+commit f8c729c5e6a4c7e2b708d00fc83429ada53595f6
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Mar 31 14:16:49 2021 -0700
+
+    rename for clarity
+
+commit 041715228a33a35df8a2632cda61fe0924b0248b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Mar 31 14:08:03 2021 -0700
+
+    check for nah declarations
+
+commit ac85904772d086155f028f6be4a3c1468b3f8903
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Mar 31 14:07:43 2021 -0700
+
+    add support for foriter and while'
+
+commit faa5653ee681a8998f1f9eba491db9f9518f8dd9
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Mar 30 21:17:48 2021 -0400
+
+    fixed workflow file now (?)
+
+commit 0e94dc94f696020dcf373dfc2411fc91079ff4e4
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Mar 30 21:05:46 2021 -0400
+
+    Fixed workflow stuff
+
+commit f6aef59bfcb3294f6393a4e29514864a4a8ac854
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Mar 30 17:10:58 2021 -0700
+
+    dup check for loops
+
+commit 69ba3cea62244fe46e64ba0d58a66efc283a9eb1
+Merge: 6e79484 bf5b9fb
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Mar 30 19:50:00 2021 -0400
+
+    Merge pull request #38 from raghavmecheri/fix/ast_tests
+    
+    Fixed test suite
+
+commit bf5b9fbb5d7836d21a78522a22d27713d45e8743
+Merge: 2510872 6e79484
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Mar 30 19:49:42 2021 -0400
+
+    Merge branch 'main' into fix/ast_tests
+
+commit 2510872307154e4d363aee1cf821b75be6c512f7
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Mar 30 23:45:28 2021 +0000
+
+    Modified runtests.sh to fix LLVM test bug + added AST test call to Github Actions
+
+commit a8437ec203a96212accea2fb76ee2f7cd7275d88
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Mar 30 16:45:03 2021 -0700
+
+    dup check for if statements
+
+commit fdab10e2e5ca0fa3d732d6fc84422af661ab9f00
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Mar 30 23:43:50 2021 +0000
+
+    Re-added AST tests + added flag to run AST tests
+
+commit 1afbdfc08a544eb32a372eb43c97a79b2bb1843e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Mar 30 09:21:15 2021 -0700
+
+    fix scope bug
+
+commit 003fe9e129d5022995dcdf273c5e676c5783ecdf
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 29 19:22:14 2021 -0700
+
+    edit other test files to remove duplicate variables
+
+commit 5d89102b442dcd3bdfc63387bd91ad389f3dc320
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 29 19:21:51 2021 -0700
+
+    new test file for duplicate checking
+
+commit c29f7ebc988422f18d749ff6529517432e8f9d5a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 29 19:21:34 2021 -0700
+
+    check for duplicate declarations in global stmts
+
+commit 8b938ff627590ee22630bd341074cad83dcce289
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 29 18:22:12 2021 -0700
+
+    finally got blocks to work
+
+commit 6e794845bf6588be4af163f5597f01dd3bb74148
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sun Mar 28 23:17:33 2021 -0400
+
+    Added expression evaluation for Binops
+
+commit 6104748c1070e0a33624596f6866f4e730232767
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Sun Mar 28 21:59:37 2021 -0400
+
+    Added boolean literal evaluation and print value resolver function. Updated make to be less annoying
+
+commit 874866573aa25dedba7ad38519071871db288caa
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Mar 28 17:59:07 2021 -0700
+
+    fix compilation errors
+
+commit c38255f60efae6b8d8635faa3ac26823c6fde5f4
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Mar 28 17:54:31 2021 -0700
+
+    include dec checking in viper.ml
+
+commit a9b5adf3b002f50bc2a7c18673f4c9d074d8c0a2
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Mar 28 17:53:08 2021 -0700
+
+    create decs.ml
+
+commit 9126c5b693364f2830fd183e975174ffa0fddd9a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Mar 28 17:32:50 2021 -0700
+
+    leftover changes
+
+commit c6ee980b6807d1c462f0d7bcc9f7dfebeeeec6df
+Merge: d50cc0b 0de030d
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Thu Mar 25 11:32:09 2021 -0400
+
+    Merge pull request #34 from raghavmecheri/fix/fileorg
+    
+    Restructured files to remove src from the top level
+
+commit 0de030d04b597c5ec5a0e398fffe728622da80be
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Thu Mar 25 11:17:48 2021 -0400
+
+    Update push.yaml
+
+commit e8cb2f13783a1f08d01d9c55d3684f9fb326d094
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Mar 25 14:19:44 2021 +0000
+
+    Restructured files to remove src from the top level
+
+commit d50cc0bde77d03b6e94a1694fbc370b38e206907
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Mar 24 22:53:51 2021 -0400
+
+    removed unused case
+
+commit b82f21b3b60427ce2c7fe5fb69b6bc10656fb090
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Mar 24 22:36:34 2021 -0400
+
+    Cleaned up comments in codegen.ml, ready for submission
+
+commit 59ef31e4798787a32773e35b95dbe6b8d255f016
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Mar 24 22:29:26 2021 -0400
+
+    Chaned expression evaluation types to match Viper LRM
+
+commit 8dbcbb87af2c150e57a11ee95d8c073d9939e5e8
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Mar 24 22:21:27 2021 -0400
+
+    Codegen clean and added tests for printing floats
+
+commit 4bf8d3d6c67d8da7c25a5d3071fbfe604a66777e
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Mar 24 20:52:33 2021 -0400
+
+    Moved expression evaluation to seperate function
+
+commit c1a4bd676f926dc6f03590b20cf5baa07ee69d53
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 21:58:49 2021 -0400
+
+    Updated print format chars
+
+commit 89c396d9670f74a16141681559b2e41987a1186a
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 21:55:19 2021 -0400
+
+    ratghav literally ruins everything
+
+commit 9470ee091e3399d2072ee9b74a1dec9b3fb376c6
+Merge: 3a4c6b2 243f681
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Mar 23 21:25:48 2021 -0400
+
+    Merge pull request #32 from raghavmecheri/feature/codegen
+    
+    Feature/codegen
+
+commit 243f681bc391565bf24d3760d625ec68df62f29a
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Wed Mar 24 01:14:32 2021 +0000
+
+    Changed a.out --> a.ll
+
+commit c3376d3d0d5c12c9398351c6a40bc24961b96a52
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 21:02:36 2021 -0400
+
+    Simple comments
+
+commit b3c447b56a9004123149782b0d4855a7ef9e81bf
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 17:50:27 2021 -0400
+
+    Updated runtests.sh to run on bash, moved simple examples to test
+
+commit 6ed9808e366b1788f3a5af6c3eb28b0372f8cd56
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Mar 23 21:22:49 2021 +0000
+
+    Added .out files so that tests don't fail
+
+commit f1fd11ec2c718f9fb0e8572094f35bd373c0dc1f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 16:50:21 2021 -0400
+
+    Moved working tests to test
+
+commit e17b0a0991518d1627f169d06c40aad8fdaf671f
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Mar 23 16:39:30 2021 -0400
+
+    Modified runtests.sh to remove a.out
+
+commit 1b1093e793088bf0c2d2bf564d52312d10f0023f
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Mar 23 16:39:03 2021 -0400
+
+    Removed a.otu
+
+commit 6fcd403a23e80305ab1e84a46e53cd9ba360f37e
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Mar 23 20:34:59 2021 +0000
+
+    Moved all the test cases to samples (for now) + implemented integration tests with .out files
+
+commit 18990543d0e488fbf444a2d68fc0f8541264536a
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 15:39:41 2021 -0400
+
+    MILESTONE: can use multiple print statments to print chars, ints, or strings
+
+commit 477bcf47fce79bef5cb8692b09a5a8a20c32bed2
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 12:59:04 2021 -0400
+
+    MILESTONE: allow for multiple print statements on top level
+
+commit 37201fe18cac90a0884918e180a73ae7e3d2127a
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Mar 23 12:52:22 2021 -0400
+
+    MILESTONE: Printing a number works
+
+commit bbaabde697288121ffdd2f8135cfbc4b8a935a12
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 22:08:15 2021 -0700
+
+    continue function semantic checking
+
+commit 6458a71629c8be1d2f74c7e3330fcf2f7e540314
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 21:04:21 2021 -0700
+
+    implement find_func
+
+commit 9d5370466bc7c491ff6114e1ad0282a9361831ca
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 19:42:27 2021 -0700
+
+    reorganize let statements
+
+commit 677fb9657ec04751dea8a78617edd9420eafb48f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 19:31:43 2021 -0700
+
+    improve overloaded func checking to use unique keys
+
+commit c6d802d5dca59cb6e9fd58d227868a0f005cd0c5
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 18:35:53 2021 -0700
+
+    globals -> statements
+
+commit 7a45797964acd498aa9fd58afaee327d6cf87c29
+Merge: 62e8089 a0022bf
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 17:11:19 2021 -0700
+
+    merge
+
+commit 62e8089d8a27ea50a652adb0f847903e7649f75e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 17:09:47 2021 -0700
+
+    add new test for overloaded functions
+
+commit 6bd2c0dbed23c842a53b6fa038fc892e03661152
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 17:08:34 2021 -0700
+
+    include semant checking to allow testing
+
+commit 277534d5472eb5fc650d512cbbbc0b7349310b75
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 17:08:01 2021 -0700
+
+    allow for overloaded functions in function checking
+
+commit 5137a9500a90b6fc5d492e0c0f25eb3bc7e99905
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 22 13:56:16 2021 -0700
+
+    fix pattern matching
+
+commit 57ddc6ff20bb2a043599d02883fa6c4951653ef7
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Mar 22 16:04:43 2021 -0400
+
+    Added some dumb test files, updated viper.ml to allow for -l flag, added a ton to codegen
+
+commit 08aa79c936b263dbda1618a890f8ac6e1415bd0c
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Mon Mar 22 03:50:43 2021 -0400
+
+    Broke ground on codegen.ml, simplified helloworld.vp bc Ratghav is too try hard
+
+commit 4d8a5b35e61e95ca87f2cb23d3e7f39ccf72bd11
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Sun Mar 21 22:02:49 2021 -0400
+
+    Added test/samples/helloworld.vp
+
+commit e4e9c11ea7154444d1b9a0e8b2c00e404ec0efdf
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Mar 22 01:55:10 2021 +0000
+
+    Commented out semant stuff so that it just returns a random ast
+
+commit a0022bf3bec9dd602749fefc4ad9ab6c6f627a02
+Merge: ce83011 3a4c6b2
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Mar 22 01:34:48 2021 +0000
+
+    Merge branch 'main' of github.com:raghavmecheri/viper into feature/semantics
+
+commit ce830110167072abb732b44d3bdd40b1c414787b
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Mar 22 01:34:44 2021 +0000
+
+    Attempting to build sast.ml
+
+commit b3c81ace40ec299de5897fa0adf8af6589d8970e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Mar 20 22:34:47 2021 -0700
+
+    simplify pattern matching
+
+commit 3a4c6b223992f186fb0f2543256afa8e057d60a4
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Mar 20 18:43:42 2021 -0700
+
+    fix errors
+
+commit 208e6114ed6155502051feacd410ceb2af09061a
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Mar 20 18:42:55 2021 -0700
+
+    implement function dup/overwrite checking
+
+commit 07840d078e1de70ab704b317b871b3cb2d4db73d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Mar 20 17:34:10 2021 -0700
+
+    check for nah defs and duplicate vars
+
+commit dee53d3fb4ad994aeb76ad093921b93309e75d8d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sat Mar 20 17:00:19 2021 -0700
+
+    void -> nah
+
+commit 6dc600b59927410807f832726047b3d176e8cd39
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Mar 18 17:03:39 2021 -0700
+
+    fix indent
+
+commit e7d8ad291ada48b3d4ca3a71dd3a3db3ad6e6aa4
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Mar 18 17:00:48 2021 -0700
+
+    update pretty printing in sast.ml
+
+commit 81cccc872a0fd26f92bc6210fcfb1dc30fbbaa2f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Mar 18 15:31:50 2021 -0700
+
+    update sast.ml with viper sexprs and sstmts
+
+commit 5d05d32140ca94a55409d6b101053cceb0050b5d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Mar 18 15:13:24 2021 -0700
+
+    Tuple -> Group
+
+commit 39575cb0d4ecfdb45f5da9466102a1727d90be0d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Mar 18 15:10:15 2021 -0700
+
+    change microc -> viper
+
+commit d5e375777d3c497e9276d20416d892381364076b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Mon Mar 15 22:23:07 2021 -0700
+
+    Add short script to quickly build MicroC container.
+    
+    I got tired of copying and pasting the command.
+
+commit 9d62a4c66814f8fa82114a7c50f4628d64f30732
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Mar 14 17:45:08 2021 -0400
+
+    semantic checking
+
+commit 89d7b96dfb834d3b405d38d287660b401ee8becb
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Thu Feb 25 13:26:14 2021 -0800
+
+    Rebased to fix issues with CI
+    
+    Fix minor issues
+    
+    Update Makefile
+    
+    Update push.yaml
+    
+    Update Makefile
+    
+    Update Makefile
+    
+    Hopefully fixed CI
+    
+    Update push.yaml
+
+commit 92a38f634d6cb7822cc50d7dd731bc698ba26d52
+Merge: 118a8d7 790a35b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 23:22:10 2021 -0800
+
+    merge and add header
+
+commit 118a8d7a68946d2687a87cbb6bd37a3250ceb6bf
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 23:19:24 2021 -0800
+
+    add code example
+
+commit 790a35bb3e5c60e0796ab3b5938b5bcd152e5ff5
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 23:51:25 2021 -0500
+
+    Added spaces before table (export issue)
+
+commit b19c0da129ee8bc8897c1c6680d524bd7eeef453
+Merge: bfa443a a86efa9
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 23:26:08 2021 -0500
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit bfa443af32908b6186597c062f4078ea6ea8303e
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 23:26:02 2021 -0500
+
+    Removed duplicate #10 entry on ToC
+
+commit a86efa9f6523142a9ed27f6d08f7f969610933d4
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 20:20:45 2021 -0800
+
+    Format headers
+
+commit c230cb488878c76f4fa625774018b43590371409
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 24 23:16:42 2021 -0500
+
+    Update LRM.md
+
+commit fe0fdde802cc10f39428cb543ed2d0fef8cd872f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 20:11:43 2021 -0800
+
+    Fix link issues
+
+commit 2eba2e5d453e5a6ae18c6779512e07c4fbc04cdb
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 24 23:07:38 2021 -0500
+
+    Update LRM.md
+
+commit ab1154dc0c853528c77206443fa8b8a418a81e8b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 20:05:31 2021 -0800
+
+    Fix merge conflicts
+
+commit a3ed27219a5030535b57d5e2562d3e5b8289fb26
+Merge: a08d41a 896c7ef
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 20:02:21 2021 -0800
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit a08d41a94dafa347c932fe9b0dd5fcc869e133f6
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 19:58:53 2021 -0800
+
+    update table of contents
+
+commit 4fcee828665fa95e2f89a8e3e4c930676d70ede3
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 19:46:58 2021 -0800
+
+    add len() to std lib
+
+commit 6fb72c4356f04e18a2dc3f525b756a238383e057
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 19:28:39 2021 -0800
+
+    add list API
+
+commit 896c7ef23b73147495db24406b933791725ce345
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Feb 24 22:13:57 2021 -0500
+
+    Added contents for section 4
+
+commit cfbff52bd490e4fe67a53ca88e00275eb885c30b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 18:49:17 2021 -0800
+
+    add type functions to stdlib
+
+commit 6bdbefa15b840b4cf64162cfc8f14974db85c66d
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 24 21:41:12 2021 -0500
+
+    Update Makefile
+
+commit 588f73406e159bc036df42e42f74d5cab458d1e2
+Merge: 274c6b0 4cc900c
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 21:36:31 2021 -0500
+
+    Merge
+
+commit 274c6b0516fdd1716602e65f72680b916a7496b9
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 21:34:37 2021 -0500
+
+    LRM tweaks + sample addition
+
+commit 4cc900cce392b1028a547a606b47c41d73c30c37
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 24 21:28:01 2021 -0500
+
+    Update LRM.md
+
+commit 425171503f88cfb9580d719fbd8b0a09bf6fc28d
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 24 21:11:50 2021 -0500
+
+    Update LRM.md
+
+commit d5ba957e777e8f1e076663aa1cb8d6cf1c22a896
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Feb 24 20:42:58 2021 -0500
+
+    Fixed decl pretty print
+
+commit f244c97c6a484a84f14835989b0fc46ebc7dd480
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Feb 24 20:34:31 2021 -0500
+
+    Fixed dict access
+
+commit bd6a5cf2e26764a997973c089d14c6f007da90a7
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 17:32:11 2021 -0800
+
+    add string to primitive tables
+
+commit cc309c68540e126032469014818cbf44e8520868
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 17:26:58 2021 -0800
+
+    add math functions to std lib
+
+commit 13e23d729d3249e289a0f723264ba624ba8676a0
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Feb 25 00:59:59 2021 +0000
+
+    Dictionary support with one r/r error
+
+commit fdf7b2261de647d9613e3f26bd63ad2cff1071e9
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 16:42:23 2021 -0800
+
+    redefine structure of std lib
+
+commit 9467c246d890ed1428329b2d0c8346f61bb52e02
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 16:21:11 2021 -0800
+
+    remove explicit size declaration from lists
+
+commit ab00d9b25f16319c07ffba42dd9e96b8d92a4ed6
+Merge: 0fb7664 d921788
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 24 19:12:44 2021 -0500
+
+    Merge pull request #24 from raghavmecheri/feature/callable_expr
+    
+    Functional expr.call() + tests
+
+commit d921788fe4a335148a77f5c9857db3fdb2a7b4c4
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Feb 25 00:11:17 2021 +0000
+
+    Modified test cases
+
+commit 0fb7664d1fa29baf6363858c7d525da3a6f5fe44
+Merge: dcaac11 5655609
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 17:18:42 2021 -0500
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit dcaac117cd365db53c09ac351bb44bb789599fa7
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 17:18:38 2021 -0500
+
+    Fixed init
+
+commit 56556090ccfd7e738682378caa59a078c7dbc221
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 24 17:12:49 2021 -0500
+
+    Update push.yaml
+
+commit 4c34e6466690975acf0ca100e55516a73f447f41
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 24 17:11:12 2021 -0500
+
+    Updated gitignore + CI
+
+commit c59bc19ec0f600646cb7efd801bcdd95b6ac889b
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Wed Feb 24 22:03:19 2021 +0000
+
+    Functional expr.call() + tests
+
+commit 4ef88d1e509017f561119bccd9da76fa2d9217b0
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 00:44:56 2021 -0800
+
+    Fix broken links
+
+commit b735dd8c6fb6c73ef7a1a36408659629df3a0802
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 00:34:31 2021 -0800
+
+    fix header links to work on github
+
+commit 24ff09de53e9d4163676013dbaf3736c2409b543
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 00:21:24 2021 -0800
+
+    test emoji header
+
+commit d3df496b878878304d62eda0dbc0ecaf32bcb534
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 00:20:07 2021 -0800
+
+    test headers in github
+
+commit c601a9a752a6a1308cc3d24c18534f58ce5d668a
+Merge: d749806 dcb4ba5
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 00:14:14 2021 -0800
+
+    merge
+
+commit d7498066564c05b7ef417cf2152ad4dade1efc0b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 24 00:07:30 2021 -0800
+
+    add emoji
+
+commit aac50f11e04e7341ec78336da88f1c47b18a503d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 23:44:23 2021 -0800
+
+    Add return to contents at end of each section
+
+commit f8903a085b37c42b1db776a2daa54ff6721ecd0d
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 23:34:21 2021 -0800
+
+    implement clickable table of contents
+
+commit 2fcbd4d1b881d7088796401fe396c576dbd05609
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 22:12:31 2021 -0800
+
+    && + || -> and + or
+
+commit dcb4ba575be3e5708a2f36d79dc4a3cf547a8597
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Wed Feb 24 01:12:28 2021 -0500
+
+    Completed Type System, began working on section 6 Standard Library
+
+commit df8e2d3c4e9713389bb34e713226d31ab66ebc9b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 22:10:31 2021 -0800
+
+    progress building table of contents
+
+commit 615e7834b093b0fde511918754e0bc314661e55b
+Merge: 6eaa36a f82512e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 21:30:33 2021 -0800
+
+    merge
+
+commit 6eaa36af89ecc8c8355019e73a57b3062e2ad956
+Merge: 1bcfecd e41218b
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 21:28:58 2021 -0800
+
+    continue editing contents
+
+commit f82512e7f4dd525844a48f432033d70ca84fb0f7
+Merge: 596862e b5f38aa
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 22:56:27 2021 -0500
+
+    Here goes nothing
+
+commit 596862e897ff92514455ba490a42aeabb01d501f
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 22:54:17 2021 -0500
+
+    Updated Section 2
+
+commit b5f38aad6628909cfacf456820070472c32475dd
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Tue Feb 23 22:28:27 2021 -0500
+
+    Cleaned repo
+
+commit 4fcae81830483fd23c34ef51b6ae668a9a37347c
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 22:25:31 2021 -0500
+
+    Update LRM.md
+
+commit 0759cc036cc6917ea0fef036ba7d27ed7dd98a8e
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Tue Feb 23 22:22:00 2021 -0500
+
+    LETS GO reduce/reduce vanquished
+
+commit 1bcfecd549c22a6fc54f349feaabf6dfb5af9d59
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 19:18:31 2021 -0800
+
+    start table of contents
+
+commit 0305e976107c0e03adb19f5996b4d1958b9adb0f
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 21:53:03 2021 -0500
+
+    Update LRM.md
+
+commit 56d1d17d69bcbc31fbba69561820a81c0be30077
+Merge: 87f4e18 e41218b
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 21:50:49 2021 -0500
+
+    Idk what happened
+
+commit 87f4e18204a78823bb2074938648623a74e97a07
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 21:49:20 2021 -0500
+
+    Ended code block at end
+
+commit e41218b9df5b2844d87cb363e0c73f3b37f547ed
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 21:45:28 2021 -0500
+
+    Update LRM.md
+
+commit 9165718ca9573031522c5e5210e643c71fe2e010
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 21:44:24 2021 -0500
+
+    Update LRM.md
+
+commit edfbd3c6aa16bf203f37ae90da7479fc16ac21b1
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 17:56:52 2021 -0800
+
+    add overview
+
+commit ce07a4e67342e14e6c9355cef6324c67b92c60aa
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 16:53:21 2021 -0800
+
+    test contents
+
+commit b555bd246ea11decf55335d9e449566e99ac4f40
+Merge: 82513f8 38952b1
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 16:49:04 2021 -0800
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 82513f8d5d152ce405130e6034854992ed0722df
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 16:48:57 2021 -0800
+
+    link test
+
+commit 38952b18e77878beea43c7ca6f69c22de4f79508
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Feb 23 19:15:10 2021 -0500
+
+    Delete old_testo.vp
+
+commit 8a024ef51fa62f5df180d85aee30f4ebaa2faca7
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Wed Feb 24 00:08:58 2021 +0000
+
+    Closed #7, #18, #19, #9, #2
+
+commit 6e717da2822920aaed889ecd675b6b99a46790c6
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 23:27:24 2021 +0000
+
+    Functional ability to pass arrow functions (non anon
+
+commit d93dfe9621f094289f5290ab0a5ae34d13033a1b
+Merge: fad9525 c5165ee
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 23:17:10 2021 +0000
+
+    Merge branch 'main' of github.com:raghavmecheri/viper into feature/tuples
+
+commit fad9525c05cf77715a96ad053152d069128ddbbc
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 23:16:47 2021 +0000
+
+    Tuple integration + test cases for loop syntactic sugar
+
+commit c5165ee455334efaa4c2976d31c629e39dead2c4
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 17:46:43 2021 -0500
+
+    Update LRM.md
+
+commit b543c8f246f8ca428b7d65051f6146f2ba6ee140
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 17:42:22 2021 -0500
+
+    Update LRM.md
+
+commit 418a6f5fd8330061efaa3c979581f58131b1b089
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 17:00:24 2021 -0500
+
+    Updated sample code syntax errors and layed out standard library format
+
+commit 8e6214d779a29872156dc863aef9fd552d2435b4
+Merge: 39fa76b 3de9841
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 16:45:04 2021 -0500
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 39fa76b086ded5d8b065052f305b0b4be8bf8043
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 16:44:45 2021 -0500
+
+    Added example code
+
+commit 27b4809d158e89904c3a58696c17edb7bba9fd41
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 21:44:31 2021 +0000
+
+    Working tuples, but with one SR conflict
+
+commit 7261ef7724a1cfdc26b8ea61e13bd951c60b2a6e
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 12:00:39 2021 -0800
+
+    move string to primitives
+
+commit 3de9841edea471e2a18dc3c23e3d70228d362208
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 13:37:36 2021 -0500
+
+    Update LRM.md
+
+commit 05244d627468251a82c090ac05d5e63a055ff500
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Tue Feb 23 13:36:41 2021 -0500
+
+    Update LRM.md
+
+commit 236cd27329554dd368e9772c04ee1337d56d62c3
+Merge: ba5baee 2f1d449
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 13:11:02 2021 -0500
+
+    Combined Trey's first commit and LRM updates
+
+commit 2f1d44994e928ea932b2c59b1b2d355b94fba737
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 00:32:41 2021 -0800
+
+    add colored code
+
+commit 817836cf33f3e9f9439e589f07bde0c857ffbc6c
+Merge: afbafbb 25e28a9
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 00:26:53 2021 -0800
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit afbafbb279f176ae1e7465a1a9f15a5e42da4a18
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 23 00:26:46 2021 -0800
+
+    Update data types in LRM
+
+commit 25e28a986e89765943a7583c690f6167ed076d10
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 07:07:36 2021 +0000
+
+    Fixed array
+
+commit ba5baee95823bce43cb80632f7698e7d87f9f0e5
+Author: treygilliland <jlg2266@columbia.edu>
+Date:   Tue Feb 23 01:56:29 2021 -0500
+
+    Trey commit #1
+
+commit bb7c499529b5a38f072bd36f87f9a6bf38d38426
+Merge: a241a28 ce62732
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 06:52:13 2021 +0000
+
+    Merged upstream changes
+
+commit a241a280fde4f8f275b183d2803586491e683215
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 06:50:13 2021 +0000
+
+    Type matching alpha chadism
+
+commit 6d76b226ba920b37d77d15968ad500c6aa556c05
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 06:04:20 2021 +0000
+
+    Broken pattern matching
+
+commit ce62732a9a2a904702e2bdc0fc610f0d3e700b93
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Tue Feb 23 00:59:04 2021 -0500
+
+    Expanded possibilities for chars and strings
+
+commit 565c8ddc764c5a5f0b3b09f0617f7ac4c8118ec6
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Tue Feb 23 00:52:52 2021 -0500
+
+    First string test
+
+commit fefef74584be6b7d51b61843d77adc3513249f94
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Tue Feb 23 00:52:31 2021 -0500
+
+    Strings and String Literals
+
+commit f3fdece37f140389e811bce41cc105581e4ee821
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 04:35:55 2021 +0000
+
+    Basic ternary integration
+
+commit 7675a58caa31a875f463fd486744026214a5ffe6
+Merge: 4d646b2 fe00f18
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 04:07:51 2021 +0000
+
+    Merged upstream changes
+
+commit 4d646b2c4f5f749a44a00180f95e59b60f74053d
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 04:06:18 2021 +0000
+
+    Super saiyan runtests.sh
+
+commit fe00f184731ad5ea05b2f530cae440d298b7c3d9
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Feb 22 23:00:08 2021 -0500
+
+    Added skip,abort,panic
+
+commit d060be5fa5627e5d387aff6f026331042fa4dac1
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 03:55:39 2021 +0000
+
+    Modified test script to bail on first failure
+
+commit 7214de7ab7f9482a2982c11346eeee9471f58e89
+Merge: b3cf6be 331875b
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 03:50:05 2021 +0000
+
+    Merge upstream
+
+commit b3cf6be4efc35ec0102e4efa57df414652d8d1e0
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 03:47:42 2021 +0000
+
+    Added floats cause I'm the GOAT
+
+commit f26b91ee3bbc47276e2144dfdfe534edab846fd8
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 03:36:33 2021 +0000
+
+    Implemented operator shorthands, closed #16
+
+commit 331875b3f9c0e580cab8c49436eb0ea9bc131dc3
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Feb 22 22:21:50 2021 -0500
+
+    Test cases for in and has
+
+commit 173129764671ac5d0c04445ae9bcad81d07eb311
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Feb 22 22:14:32 2021 -0500
+
+    HAS operator
+
+commit 3b65823fad412c2059ae1d8368b5239d7d8a91b2
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Feb 22 21:55:33 2021 -0500
+
+    In op p1
+
+commit 6fdf1b66383b995961289ba785557a77df916911
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 02:51:05 2021 +0000
+
+    Added condition + for fix
+
+commit df49c2039fa23c980ff606c699058d28df54ea70
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 02:37:34 2021 +0000
+
+    Closed #11
+
+commit f3f56f639926aa148d351770a44e0a38081c5ddd
+Merge: 193a3e8 e90cb0d
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 02:23:22 2021 +0000
+
+    Merge branch 'main' of github.com:raghavmecheri/viper into main
+
+commit 193a3e889b5a5bbe07a4829eb2b966963e6ffa46
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 02:22:49 2021 +0000
+
+    Basic functionality + no errors :)))
+
+commit a0221b737f28a0d16a4018ffebfaa4bac77c620b
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 01:48:08 2021 +0000
+
+    Not yucky grammar
+
+commit 67c0ebc3041b2e4a6e32ef6796e85a29ba8a2a3d
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Tue Feb 23 00:29:06 2021 +0000
+
+    Redid test suite
+
+commit 844be1d01de393782994ca4287b24a23b23ad80a
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 19:29:15 2021 +0000
+
+    Formalised tests a little bit more
+
+commit e90cb0de0ca79681e2ba96055af3bdd2843882cb
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Feb 22 12:37:37 2021 -0500
+
+    Update LRM.md
+
+commit 5fc4864ac6b9f6def1ab61f1e6ecba0af35add69
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Feb 22 12:34:21 2021 -0500
+
+    Update LRM.md
+
+commit 0bfe9932e4af67f18631d6f0706c146141cbe239
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 15:42:52 2021 +0000
+
+    Broken, but somewhat valid attempt
+
+commit 42057fece458597d75ea011213a85f57eb41a5ce
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 15:35:04 2021 +0000
+
+    Declarations + decassigns both work
+
+commit edbd6669981645da140797a69f5fb0bb1a39376c
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 14:30:37 2021 +0000
+
+    Array indexed assignment to expression + closed #4
+
+commit 0042d9957963c6725f75ef8e6ef75454f04f6abf
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 14:27:45 2021 +0000
+
+    Array indexed access
+
+commit be3aced4d0b46db7c029f19ec57ccd8adf4010c6
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 14:22:01 2021 +0000
+
+    Musti was trolling
+
+commit ef5fef858593147341a623809313b1a5f3f59b37
+Merge: 5a8fbe3 6b40b7f
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Feb 21 23:23:09 2021 -0800
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 5a8fbe399a5a67f3d4d0b0013370dfb813701716
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Feb 21 23:23:03 2021 -0800
+
+    start adding higher-order data types
+
+commit 6b40b7f778cd31b4ac8d3130ea6a9dfef39d401c
+Merge: 65a0030 7e536cf
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Feb 22 01:00:21 2021 -0500
+
+    Merge branch 'main' of https://github.com/raghavmecheri/viper into main
+
+commit 65a00308290c3d1e4b5b1ed164b1877e6cd783de
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Mon Feb 22 00:59:52 2021 -0500
+
+    Lists part 1
+
+commit 7e536cf545dcb303ddd0d9eb68db420f42d4ce3f
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Feb 22 00:04:24 2021 -0500
+
+    Update LRM.md
+
+commit 8777652d9f2db8fc85b5df411d54584724bc808a
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 23:24:27 2021 -0500
+
+    Update LRM.md
+
+commit ca15a5d1ca9d0333b028319d494f71989ff29107
+Merge: feab3ab 7f19210
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Sun Feb 21 23:23:33 2021 -0500
+
+    Merge pull request #8 from raghavmecheri/fix/brokenvdecls
+    
+    Working weird shape stuff
+
+commit 7f192107af4add8a2ab1f5c709a2aac4c3ea2eba
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Mon Feb 22 04:22:52 2021 +0000
+
+    Working weird shape stuff
+
+commit 99da8a685d5da8a1186bc524658310da159083f4
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Feb 21 19:26:56 2021 -0800
+
+    update int, float, bool
+
+commit feab3abf26247d453cfd5aece2609330e168329f
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 21:36:08 2021 -0500
+
+    Update LRM.md
+
+commit b1fcc62a1b9e560f1e2bd2c4e084262aa6432154
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 20:52:06 2021 -0500
+
+    Update LRM.md
+
+commit fba0a770706a5eb91e82b921a5bf4b386fd8521f
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 20:46:51 2021 -0500
+
+    Update LRM.md
+
+commit 010696560dab8b9fb2c22dce75fa1a163b3edc33
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 20:45:11 2021 -0500
+
+    Update LRM.md
+
+commit 4f077353f39451a803ab1d8a92861405b224a1c2
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 20:20:57 2021 -0500
+
+    Update LRM.md
+
+commit 4874739065314e0232fc0b5e354f7cc38afb60d9
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Sun Feb 21 17:19:04 2021 -0800
+
+    Update data types and chars
+
+commit 750d9548af980d96b62c4fb20f3ddd2b85f71800
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 19:50:47 2021 -0500
+
+    Update LRM.md
+
+commit 3e5e3c7e958d2f04e26817fc04de0cf8b879a07f
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Sun Feb 21 19:06:12 2021 -0500
+
+    Update LRM.md
+
+commit 3a1b05e287e5eaf1798b2e9eac94cc490dddeb0d
+Merge: 76207ff 528b583
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Thu Feb 18 16:05:31 2021 -0500
+
+    Merge pull request #1 from raghavmecheri/feature/arrow
+    
+    Feature/arrow
+
+commit 528b58358ebb45736908ce0b1c6e705011411ef2
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Feb 18 20:06:16 2021 +0000
+
+    Added example of second type of arrow function
+
+commit 0523a908238cdd83200aae85178ce1749b874fbd
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Feb 18 20:05:27 2021 +0000
+
+    Got arrow functions to translate to regular functions :)
+
+commit 0e3f3a3764f841af4f2bb3aa638f81321c0486a2
+Author: Raghav Mecheri (Linux) <raghav@mecheri.in>
+Date:   Thu Feb 18 20:05:13 2021 +0000
+
+    Added gitignore
+
+commit 76207ff128c40ecc17f1b74a464b1cda303c539d
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Feb 17 23:39:00 2021 -0500
+
+    Example
+
+commit 0ab0bbaacc03d5080536013be52e33121d069c74
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Feb 17 23:38:00 2021 -0500
+
+    Additional files for Makefile functionality
+
+commit b0c05fd1e940a5aab31854f0c93e34746d81746b
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Feb 17 23:30:28 2021 -0500
+
+    First run scanner, parser, and ast changes
+
+commit 4b306c4441a3fbd7152a08bcf9f65b95e495aceb
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Wed Feb 17 21:10:25 2021 -0500
+
+    Adding additional files
+
+commit 76612774f11806196c938e55a621185a2065bf37
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Tue Feb 16 21:53:27 2021 -0500
+
+    Create LRM.md
+
+commit 8dcf781cae965f914cf144a8663bbcd3110c52dd
+Merge: f73fd69 0eba599
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Feb 16 02:30:32 2021 -0500
+
+    Merge branch 'main' of github.com:raghavmecheri/succotash into main
+
+commit f73fd692ac6395d79efa8252607f0c43edfcf269
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Feb 16 02:30:25 2021 -0500
+
+    Added a couple of types to the scanner
+
+commit 0eba599255a3d6ee436d71f18667324edf91fcbe
+Author: Mustafa <maxusmusti@gmail.com>
+Date:   Tue Feb 16 01:52:35 2021 -0500
+
+    Fix README
+
+commit 1ce18f321b552cb32b5b300a988982e5be816530
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Feb 16 01:49:51 2021 -0500
+
+    minor changes
+
+commit e62cdf63254f7722f0fb36fd086f989e7b4260d3
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Mon Feb 15 16:11:23 2021 -0500
+
+    added scanner, parser and ast from microc
+
+commit 1be7c0cadcdfea3a60ef56b8705b077fb7608087
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 3 23:05:31 2021 -0500
+
+    Fixed minor issues with proposal
+
+commit 45daaf6c8b0c5a66f3fa9727d9e2c8d06763b116
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 22:35:26 2021 -0500
+
+    Update Proposal.md
+
+commit 4997a6492de9afcc20bdb5f3d9d4918c83e1f3bc
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 22:28:49 2021 -0500
+
+    Update Proposal.md
+
+commit 46a1a8d14a3194142cddffdfb01bf52709b6f192
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 22:26:21 2021 -0500
+
+    Update Proposal.md
+
+commit 7821f7b96f085a4a427635c5ca19d1e1e58b0f17
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 3 17:14:35 2021 -0800
+
+    Update Proposal.md
+
+commit a628876b4d8d244bec686864e20a6f4ec023d5b8
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 20:04:27 2021 -0500
+
+    Update Proposal.md
+
+commit a1a31369b3e4acac4fc3278c0c029f2b68e3fa84
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 19:58:25 2021 -0500
+
+    Update Proposal.md
+
+commit 35e5b4a9f00992a24e78c368892dfaac4c851797
+Author: Trey Gilliland <treygilliland3@gmail.com>
+Date:   Wed Feb 3 18:45:28 2021 -0500
+
+    Fixed semicolon
+
+commit d63c8f86c39fb20fd6d8450a6a8b4eb7c3ff6928
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 18:39:43 2021 -0500
+
+    Update Proposal.md
+
+commit 3ee76505bdc89cae7b1871a2440c0f802477c312
+Author: Trey Gilliland <treygilliland3@gmail.com>
+Date:   Wed Feb 3 18:35:45 2021 -0500
+
+    Update Proposal.md
+
+commit 33fb83e33229e73b06a5ee9df9bb0d4599aad94c
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 16:04:45 2021 -0500
+
+    Update Proposal.md
+
+commit 1c18591c7596323c8d319a4acb19fa8a52b1da25
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 16:03:18 2021 -0500
+
+    Update Proposal.md
+
+commit 27c77205617dd7ad9d358dab5642af81c24c0cf5
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 3 15:53:24 2021 -0500
+
+    Update Proposal.md
+
+commit b2321fdeebff8b32f197c6157fd88c0acab62b43
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 3 15:51:46 2021 -0500
+
+    Update Proposal.md
+
+commit c7ff5dee18ea57f931ff295de1c0cd6a8640c371
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 3 15:46:46 2021 -0500
+
+    Update Proposal.md
+
+commit 91a6a1d9fcf6a1956f27cde4eabf5dc38843716d
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Wed Feb 3 15:32:49 2021 -0500
+
+    Fixed issues
+
+commit 5a8949d091bfbd5e3631c9100d5140d6b83e29ef
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 15:21:28 2021 -0500
+
+    Update Proposal.md
+
+commit b966034090aa3b3cbaf8719697169144a9c21288
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 15:16:10 2021 -0500
+
+    Update Proposal.md
+
+commit 762af4033bf8df7a10763bcd69c0266adf1f5e92
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 15:11:37 2021 -0500
+
+    Update Proposal.md
+
+commit 97105b515e33dc995f6fd08832d5bae3bd8ea4bf
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 3 14:43:03 2021 -0500
+
+    Update Proposal.md
+
+commit cf60163ecc4693fdae4fc840536e442e1a1c32c6
+Author: Dreams-Happen <ottomanomatthew@gmail.com>
+Date:   Wed Feb 3 14:42:19 2021 -0500
+
+    Update Proposal.md
+
+commit bd4970131e3814fe8a1d193bf5e531d55b10a44b
+Author: Mustafa Eyceoz <maxusmusti@gmail.com>
+Date:   Wed Feb 3 14:12:38 2021 -0500
+
+    Update Proposal.md
+
+commit 3887c2c9cc33a2a5d0d663e50ff5b831568998ad
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 14:09:33 2021 -0500
+
+    Update Proposal.md
+
+commit 7821d9f75b632e5fd016a14120992d22a1d1ad7f
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 14:09:22 2021 -0500
+
+    Update Proposal.md
+
+commit 71e0746b5e2b5f2cce2cd545e973a46f60c97b94
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 13:39:15 2021 -0500
+
+    Update Proposal.md
+
+commit dd127950e08eb4d4403bb0c090e4816b7eb39332
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 13:30:52 2021 -0500
+
+    Update Proposal.md
+    
+    Added section on functions
+
+commit 0c44c2f83196014eeba8f6a0fa62715f2229c9e2
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Wed Feb 3 00:16:42 2021 -0800
+
+    Add syntactic sugar to proposal🍭
+
+commit b60116b863311e4373762da834dfe3bd350d9fdf
+Author: Tommy Gomez <tjk2132@columbia.edu>
+Date:   Tue Feb 2 22:19:20 2021 -0800
+
+    Update README.md
+
+commit 4213b2a3265365213d2950b4ed041fa67b49a4a5
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:10:52 2021 -0500
+
+    Update Proposal.md
+
+commit ba5abb8c4dbb63f248a3089831a1b2e2ce1b45d2
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:10:20 2021 -0500
+
+    Update Proposal.md
+
+commit e20a1ec24e1f404cf77b6f77934572570a1acf16
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:08:37 2021 -0500
+
+    Update Proposal.md
+
+commit f465f53a1d66a56f02617639ed9de797950a41ab
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:03:20 2021 -0500
+
+    Update Proposal.md
+
+commit 01202f796f339e885ffe6a368d11b983f9fa1826
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:02:37 2021 -0500
+
+    Delete REAMDE.md
+
+commit a4e8105894b5765fb2bc93e7d76e04de76cc1877
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:02:30 2021 -0500
+
+    Create README.md
+
+commit e55fc01f0a5d0b7d6b0b11ee5e15e7a7aee6f335
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:02:01 2021 -0500
+
+    Update Proposal.md
+
+commit ed294641626dbae744500c786e35fcace1a4f1ab
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:01:26 2021 -0500
+
+    Update Proposal.md
+
+commit f4ecd16fe0a6e827439057103ea2ffa45e38f7db
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 01:00:11 2021 -0500
+
+    Update Proposal.md
+
+commit 92820d2c85f3ea284e25826327410e8cd02f5779
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:59:29 2021 -0500
+
+    Update Proposal.md
+
+commit a4ef4123be3a12142f9dd851b58f87cdaf4b62ea
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:56:06 2021 -0500
+
+    Update Proposal.md
+
+commit e82741b1b96314aacbbdfe0e6b8893ab46a836d6
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:55:47 2021 -0500
+
+    Update Proposal.md
+
+commit d28723d7af44636618f574263e441dd70caf0e8e
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:55:17 2021 -0500
+
+    Update Proposal.md
+
+commit ff696f231b94349b3f4cc37f29aff9c1cad62b9e
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:54:35 2021 -0500
+
+    Update Proposal.md
+
+commit 5206b88bc79cf8e1dc6b2dcf2772dffbeebf827e
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:52:17 2021 -0500
+
+    Update Proposal.md
+
+commit 3357d3818736c681f38a10979a6f0bb4ff350ec2
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:50:40 2021 -0500
+
+    Update Proposal.md
+
+commit 9f151612d548c58ecb81292b361cfd5a4af8ccb1
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:49:34 2021 -0500
+
+    Update Proposal.md
+
+commit ec3afce8f07e62b1c4db44ffc214543125277465
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:42:56 2021 -0500
+
+    Update Proposal.md
+
+commit d57e7b82be31fda12f3ed6e286363ff5cc79bff9
+Author: Raghav Mecheri <37787004+raghavmecheri@users.noreply.github.com>
+Date:   Wed Feb 3 00:17:54 2021 -0500
+
+    Create Proposal.md
+
+commit 3f5c8e1c255559463063079757998d7e48681267
+Author: Raghav Mecheri <raghav.mecheri@columbia.edu>
+Date:   Tue Feb 2 23:54:03 2021 -0500
+
+    Added README
 ```
 ## `16.2` Source Code
 ```
