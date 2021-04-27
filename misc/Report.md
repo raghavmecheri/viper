@@ -122,35 +122,35 @@ Authors:
         1. [add()](#941-add)
         2. [keys()](#942-keys)
         3. [contains()](#943-contains)
-10. [Sample Code 🧩](#10-sample-code) 
+10. [Sample Code 🧩](#10-sample-code)   
     1. [Fizzbuzz](#101-fizzbuzz-examples) 
     3. [Calculate Function Example](#calculate-function-example)
     4. [Wordcounts in a string array](#103-wordcounts-in-a-string-array)
 11. [Language Grammar](#11-language-grammar)
-12. [Project Plan]
-    12.1 [Specification Process]
-    12.2 [Development Process]
-    12.3 [Testing Process]
-    12.4 [Team Responsibilities]
-    12.5 [Project Timeline]
-    12.6 [SDE]
-    12.7 [Programming Style]
-13. [Architectural Design]
-    13.1 [The Compiler]
-    13.2 [The Lexer]
-    13.3 [The Parser]
-    13.4 [Desugaring]
-    13.5 [The Semantic Checker]
-    13.6 [The Code Generator]
-    13.7 [C Libraries]
-14. [Testing]
-    14.1 [Scanner, Parser, AST]
-    14.2 [Semantic Checker]
-    14.3 [Code Generation]
-15. [Lessons Learned]
-16. [Appendix]
-    16.1 [Git logs]
-    16.2 [Source Code]
+12. [Project Plan]  
+    12.1 [Specification Process]  
+    12.2 [Development Process]  
+    12.3 [Testing Process]  
+    12.4 [Team Responsibilities]  
+    12.5 [Project Timeline]  
+    12.6 [SDE]  
+    12.7 [Programming Style]  
+13. [Architectural Design]  
+    13.1 [The Compiler]   
+    13.2 [The Lexer]  
+    13.3 [The Parser]  
+    13.4 [Desugaring]  
+    13.5 [The Semantic Checker]  
+    13.6 [The Code Generator]  
+    13.7 [C Libraries]  
+14. [Testing]   
+    14.1 [Scanner, Parser, AST]  
+    14.2 [Semantic Checker]  
+    14.3 [Code Generation]   
+15. [Lessons Learned]  
+16. [Appendix]  
+    16.1 [Git logs]  
+    16.2 [Source Code]  
 
 
 # `1` Overview  🚁
