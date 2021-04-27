@@ -37,8 +37,7 @@ Authors:
         6. [nah](#316-nah)
     2. [Higher-Order Data Types](#32-higher-order-data-types)
         1. [list](#321-list)
-        2. [group](#322-group)
-        3. [dict](#323-dict)
+        2. [dict](#322-dict)
 4. [Type System 🗃](#4-type-system)
     1. [Explicit Types](#41-explicit-types)
     2. [Explicit Type Conversion](#42-explicit-type-conversions)
@@ -115,17 +114,15 @@ Authors:
         2. [len()](#932-len)
     4. [Lists](#94-lists)
         1. [append()](#941-append)
-        2. [prepend()](#942-prepend)
-        3. [remove()](#943-remove)
-        4. [join()](#944-join)
-        5. [sub()](#945-sub)
-    5. [Groups](#95-groups)
-    6. [Dicts](#96-dicts)
+        2. [contains()](#942-contains)
+    5. [Dicts](#95-dicts)
+        1. [add()](#941-add)
+        2. [keys()](#942-keys)
+        3. [contains()](#943-contains)
 10. [Sample Code 🧩](#10-sample-code)
     1. [Fizzbuzz](#101-fizzbuzz-examples)
-    2. [Int list sum](#102-int-list-sum-examples)
-    3. [GCD Function](#103-gcd-function)
-    4. [Counting Characters in Strings](#104-counting-characters-in-strings)
+    2. [Calculate Function Example](#calculate-function-example)
+    3. [Wordcounts in a string array](#103-wordcounts-in-a-string-array)
 11. [Language Grammar](#11-language-grammar)
 
 # `1` Overview  🚁
@@ -154,7 +151,6 @@ Finally, we want to make sure that in Viper, users can still do all the things t
 ## `1.4` How to Obtain and Use Viper
 To obtain the Viper code repository, simply clone this repo: https://github.com/raghavmecheri/viper
  - Once cloned, type `cd src && make && cd ..`
- - There should now be a viper.native file in your current directory, as well as an exec.sh
  - Next, write some Viper code in a (filename).vp file (details on how to write Viper in next sections)
      - For an example, open a `test.vp` and inside write `print("hello world");`
  - Running `./viper.native test.vp` will output the llvm code if desired
@@ -315,9 +311,9 @@ The six primitive types supported by Viper are `char`, `int`, `float`, `bool`, `
 
 | Primitive Type | Size | Description | Declaration/Usage |
 |-----------|-----------|-----------|-----------|
-| `char` | 2 bytes | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
-| `int` | 8 bytes | Stores signed integer values | `int pos = 12;`<br>`int neg = -980;`<br>`int sum = 4 + 5;` |
-| `float` | 8 bytes | Stores signed floating-point numbers | `float pos = 3.2;`<br>`float neg = -29.7;`<br>`float dec = 0.003;`<br>`float whole_num = 2.0;` |
+| `char` | 1 byte | Represents single ASCII characters | `char a = 'a';`<br>`char c = 'b' + 1;`<br>`char newline = '\n';` |
+| `int` | 4 bytes | Stores signed integer values | `int pos = 12;`<br>`int neg = -980;`<br>`int sum = 4 + 5;` |
+| `float` | 4 bytes | Stores signed floating-point numbers | `float pos = 3.2;`<br>`float neg = -29.7;`<br>`float dec = 0.003;`<br>`float whole_num = 2.0;` |
 | `bool` | 1 byte | Stores either `true` or `false` | `bool t = true;`<br>`bool f = false;`<br>`bool falsy = t and f;` |
 | `string` | varies | Stores a sequence of `char`s representing a word | `string s = "yeehaw"`<br>`string name = "mro";`
 | `nah`  | 1 byte | Viper's `null` value | `int nil = nah;`<br>`char empt = nah;`<br>`return nah;` |
@@ -440,7 +436,8 @@ for (int i = 0; i <= 10; i++) {
     print(i);
 }
 
-for (int num: nums) {
+int[] nums = [1,2,3,4];
+for (int num in nums) {
     print(num);
 }
 ```
@@ -456,15 +453,13 @@ Explicit type conversion functions include:
 
 Examples of using explicit type conversions:
 ```java
-int x = 1;
 /* converts 1 into '1' */
-char y = chr(x);
+char y = toChar(1);
 
 int x = 2;
 int y = 5;
-int z = x+y; /* 7 */
-/* "257" */
-string xyz = str(x) + str(y) + str(z);
+/* "25" */
+string xyz = toString(2) + toString(5);
 ```
 
 Note:
@@ -904,20 +899,20 @@ Variable operators are given a lower precedence than binary operators and are ri
 Viper uses curly braces to define scope.
 For example, a for loop can be established in a number of different ways:
 ```java
-for string elem in list {
+for (string elem in list) {
     print(elem);
 }
 
 /* Is the same as: */
 
-for string elem in list
+for (string elem in list)
 {
     print(elem);
 }
 
 /* Is the same as: */
 
-for string elem in list
+for (string elem in list)
 { print(elem); }
 ```
 
@@ -995,40 +990,40 @@ float bad_bad_bad = trunc(0.99, 0); /* Throws an error */
 ## `9.2` Primitive Type Casting Functions
 Viper's standard library provides methods for casting between types for ease of use and readability. Type casting functions include:
 
-### `9.2.1` `char()`
-`char()` converts to `char`s. The input can be an `int` in range [0, 255], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. Passing any other types or `nah` to `char()` results in an error.
+### `9.2.1` `toChar()`
+`toChar()` converts to `char`s. The input can be an `int` in range [0, 255], for which the output is the `char` corresponding to the ASCII value of the `int`. The input can also be a `string`, for which the output is the `char` value of the first character in the `string`. Passing any other types or `nah` to `toChar()` results in an error.
 ```java
 char int_chr = char(36); /* Returns '$' */
 char str_char = char(string(true)); /* Returns 't' */
 char no_dont_do_it = char(33.4); /* Throws an error */
 ``` 
 
-### `9.2.2` `int()`
-`int()` casts certain types to integer values. Given a `char`, `int()` returns the decimal value of the `char`'s ASCII code. Given a `float`, `int()` returns the result of truncating all decimal components. Given a `bool`, `int()` returns 0 for values of `false`, and 1 for values of `true`. Passing any other types or `nah` to `int()` results in an error.
+### `9.2.2` `toInt()`
+`toInt()` casts certain types to integer values. Given a `char`, `toInt()` returns the decimal value of the `char`'s ASCII code. Given a `float`, `toInt()` returns the result of truncating all decimal components. Given a `bool`, `int()` returns 0 for values of `false`, and 1 for values of `true`. Passing any other types or `nah` to `toInt()` results in an error.
 ```java
-int chr_int = int('R'); /* Returns 82 */
-int str_int = int(7.999); /* Returns 7 */
-int zero = int(false); /* Returns 0 */
-int one = int(true); /* Returns 1 */
+int chr_int = toInt('R'); /* Returns 82 */
+int str_int = toInt(7.999); /* Returns 7 */
+int zero = toInt(false); /* Returns 0 */
+int one = toInt(true); /* Returns 1 */
 ``` 
 
-### `9.2.3` `float()`
-`float()` casts `int`s and `char`s to float values. Given an `int`, `float()` returns the `float` equivalent of that `int`, appending a decimal point and a single 0. Given a `char`, `float` does the same thing with the decimal value of the `char`'s ASCII code. Passing any other types or `nah` to `float()` results in an error.
+### `9.2.3` `toFloat()`
+`toFloat()` casts `int`s and `char`s to float values. Given an `int`, `toFloat()` returns the `float` equivalent of that `int`, appending a decimal point and a single 0. Given a `char`, `float` does the same thing with the decimal value of the `char`'s ASCII code. Passing any other types or `nah` to `toFloat()` results in an error.
 ```java
-float int_float = float(333); /* Returns 333.0 */
-float char_float = float('&'); /* Returns 38.0 */
-float noooooo = float("if you smoke"); /* Returns an error */
+float int_float = toFloat(333); /* Returns 333.0 */
+float char_float = toFloat('&'); /* Returns 38.0 */
+float noooooo = toFloat("if you smoke"); /* Returns an error */
 ``` 
 
-### `9.2.4` `bool()`
-`bool()` converts any data type to either `true` or `false`, depending on the value. It's called implicitly when using a non-boolean type in a boolean expression For example, the following code implicitly calls `bool()` on `x`:
+### `9.2.4` `toBool()`
+`toBool()` converts any data type to either `true` or `false`, depending on the value. It's called implicitly when using a non-boolean type in a boolean expression For example, the following code implicitly calls `toBool()` on `x`:
 ```java
 int x = 0;
 if (x) {
     print("Yes");
 }
 ```
-See the below table for details on what values `bool()` maps to true and result in `true` and what values result in `false`:
+See the below table for details on what values `toBool()` maps to true and result in `true` and what values result in `false`:
 
 | Type | `true` values | `false` values |
 |-----|------|-----|
@@ -1040,13 +1035,13 @@ See the below table for details on what values `bool()` maps to true and result 
 | `nah` | n/a | `nah`   
 
 
-### `9.2.5` `string()`
-`str()` converts any type to a `string`, which is useful for printing. See the below examples for type-specific details.
+### `9.2.5` `toString()`
+`toString()` converts any type to a `string`, which is useful for printing. See the below examples for type-specific details.
 ```java
-string char_str = string('z'); /* Returns "z" */
-string int_str = string(30); /* Returns "30" */
-string float_str = string(34.5); /* Returns "34.5" */
-string bool_str = string(false); /* Returns "false" */
+string char_str = toString('z'); /* Returns "z" */
+string int_str = toString(30); /* Returns "30" */
+string float_str = toString(34.5); /* Returns "34.5" */
+string bool_str = toString(false); /* Returns "false" */
 ```
 
 ## `9.3` Miscellaneous Functions
@@ -1096,44 +1091,48 @@ int[] new_channels = channels.append(54);
 /* new_channels contains: [31, 44, 21, 54] */
 ```
 
-### `9.4.2` `prepend()`
-`prepend()` works in the same way as `append()`, but it adds the input element to the front of the list.
-```java
-string[] cities = ["NEWY", "BOST", "MIAM"];
-string[] more_cities = cities.prepend("ATLA");
-/* more_cities contains: ["ATLA", "NEWY", "BOST", "MIAM"] */
-```
-
-### `9.4.3` `remove()`
-`remove()` takes in an `int` and removes the element at the index specified by the `int`. If the list has no such index, an error is thrown. Because lists have fixed sizes, the original list remains unmodified, and `remove()` returns a new list with the specified input element removed.
+### `9.4.2` `contains()`
+`contains()` takes in an element of the list type and checks as to whether that element exists within the last. If the element exists, the function returns the `int` value of 1, and `int` value of 0 if the element does not exist.
 ```java
 char[] notes = ['a', 'c', 'd', 'c'];
-char[] less_notes = notes.remove(2);
-/* less_notes contains: ['a', 'c', 'c'] */
+print(notes.contains('a'))
+print(notes.contains('b'))
+/*
+1
+-1
+*/
 ```
 
-### `9.4.4` `join()`
-`join()` takes another list as input and appends it to the list that `join()` is called on. Because lists have fixed sizes, the original lists are unmodified, and `join()` returns a new list with the elements of the second list appended to the elements of the first. The type of both lists must match, or an error is thrown. 
+## `9.5` Dicts
+Dictionary functionality is provided through the standard library. Dictionaries are mutable sequences of a two data types with dynamic sizes. Dictionary key, value pairs are accessed and modified with square brackets ([]). See [Higher-Order Data Types: dicts](#322-dict) for more details on instantiation and modification. The following sections describe additional dict-specific operations implemented in the list api. These operations are all called on instances of dict, and thus take the form `dict.operation(parameters)`.
+
+### `9.5.1` `add()`
+`add()` adds an input key and value, and adds it to the dictionary. If the key already exists, then the value for the same is overriden. 
 ```java
-float[] class1 = [0.8, 0.8, 0.9];
-float[] class2 = [0.7, 0.75, 1.0];
-float[] all = class1.join(class2);
-/* all contains: [0.8, 0.8, 0.9, 0.7, 0.75, 1.0] */
+[string: int] word_counts = [];
+word_counts.add("a", 1);
+/* word_counts contains: [["a", 1]] */
 ```
 
-### `9.4.5` `sub()`
-`sub()` takes two `int`s as input, and returns the sublists that fall between those two indices of the list. The element at the start index is included in the sublist, but the element at the end index is not. If the first index is out of the range of the list's indices, an error is thrown. If the second index is less than 0 or greater than the size of the list, an error is throw. Note that the second index is permitted to be one greater than the index of the list's last element, because the element at the second input is not included in the sublist. `sub()` returns a brand new list and leaves the original unmodified. 
+### `9.5.2` `keys()`
+`keys()` outputs a unique list of all the keys present the dictionary. The return type for the `keys()` function is dependant on the key type for the dictionary being called. An empty list is returned if no keys exist
 ```java
-int[] nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-int[] less_than_5 = nums.sub(0, 5);
-int[] middle_3 = nums.sub(4, 7);
-/* less_than_5 contains: [0, 1, 2, 3, 4] */
-/* middle_3 contains: [4, 5, 6]
+[string: int] word_counts = [];
+word_counts.add("a", 1);
+print(word_counts.keys())
+/* word_counts contains: ["a"] */
 ```
 
-## `9.6` Dicts
-Check back soon for the `dict`s API.
-
+### `9.5.3` `contains()`
+`contains()` takes in an of the dict's key type and returns an `int` value of `0` if the key does not exist in the dict, and `1` if it does.
+```java
+[string: int] word_counts = [];
+word_counts.add("a", 1);
+print(word_counts.contains("a"))
+/*
+1
+*/
+```
 
 [↩️  Back to Contents 📌](#0-contents)
 
@@ -1156,100 +1155,81 @@ for (int i = 1; i <= 100; i++) {
    }
 }
 
-/* fizzbuzz for-loop with nested ternary operator
-valid, but overly complex solution */
-for (int i = 0; i <= 100; i++) {
-    (i % 15 == 0) 
-        ? print("fizzbuzz")
-        : (i % 3 == 0) 
-            ? print("fizz") 
-            : (i % 5 == 0)
-                ? print("buzz")
-                : print(i);
-}
+/* fizzbuzz for-loop using an arrow function for divisibity*/
+bool func isDivisible(int x, int div) => (x % div == 0);
 
-/* fizzbuzz for-loop with pattern-matching
-valid, short, and easily comprehensible solution */
-for (int i = 0; i <= 100; i++) {
-    string output = ??
-        i % 15 == 0 : "fizzbuzz"
-        | i % 3 == 0 : "fizz"
-        | i % 5 == 0 : "buzz"
-        ?? i;
-
-    print(output);
-}
-```
-
-## `10.2` Int list sum examples:
-```java
-/* Printing an average of a list
-of ints, (almost) C-style */
-int[] nums = [1, 2, 3, 4];
-int sum = 0;
-
-for(int i = 0; i < len(nums); i++) {
-    sum = sum + nums[i];
-}
-
-float avg = sum/len(nums);
-print(avg);
-
-/* Printing an average of a list
-of ints using Viper conventions */
-int[] nums = [1, 2, 3, 4];
-int sum = 0;
-
-for (num in nums) {
-    sum += num;
-}
-
-float avg = sum/len(nums);
-print(avg);
-
-/* Printing an average of a list
-of ints using Viper standard library */
-int[] nums = [1,2,3,4];
-float avg = sum(nums)/len(nums);
-print(avg);
-```
-
-## `10.3` GCD Function
-```java
-int func recursiveGCD(int a, int b) {
-    
-    int func conditional (int x, int y) =>
-        x == 0 ? y : y == 0 ? x : nah;
-        
-    int func swappedGCD (int x, int y) => 
-        x > y ? recursiveGCD(x-y, y) : recursiveGCD(x, y-x);
-    
-    int check = conditional(a, b);
-
-    return check == nah ? swappedGCD(a, b) : check;
-}
-```
-
-## `10.4` Counting Characters in Strings
-```Java
-string problem = "H0w many z3r03s and thr33s ar3 in this string?";
-
-/* Standard, Java-like approach for counting the occurences of certain characters in a string: */
-int count = 0;
-for (int i = 0; i < len(problem); i++) {
-    char character = problem[i];
-    if (character == '0' or character == '3') {
-        count++;
+for(int i = 1; i <= 100; i+=1) {
+    if(isDivisible(i, 15)) {
+        print("fizzbuzz");
+    }
+    else if(isDivisible(i, 3)) {
+        print("fizz");
+    } else if(isDivisible(i, 5)) {
+        print("buzz");
+    } else {
+        print(i);
     }
 }
-print(count);
+```
 
-/* Viper's concise approach using bool to int casting: */
-int count = 0;
-for (char character in problem) {
-    count += int(character == '0' or character =='3');
+## `10.2` Calculate Function Example
+```java
+/* Choosing an operation to compute, using if-else */
+int func calc(int a, int b, char op) {
+    int res;
+    if(op == '+') {
+        res = a + b;
+    } else if (op == '-') {
+        res = a - b;
+    } else if (op == '*') {
+        res = a * b;
+    } else if (op == '/') {
+        res = a / b;
+    } else {
+        res = a;
+    }
+    return res;
 }
-print(count);
+
+/* The same code, using guard matching!*/
+int func calc(int a, int b, char op) {
+    int res = ??
+        op == '+' : (a + b)
+      | op == '-' : (a - b)
+      | op == '*' : (a * b)
+      | op == '/' : (a / b)
+    ?? a ;
+
+    return res;
+}
+```
+
+## `10.3` Wordcounts in a string array
+```Java
+[string: int] func count_words(string[] str) {
+    [string: int] word_counts = [];
+    for(string x in str) {
+        if(word_counts.contains(x) == 1) {
+            word_counts.add(x, word_counts[x] + 1);
+        } else {
+            word_counts.add(x, 1);
+        }
+    }
+    return word_counts;
+}
+
+string [] test = ["Hello", "world", "succotash", "am", "world", "hello", "world", "viper", "Viper", "viper"];
+
+[string: int] counts = count_words(test);
+
+string[] unique_keys = counts.keys();
+
+for(string key in unique_keys) {
+    print(key);
+    print("=");
+    print(counts[key]);
+    print("|");
+}
 ```
 
 # `11` Language Grammar
