@@ -1401,7 +1401,9 @@ Tests for the scanning and parsing stage contain syntactically correct code whic
 The AST tests are not the right kind to test on the semantic checker. This is because an assignment can be syntactically correct, however if the variable never was declared, the Semantic Checker will throw an error. Therefore a new list of tests had to be created to abide by the semantic checker. The most important tests regard type checking; this includes checking the types of declaration assignments, assignments, function return types, loop predicates, etc. This set of tests was forced to be type sensitive.
 ## `14.3` Code Generation 
 # `15` Lessons Learned
-Raghav -  
+Raghav -  Functional programming is crazy. It took me forever to figure out, but once I did it really changed the way I think about problem solving. Specifically with regards to my role in the project, PLT really taught me how much you can do with just breaking up complex things into simpler blocks. Be it the whole LLVM experience, or my role with regards to desugaring code into its more basic forms (for to while, pattern matching to else-ifs, etc) this class really showed me that spending a little time up-front writing code that can be broken down can literally save you whole nights of sleep.
+
+Advice: Embrace the chaos. Things will break, sometimes parts and sometimes everything. Don't panic, and try to tackle problems one by one. Try to build small, and build an entire pipeline. Don't go module by module, like we did. Regardless though, just enjoy the experience because watching your own code compile using your own syntax via your own compiler is the most satisfying feeling you'll have at Columbia.    
 
 Mustafa - Grammars are wild and powerful. I had a ton of fun taking time experimenting with all of the funky syntax and features possible when building the grammar for our parser. That’s one of the bigger bottlenecks in your language’s power, so make sure to mess around with it and add some new stuff. Also, lambda calculus is cracked. Super cool lesson towards the end of the class, I absolutely loved it.  
   
