@@ -1387,5 +1387,30 @@ actuals_list ->
   expr
 | actuals_list COMMA expr
 ```
+# `12` Project Plan
+## `12.1` Specification Process
+We started by creating an initial list of all the various features we thought would be cool to include in a language. While keeping in mind our initial goal of a statically-typed, compilable, scripting language, we thought about what the most important features and pieces of syntactic sugar would also have to be inherited from the inspiration languages Python and Javascript. We compiled a list of everything we thought necessary, from dicts, lists, and useful math operations to more complex features like arrow functions, ternaries, and iterator sugar. Additionally, we planned to add scoping identification through curly braces or indentation, but had to cut the white-space scoping due to time constraints.
+
+From there, our first concrete specification came when we defined our lexicon and syntax, which then got translated into the scanner and parser, respectively. We figured out how many features we wanted to be expressible, and then decided how they would be expressed syntactically. This was then inscribed into our original Language Reference Manual.
+
+As we continued working on semantic checks, codegen, and the standard library, we had frequent iterative updates to our specification due to new, better ideas, conflicts, or removed features. The only major changes were the removal of whitespace scoping and the addition of pattern matching. Otherwise, most changes were minor syntax changes. We also intended to add tuples (or “groups” as we called them), but ultimately decided against it in order to put resources into more interesting features.
+## `12.2` Development Process
+Development followed the stages of the compiler architecture. We began with the scanner, parser, and ast, with the three honestly being quite simultaneous, although each individual change occurred in that order. We then got `print(“hello world”)` working in codegen while simultaneously working on semantic checking. After hello world, we shifted into first desugaring syntax in layer one of semantic analysis, then type/validity checking in layer two. From here progress continued on updated iterations of semantic checking, while the rest of codegen and the standard library began to ramp up. The standard library was completed before the codegen, which was our final push on the project. It is worth noting that there was overlap in these tasks (they were not completed in isolation), and testing was set up at each one of these checkpoints that allowed us to easily identify where blocks were occurring. 
+## `12.3` Testing Process
+## `12.4` Team Responsibilities 
+Raghav - Lexer, Parser, AST, Desugaring
+Mustafa - Lexer, Parser, AST, C Libraries
+Matthew - Semantics, Documentation
+Tommy - Semantics, Documentation
+Trey - Code Generation, Documentation
+## `12.5` Project Timeline
+| Date          | Milestone                        |
+|---------------|----------------------------------|
+| February 24th | Scanner, Parser, AST Implemented |
+| March 24th    | Hello World Implemented          |
+| April 7th     | Desugar Implemented              |
+| April 16th    | Semantic Checking Implemented    |
+| April 25th    | Codegen Implemented              |
+
 
 [↩️  Back to Contents 📌](#0-contents)
