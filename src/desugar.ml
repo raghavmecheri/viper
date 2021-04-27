@@ -1,4 +1,4 @@
-(* Semantic checking for the MicroC compiler *)
+(* Desugar module to desugar an AST *)
 
 open Ast
 let placeholderCheck ast = ast

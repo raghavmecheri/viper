@@ -1,6 +1,6 @@
-(*****
+(*
 This file handles Viper's type casting, defining what types can and cannot be cast to another.
-*****)
+*)
 
 open Ast
 open Sast

@@ -1,3 +1,6 @@
+(*
+Module to generate a SAST given a desugared AST
+*)
 open Ast
 open Sast
 open Boolcheck

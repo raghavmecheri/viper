@@ -19,14 +19,3 @@ for(g in arr) {
 for(int f in arr) {
     j = j + f;
 }
-
-for((int, bool) tup in list) {
-    if (tup[1] == true) {
-        j += tup[0];
-    }
-}
-
-for((int iter, int index) in list) {
-    j += index;
-    j += iter;
-}
