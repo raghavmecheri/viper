@@ -1,3 +1,7 @@
+(*
+Checking for array types
+*)
+
 open SAST
 
 let eval_list = List.map (expr scope deepscope) l in 

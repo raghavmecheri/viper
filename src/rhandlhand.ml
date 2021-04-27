@@ -1,3 +1,7 @@
+(*
+Comparison checks to make sure the LHS and RHS of an expression work out
+*)
+
 open Sast 
 open Ast
 

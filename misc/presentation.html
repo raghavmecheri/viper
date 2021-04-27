@@ -23,12 +23,12 @@
             <h3>Type System</h3>
             <ul>
               <li>Viper is strongly statically typed, with type checking performed at compile-time</li>
-              <li>Support for int, float, char, bool, string and nah</li>
-              <li>Library support for lists, dicts</li>
+              <li>Support for primitive mainstream data-types</li>
+              <li>Library support for data-structures</li>
             </ul>
           </section>
           <section>
-            <h3>Ternary Operators & Pattern Matching</h3>
+            <h3>Ternary Operators & Guard Expressions</h3>
             <ul>
               <li>Viper comes with support for both ternary operators, and a modified form of guard expressions</li>
               <li>Guard expressions are an alternative way of using conditional statements. Think of them as more powerful, more flexible, and better looking switch-case statements(example to follow)</li>
@@ -52,20 +52,20 @@
             <ul>
               <li>Support for Math functions like ceil, floor, round, min, max, trunc</li>
               <li>Support for a couple of in-built functions you've just got to have: len() and print()</li>
-              <li>Support for typecasting functions like int(), float(), char()</li>
+              <li>Support for typecasting functions like toInt(), toFloat(), toChar()</li>
             </ul>
           </section>
           <section>
             <h3>Iterators</h3>
             <ul>
               <li>Viper also has built-in support for loop iterators</li>
-              <li>Support for iterating directly across values, as well as index, value pairs</li>
+              <li>Support for iterating directly across values via syntactic sugar</li>
             </ul>
           </section>
         </section>
         <section>
           <section>
-            <h2>Viper's Structure & Sample</h2>
+            <h2>Viper's Structure</h2>
           </section>
           <section>
             <h2>Structure</h2>
@@ -76,38 +76,19 @@
             </ul>
           </section>
           <section>
-            <h2>Sample Program I</h2>
-            <pre><code data-trim data-noescape>
-              string problem = 
-                "H0w many z3r03s and thr33s ar3 in this string?";
-              int count = 0;
-              for (char character in problem) {
-                count += int(character == '0' or character =='3');
-              }
-              print(count);
-            </code></pre>
+            <h3>Control Flow/Iteration</h3>
+            <ul>
+              <li>Support for if statements, as well as guards and ternary operators</li>
+              <li>Supports for standard looping as well as iterators</li>
+              <li>Support for skip (continue in Java) and abort (break in Java)</li>
+            </ul>
           </section>
           <section>
-            <h2>Sample Program II</h2>
-            <pre><code data-trim data-noescape>
-              int func conditional(int x, int y) {
-                  if(x == 0 && y == 0) {
-                      return -1;
-                  }
-                  return (x == 0 ? y : x);
-              }
-
-              int func gcd(int a, int b) {
-                  int check = conditional(a, b);
-                  if(check == -1) {
-                      int diff = a > b ? (a-b) : (b-a);
-                      return a > b ? gcd(diff, b) : gcd(a, diff);
-                  }
-                  return check;
-              }
-
-              print(gcd(100, 10));
-            </code></pre>
+            <h3>Scoping</h3>
+            <ul>
+              <li>Viper eliminates the global scope from within function bodies, eliminating the ambiguity that comes with global variables</li>
+              <li>Support for function overloading</li>
+            </ul>
           </section>
         </section>
 
@@ -116,7 +97,48 @@
             <h2>Type System</h2>
           </section>
           <section>
-            TBD
+            <h3>Supported Types</h3>
+            int, float, bool, char, string, nah
+          </section>
+          <section>
+            <table>
+              <thead>
+                <tr>
+                  <th>Datatype</th>
+                  <th>Memory</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>int</td>
+                  <td>4 bytes</td>
+                </tr>
+                <tr>
+                  <td>float</td>
+                  <td>4 bytes</td>
+                </tr>
+                <tr>
+                  <td>bool</td>
+                  <td>1 byte</td>
+                </tr>
+                <tr>
+                  <td>char</td>
+                  <td>1 bytes</td>
+                </tr>
+                <tr>
+                  <td>string</td>
+                  <td>n/a</td>
+                </tr>
+                <tr>
+                  <td>nah</td>
+                  <td>n/a</td>
+                </tr>
+              </tbody>
+              </table>
+          </section>
+          <section>
+            <h3>Additional Data Structures</h3>
+            lists, dictionaries
           </section>
         </section>
 
@@ -125,7 +147,17 @@
             <h2>Viper's Standard Library</h2>
           </section>
           <section>
-            TBD
+            <ul>
+              <li>Viper uses the Viper C standard library as an API to enable in-memory data structures</li>
+              <li>Support for lists, dicts, and type-casting</li>
+              <li>Build in functions like print</li>
+            </ul>
+          </section>
+          <section>
+            <ul>
+              <li>Viper's lists are implemented as arraylists, and Viper's dicts are implemented as lookup tables that allow for for nested dictionaries as well</li>
+              <li>Support for in-built in type-specific functions like len, contains, append, etc</li>
+            </ul>
           </section>
         </section>
 
@@ -134,7 +166,37 @@
             <h2>Notable Features</h2>
           </section>
           <section>
-            TBD
+            <h3>Guard Expressions</h3>
+            <pre><code data-trim data-noescape>
+              int y = 0;
+
+              int test = ??
+                y < 0 : 0
+              | y > 0 : 10
+              ?? 5;
+            </code></pre>
+          </section>
+          <section>
+            <h3>Iterators</h3>
+            <pre><code data-trim data-noescape>
+              int[] arr = [1,2,3,4];
+              for(int f in arr) {
+                print(f)
+              }
+            </code></pre>
+          </section>
+          <section>
+            <h3>Ternary Operators</h3>
+            <pre><code data-trim data-noescape>
+              int val = 10;
+              int positive = val < 0 ? 0 : val
+            </code></pre>
+          </section>
+          <section>
+            <h3>Arrow Functions</h3>
+            <pre><code data-trim data-noescape>
+              int func add(int x, int y) => x + y;
+            </code></pre>
           </section>
         </section>
 
@@ -155,13 +217,29 @@
             Viper has a lot of features that we were able to reduce to just syntactic sugar, to make the work easier when we need to generate LLVM
           </section>
           <section>
-            Arrow functions are reduced to just regular functions
+            <h3>Overview</h3>
+            Viper's desugar module runs via two passes, in order to break down more complex expressions before Codegen
           </section>
           <section>
-            Guard expressions are merely nested ternaries
+            <h3>Overview: First Pass</h3>
+            <ul>
+              <li>All of Viper's various for loops are reduced to while loops</li>
+              <li>Arrow Functions are reduced to regular function calls</li>
+              <li>Guard expressions are reduced to nested ternaries</li>
+              <li>Attribute calls are decomposed to regular function calls [a.foo(b) -> foo(a, b)]</li>
+            </ul>
           </section>
           <section>
-            For loops, iterative for loops (for-in) and other types of syntactically sugared for-loops are all reduced to while loops
+            <h3>Overivew: Second Pass</h3>
+            Viper's second pass serves only to convert all types of ternary operators into nested if statements
+            <ul>
+              <li>Iterate through all the statements in a file</li>
+              <li>Detect instances of expresions that contain ternary operators</li>
+            </ul>
+          </section>
+          <section>
+            <li>Insert a replacement if statement coupled with an assignment operator at the statement right before the statement that contains the ternary, via a PretendBlock</li>
+            <li>Viper uses PretendBlocks to insert blocks for which a reduced scope is not required - the SAST module ignores the change in scope</li>
           </section>
         </section>
 
@@ -170,7 +248,10 @@
             <h2>Building the SAST</h2>
           </section>
           <section>
-            TBD
+            <h3>Highlights</h3>
+          </section>
+          <section>
+            <h3>Challenges Faced</h3>
           </section>
         </section>
 
@@ -179,7 +260,10 @@
             <h2>Codegen</h2>
           </section>
           <section>
-            TBD
+            <h3>Highlights</h3>
+          </section>
+          <section>
+            <h3>Challenges Faced</h3>
           </section>
         </section>
 
@@ -188,7 +272,12 @@
             <h2>Future Work</h2>
           </section>
           <section>
-            TBD
+            <ul>
+              <li>Allowing for imports of files/modules</li>
+              <li>Support for other C-based libraries (numpy, tensorflow)</li>
+              <li>Improve limited casting functionality/support</li>
+              <li>Fixing all the bugs that keep cropping up</li>
+            </ul>
           </section>
         </section>
 

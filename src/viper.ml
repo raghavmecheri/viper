@@ -1,7 +1,7 @@
-(* Top-level of the Viper compiler: scan & parse the input,
-   check the resulting AST, generate LLVM IR, and dump the module 
-
-   REF: https://github.com/cwabbott0/microc-llvm/blob/master/microc.ml *)
+(*
+Top-level of the Viper compiler: scan & parse the input, check the resulting AST, generate LLVM IR, and dump the module 
+REF: https://github.com/cwabbott0/microc-llvm/blob/master/microc.ml
+*)
 
 type action = Ast | Sast | LLVM_IR | Compile
 

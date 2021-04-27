@@ -1,10 +1,10 @@
-(* * * * *
+(*
    This file semantically checks all variable and function declarations in the AST.
    Duplicate variables, nah variable declarations, and function declarations
    with the same parameters throw errors.
    A scoped symbol table mapping variable names to their types is returned, along with  
    a mapping of functions to their scoped formal and local variables.
- * * * * *)
+*)
 
 open Ast
 

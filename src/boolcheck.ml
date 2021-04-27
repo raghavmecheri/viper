@@ -1,3 +1,7 @@
+(*
+One function that just checks if an if-condition or while loops have a bool predicate
+*)
+
 open Ast 
 open Sast
 open Decs
