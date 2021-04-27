@@ -1,8 +1,14 @@
 int func factorial(int target) {
     if(target == 1) {
-            return target;
+        print(target);
+        return target;
     }
-    return target * factorial(target - 1);
+    
+    int sub = factorial(target-1);
+    int res = target * sub;
+    print(res);
+    return res;
 }
 
-print(factorial(10));
+print("Factorial of 10:");
+factorial(10);

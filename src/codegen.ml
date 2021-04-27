@@ -102,11 +102,17 @@ let translate (_, functions) =
   let print_char_list_func : L.llvalue =
     L.declare_function "print_char_list" print_char_list_t the_module in 
 
-  (* Prints a string[] list*)
+  (* Prints a string[] list *)
   let print_str_list_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")) |] in 
   let print_str_list_func : L.llvalue =
     L.declare_function "print_str_list" print_str_list_t the_module in 
+
+  (* Prints an int[] list *)
+  let print_int_list_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")) |] in 
+  let print_int_list_func : L.llvalue =
+    L.declare_function "print_int_list" print_int_list_t the_module in 
 
   (* C STANDARD LIBRARY FUNCTIONS HERE *)
 
@@ -205,6 +211,11 @@ let translate (_, functions) =
   let contains_float_func : L.llvalue =
     L.declare_function "contains_float" contains_float_t the_module in
 
+  (* ASSIGN LIST FUNCTIONS HERE *)
+  let assign_int_t : L.lltype =
+    L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int); (ltype_of_typ A.Int) |] in 
+  let assign_int_func : L.llvalue =
+    L.declare_function "assign_int" assign_int_t the_module in
 
   (* given a pointer to list, returns length*)
   let listlen_t : L.lltype =
@@ -237,7 +248,7 @@ let translate (_, functions) =
   let access_str_key_func : L.llvalue = 
     L.declare_function "access_str_key" access_str_key_t the_module in
 
-  (* type -> void pointer alloc funtions *)
+  (* Type Alloc funtions *)
   let int_alloc_t : L.lltype =
     L.function_type (L.pointer_type i8_t) [| (ltype_of_typ A.Int) |] in 
   let int_alloc_func : L.llvalue =
@@ -569,7 +580,11 @@ let translate (_, functions) =
          L.build_call (access_func typ) [| li; index |] "access" builder *)
       (* | _ -> raise (Error "Access only supported for lists and dicts")) *)
 
-      | SAccessAssign(i, idx, e)  -> raise (Error "SAccessAssign not implemented")
+      | SAccessAssign(i, idx, e) ->
+        let li = expr builder i in 
+        let index = expr builder idx in 
+        let value = expr builder e in 
+        L.build_call assign_int_func [| li; index; value |] "assign_int" builder
 
       (* USER-EXPOSED BUILT-INS: Must be added to check in decs.ml *)
 
@@ -582,6 +597,7 @@ let translate (_, functions) =
           | A.Array(arr) -> (match arr with 
               | A.Char   -> L.build_call print_char_list_func [| (expr builder params) |] "" builder
               | A.String -> L.build_call print_str_list_func [| (expr builder params) |] "" builder
+              | A.Int    -> L.build_call print_int_list_func [| (expr builder params) |] "" builder
               | _ -> raise (Error "Print not supported for array type"))
           | _ -> 
             let print_value = (match p_t with

@@ -10,4 +10,4 @@ fi
 llc -relocation-model=pic a.ll > a.s
 cc -o a.exe a.s src/library.o -lm
 output=$(./a.exe)
-echo $output
+echo "$output"
