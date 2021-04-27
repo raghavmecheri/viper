@@ -1414,6 +1414,13 @@ Lines generally wrap at around 80 characters, when applicable.
 ## `14.1` Scanner, Parser, AST 
 ## `14.2` Semantic Checker
 ## `14.3` Code Generation 
+# `15` Lessons Learned
+Raghav -
+Mustafa - 
+Matthew - 
+Tommy - 
+Trey - 
+# `16` Appendix
 
 
 
