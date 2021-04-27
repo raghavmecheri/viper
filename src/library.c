@@ -569,6 +569,30 @@ void print_str_list(struct list *inlist)
     printf("]\n");
 }
 
+int contains_str_key(struct dict *indict, char *key)
+{
+    for (int i = 0; i < indict->pairs->size; i++)
+    {
+        if (!strcmp((char *)access_pair(indict->pairs, i)->key, key))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int contains_char_key(struct dict *indict, char key)
+{
+    for (int i = 0; i < indict->pairs->size; i++)
+    {
+        if (*((char *)access_pair(indict->pairs, i)->key) != key)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 struct list *get_char_keys(struct dict *indict)
 {
     if (strcmp(indict->key_type, "char"))
@@ -581,7 +605,9 @@ struct list *get_char_keys(struct dict *indict)
     for (int i = 0; i < indict->pairs->size; i++)
     {
         char toadd = *((char *)access_pair(indict->pairs, i)->key);
-        append_char(keys, toadd);
+        if (!contains_char(keys, toadd)){
+            append_char(keys, toadd);
+        }
     }
     return keys;
 }
@@ -598,7 +624,9 @@ struct list *get_str_keys(struct dict *indict)
     for (int i = 0; i < indict->pairs->size; i++)
     {
         char *toadd = (char *)access_pair(indict->pairs, i)->key;
-        append_str(keys, toadd);
+        if (!contains_str(keys, toadd)){
+            append_str(keys, toadd);
+        }
     }
     return keys;
 }
@@ -643,30 +671,6 @@ void remove_char_key(struct dict *indict, char key)
     }
 
     indict->pairs->size -= 1;
-}
-
-int contains_str_key(struct dict *indict, char *key)
-{
-    for (int i = 0; i < indict->pairs->size; i++)
-    {
-        if (!strcmp((char *)access_pair(indict->pairs, i)->key, key))
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int contains_char_key(struct dict *indict, char key)
-{
-    for (int i = 0; i < indict->pairs->size; i++)
-    {
-        if (*((char *)access_pair(indict->pairs, i)->key) != key)
-        {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 int void_to_int(void *v_ptr)
