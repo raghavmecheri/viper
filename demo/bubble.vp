@@ -6,17 +6,20 @@ int[] func bubble(int[] arr) {
                 int temp = arr[j];
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
+                print("Step:");
+                print(arr);
             }
         }
     }
+
     return arr;
 }
 
-/*
-int[] target = [4, 5, 10, 1, 5, 3];
-int[] sort = bubble(target);
 
-for(int x in sort) {
-    print(sort);
-}
-*/
+int[] target = [4, 5, 10, 1, 5, 3];
+print("Initial:");
+print(target);
+
+int[] sort = bubble(target);
+print("Final:");
+print(sort);

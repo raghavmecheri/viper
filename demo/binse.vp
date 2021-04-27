@@ -17,9 +17,25 @@ int func binary_search(int []arr, int x) {
     return -1;
 }
 
+nah func print_result(int loc) {
+    if (loc != -1) {
+        print("Found! Location:");
+        print(loc);
+    } else {
+        print("Not found.");
+    }
+}
+
 int target = 4;
 int []present = [1,2,3,4,5];
 int []absent = [1,2,3,5];
 
-print(binary_search(present, 4));
-print(binary_search(absent, 4));
+print("Looking for 4 in:");
+print(present);
+print_result(binary_search(present, 4));
+
+print();
+
+print("Looking for 4 in:");
+print(absent);
+print_result(binary_search(absent, 4));

@@ -211,6 +211,7 @@ let get_decs (s_list, f_list) =
       ("print", [Float], Nah);
       ("print", [Array(Char)], Nah);
       ("print", [Array(String)], Nah);
+      ("print", [Array(Int)], Nah);
 
       ("len", [Array(Int)], Int);
       ("len", [Array(Float)], Int);

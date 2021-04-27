@@ -518,7 +518,7 @@ void print_char_list(struct list *inlist)
 
     for (int i = 0; i < inlist->size; i++)
     {
-        printf("%c", access_char(inlist, i));
+        printf("\'%c\'", access_char(inlist, i));
 
         if (i < inlist->size - 1)
         {
@@ -562,7 +562,7 @@ void print_str_list(struct list *inlist)
 
     for (int i = 0; i < inlist->size; i++)
     {
-        printf("%s", access_str(inlist, i));
+        printf("\"%s\"", access_str(inlist, i));
 
         if (i < inlist->size - 1)
         {
