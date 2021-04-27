@@ -1,9 +1,0 @@
-int func square (int x) => x * x;
-
-int func sum (int c) => c + c;
-
-nah func apply (int base, int func f) => f(base);
-
-apply(10, sum);
-
-square(10);
