@@ -41,7 +41,6 @@ Authors:
 4. [Type System 🗃](#4-type-system)
     1. [Explicit Types](#41-explicit-types)
     2. [Explicit Type Conversion](#42-explicit-type-conversions)
-    3. [Implicit Type Conversion](#43-implicit-type-conversions)
 5. [Statements 🗣](#5-statements)
     1. [Selector Statements](#51-selector-statements)
         1. [if](#511-if-statement)
@@ -445,10 +444,11 @@ for (int num in nums) {
 Viper utilizes casting functions available in the standard library to convert between types as needed. For example, casting up from an int to a float is a simple as wrapping an integer value expression in the _float_ function.
 
 Explicit type conversion functions include:
-* str(x) - converts x to a string
-* float(x) - converts x to a float
-* int(x) - converts x to an int
-* chr(x) - converts x to a char
+* toString(x) - converts x to a string
+* toFloat(x) - converts x to a float
+* toInt(x) - converts x to an int
+* toBool(x) - converts x to a bool
+* toChar(x) - converts x to a char
 
 Examples of using explicit type conversions:
 ```java
@@ -463,30 +463,6 @@ string xyz = toString(2) + toString(5);
 
 Note:
 See Section 6 for more details on explicit type casting functions.
-
-## `4.3` Implicit Type Conversions
-As Viper is statically-typed, we can rely on user-specified types to infer the desired type of an output and convert values accordingly. This comes in handy for common programming tasks such as math operations and string concatenation.
-
-Examples of implicit type conversion:
-```java
-/* when 2 integers are divided, Viper's
-type system is often able to infer which type the
-user would like to return from the result
-from hints such as the variable type. */
-int x = 2/5; /* 0 */
-float x = 2/5; /* .166666... */
-
-/* when a series of concatenations
-occurs starting with a string,
-all following operands will be
-converted to strings and then
-concatenated. */
-string num1 = "17";
-int num2 = 38;
-print(num1 + num2); /* "1738" */
-```
-
-When making an implicit type conversion, the Viper type system attempts to make an conversion based on the context of the values and types around it. If a conversion inference can not be made, Viper assumes the type that leads to the least loss of precision.
 
 [↩️  Back to Contents 📌](#0-contents)
 
