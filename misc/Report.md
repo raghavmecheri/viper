@@ -77,7 +77,6 @@ Authors:
     4. [Logical Operators](#74-logical-operators)
         1. [and](#741-the-and-operator)
         2. [or](#742-the-or-operator)
-        3. [has](#743-the-has-operator)
     5. [Variable Operators](#75-variable-operators)
         1. [+= (quick add)](#751-the--operator)
         2. [-= (quick subtract)](#752-the--operator)
@@ -774,16 +773,6 @@ stdout:
 ```
 true
 ```
-### `7.4.3` The HAS Operator
-The HAS operator is given the symbol, "has". When written in between an object of elements and an element, it returns true if the element exists in the object of elements and false otherwise.
-```python
-if (arr has 42){
-  print(true);
-}
-else{
-  print(false);
-}
-```
 ## `7.5` Variable Operators
 Variable operators act on a variable and an integer. These include +=, -=, \*=, and /=.
 ### `7.5.1` The += Operator
@@ -1053,6 +1042,19 @@ int group_length = len(groupie); /* group_length = 2 */
 int dict_length = len(["word": 3,
                        "knees": 5, 
                        "port": 90]); /* dict_length = 3 */
+```
+
+### `9.3.3` `contains()`
+The `contains()` function returns 1 if the element exists in the object of elements and 0 otherwise.
+```java
+char[] chrlist = ['a', 'b', 'c'];
+if (chrlist.contains('a'){        /* same as contains(chrlist, 'a'); */
+  print(true);
+}
+else{
+  print(false);
+}
+
 ```
 
 ## `9.4` Lists
