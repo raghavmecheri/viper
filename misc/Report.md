@@ -1403,13 +1403,13 @@ Mustafa - Lexer, Parser, AST, C Libraries
 Matthew - Semantics, Documentation  Tommy - Semantics, Documentation  
 Trey - Code Generation, Documentation
 ## `12.5` Project Timeline
-| Date          | Milestone                        |
-|---------------|----------------------------------|
-| February 24th | Scanner, Parser, AST Implemented |
-| March 24th    | Hello World Implemented          |
-| April 7th     | Desugar Implemented              |
-| April 16th    | Semantic Checking Implemented    |
-| April 25th    | Codegen Implemented              |
+| Date          | Milestone                                        |
+|---------------|--------------------------------------------------|
+| February 24th | Scanner, Parser, AST Implemented and LRM Written |
+| March 24th    | Hello World Implemented                          |
+| April 7th     | Desugar Implemented                              |
+| April 16th    | Semantic Checking Implemented                    |
+| April 25th    | Codegen Implemented                              |
 ## `12.6` Software Development Environment
 ## `12.7` Programming Style
 We generally wrote code according to the following style guidelines: 
