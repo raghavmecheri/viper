@@ -153,7 +153,7 @@ To obtain the Viper code repository, simply clone this repo: https://github.com/
  - Once cloned, type `cd src && make && cd ..`
  - Next, write some Viper code in a (filename).vp file (details on how to write Viper in next sections)
      - For an example, open a `test.vp` and inside write `print("hello world");`
- - Running `./viper.native test.vp` will output the llvm code if desired
+ - Running `src/viper.native test.vp` will output the llvm code if desired
  - Running `./exec.sh test.vp` will generate three files:
      - `a.ll` = llvm code
      - `a.s` = assembly code
@@ -355,7 +355,6 @@ Viper also supports various higher-order data types, including `list`, `group`, 
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[0] array; /* Empty list */`<br>`float[] scores = [9.7, 8.2];` |
-| `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
 | `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ["dairy", 5],   `<br>                        `"apple": ["fruit", 3] ];`
 
 
