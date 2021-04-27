@@ -10,11 +10,13 @@
 	return word_counts;
 }
 
-string [] test = ["Hello", "world", "sugma", "am", "world", "hello", "world", "viper", "Viper", "viper"];
+string [] test = ["Hello", "world", "succotash", "am", "world", "hello", "world", "viper", "Viper", "viper"];
 
 [string: int] counts = count_words(test);
 
-for(string key in test) {
+string[] unique_keys = counts.keys();
+
+for(string key in unique_keys) {
 	print(key);
 	print("=");
     print(counts[key]);
