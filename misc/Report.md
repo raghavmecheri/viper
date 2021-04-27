@@ -41,7 +41,6 @@ Authors:
 4. [Type System 🗃](#4-type-system)
     1. [Explicit Types](#41-explicit-types)
     2. [Explicit Type Conversion](#42-explicit-type-conversions)
-    3. [Implicit Type Conversion](#43-implicit-type-conversions)
 5. [Statements 🗣](#5-statements)
     1. [Selector Statements](#51-selector-statements)
         1. [if](#511-if-statement)
@@ -78,7 +77,6 @@ Authors:
     4. [Logical Operators](#74-logical-operators)
         1. [and](#741-the-and-operator)
         2. [or](#742-the-or-operator)
-        3. [has](#743-the-has-operator)
     5. [Variable Operators](#75-variable-operators)
         1. [+= (quick add)](#751-the--operator)
         2. [-= (quick subtract)](#752-the--operator)
@@ -131,7 +129,7 @@ Viper is a statically-typed imperative programming language that incorporates po
 ## `1.1` Background
 Modern day scripting languages like Python and Javascript are incredibly convenient. They make it incredibly easy to write short, readable code that makes both prototyping and collaboration a breeze. The issue, however, is that this level of convenience and accesibility comes at a cost: computational efficiency. While simple, forgiving, dynamically-typed languages like the previously mentioned are useful, it requires one to forgo the traditional compiler, and instead use an interpreter when attempting to execute code. The process of simultaneously translating into machine code and executing takes orders of magnitude more time then executing a pre-compiled piece of code, and even the efforts of just-in-time compilers like PyPy have been unsuccessful in completely bridging the gap. To achieve similar efficiency to languages like C and C++, a proper compiler is a necessity.
 
-We set into this project with exactly that in mind: come up with a language that retains all of the simplicity, ease-of-use, and functionality of modern scripting languages, while introducing a proper static typing system to allow for efficient compilation. We wanted it to feel like you are writing in Python or Javascript, but then afterwards to feel like you are running a C program. With that in mind, we first thought about all the features we wanted to carry over from the dynamic scripting languages. First, a user has to be able to open a file and just start typing. The top-level should be a place where code is directly executed, without the need for any complex class-structure. Additionlly, we would require a lot of syntactic sugar for different means of iteration, declaration, and assignment. We would also need to include the functionality of mechanics like arrow functions and ternaries, as well as standard data structures like lists and dictionaries. At this point, we also had some new ideas for features like pattern matching to replace nested ternaries and switches, and built-in index values for iterators. All together, these core ideas came to be what we now call Viper.
+We set into this project with exactly that in mind: come up with a language that retains all of the simplicity, ease-of-use, and functionality of modern scripting languages, while introducing a proper static typing system to allow for efficient compilation. We wanted it to feel like you are writing in Python or Javascript, but then afterwards to feel like you are running a C program. With that in mind, we first thought about all the features we wanted to carry over from the dynamic scripting languages. First, a user has to be able to open a file and just start typing. The top-level should be a place where code is directly executed, without the need for any complex class-structure. Additionally, we would require a lot of syntactic sugar for different means of iteration, declaration, and assignment. We would also need to include the functionality of mechanics like arrow functions and ternaries, as well as standard data structures like lists and dictionaries. At this point, we also had some new ideas for features like pattern matching to replace nested ternaries and switches, and built-in index values for iterators. All together, these core ideas came to be what we now call Viper.
 
 ## `1.2` Related Work
 Most features found in Viper derive from one or more of Python, Javascript, or C. While our scoping and execution rules match Python closest, Viper does not use whitespace to identify scoping, but instead uses the standard brace notation from the other two languages. Additionally, while more abstract than C (as memory allocation is handled for the user), Viper also requires static typing for all variables upon declaration. Operator precedence and applicative-order reduction is the same in Viper as one might expect from any of the aforementioned programming languages.
@@ -153,7 +151,7 @@ To obtain the Viper code repository, simply clone this repo: https://github.com/
  - Once cloned, type `cd src && make && cd ..`
  - Next, write some Viper code in a (filename).vp file (details on how to write Viper in next sections)
      - For an example, open a `test.vp` and inside write `print("hello world");`
- - Running `./viper.native test.vp` will output the llvm code if desired
+ - Running `src/viper.native test.vp` will output the llvm code if desired
  - Running `./exec.sh test.vp` will generate three files:
      - `a.ll` = llvm code
      - `a.s` = assembly code
@@ -355,7 +353,6 @@ Viper also supports various higher-order data types, including `list`, `group`, 
 | Type | Description | Declaration/Usage |
 |-----------|-----------|-----------|
 | `list` | Ordered lists of any type | `int[0] array; /* Empty list */`<br>`float[] scores = [9.7, 8.2];` |
-| `group` | Lightweight structure to hold type-specified collections of data | `(int x, int y) coord = (3, -4);`<br>`(string, int) name_id = ("Bon", 4432);` |
 | `dict` | Key-value pairs with random access | `[int: int] pos; /* Empty */ `<br>`[string: (string, int)] items = [`<br>                          `"milk": ["dairy", 5],   `<br>                        `"apple": ["fruit", 3] ];`
 
 
@@ -446,10 +443,11 @@ for (int num in nums) {
 Viper utilizes casting functions available in the standard library to convert between types as needed. For example, casting up from an int to a float is a simple as wrapping an integer value expression in the _float_ function.
 
 Explicit type conversion functions include:
-* str(x) - converts x to a string
-* float(x) - converts x to a float
-* int(x) - converts x to an int
-* chr(x) - converts x to a char
+* toString(x) - converts x to a string
+* toFloat(x) - converts x to a float
+* toInt(x) - converts x to an int
+* toBool(x) - converts x to a bool
+* toChar(x) - converts x to a char
 
 Examples of using explicit type conversions:
 ```java
@@ -464,30 +462,6 @@ string xyz = toString(2) + toString(5);
 
 Note:
 See Section 6 for more details on explicit type casting functions.
-
-## `4.3` Implicit Type Conversions
-As Viper is statically-typed, we can rely on user-specified types to infer the desired type of an output and convert values accordingly. This comes in handy for common programming tasks such as math operations and string concatenation.
-
-Examples of implicit type conversion:
-```java
-/* when 2 integers are divided, Viper's
-type system is often able to infer which type the
-user would like to return from the result
-from hints such as the variable type. */
-int x = 2/5; /* 0 */
-float x = 2/5; /* .166666... */
-
-/* when a series of concatenations
-occurs starting with a string,
-all following operands will be
-converted to strings and then
-concatenated. */
-string num1 = "17";
-int num2 = 38;
-print(num1 + num2); /* "1738" */
-```
-
-When making an implicit type conversion, the Viper type system attempts to make an conversion based on the context of the values and types around it. If a conversion inference can not be made, Viper assumes the type that leads to the least loss of precision.
 
 [↩️  Back to Contents 📌](#0-contents)
 
@@ -799,16 +773,6 @@ stdout:
 ```
 true
 ```
-### `7.4.3` The HAS Operator
-The HAS operator is given the symbol, "has". When written in between an object of elements and an element, it returns true if the element exists in the object of elements and false otherwise.
-```python
-if (arr has 42){
-  print(true);
-}
-else{
-  print(false);
-}
-```
 ## `7.5` Variable Operators
 Variable operators act on a variable and an integer. These include +=, -=, \*=, and /=.
 ### `7.5.1` The += Operator
@@ -1078,6 +1042,19 @@ int group_length = len(groupie); /* group_length = 2 */
 int dict_length = len(["word": 3,
                        "knees": 5, 
                        "port": 90]); /* dict_length = 3 */
+```
+
+### `9.3.3` `contains()`
+The `contains()` function returns 1 if the element exists in the object of elements and 0 otherwise.
+```java
+char[] chrlist = ['a', 'b', 'c'];
+if (chrlist.contains('a'){        /* same as contains(chrlist, 'a'); */
+  print(true);
+}
+else{
+  print(false);
+}
+
 ```
 
 ## `9.4` Lists
@@ -1404,21 +1381,40 @@ Pattern matching on elements with tuples uses parentheses (for example, For(e1, 
 Lines generally wrap at around 80 characters, when applicable.
 # `13` Architectural Design
 ## `13.1` The Compiler
+Our compiler closely follows the structure we learned about in lecture, with the addition of a desugaring step between the parser and semantic checker. See below for more details. 
 ## `13.2` The Lexer
+The first step of the compiler is the lexer. The lexer scans the program and creates tokens based on spaces. The tokens include common tokens such as assignment(=), operations(+,-,) etc. Some of the less common tokens Viper accepts are guards(|) and ternaries(??).
 ## `13.3` The Parser
+After the lexer returns a list of tokens, the compiler then parses through the tokens and returns types based on the Abstract Syntax Tree. The Abstract Syntax tree separates types by expressions and statements. Statements include things like if conditionals and loops while expressions include binary operations, unary operations and some of our cool syntactic sugar like ternaries. The parser also separates the Viper program into a tuple of global statements and function declarations. This allows Viper to support statements outside of functions. The current scoping system uses “{}”. 
 ## `13.4` Desugaring
+A big portion of the compiler is the desugaring stage. The cool parts of Viper are pattern matching, ternary operators, for loop iterators and more. These parts, while they seem new and interesting, are simply syntactic sugar. The desugaring stage takes the syntactic sugar and replaces the instances in the Abstract Syntax Tree with simpler instances such as if conditionals and while loops. The for loop is also syntactic sugar and is desugared into a while loop. 
 ## `13.5` The Semantic Checker
+After desugaring the AST, it is sent to the semantic checker. The semantic checker is composed of several modules and driven by a driver file. First, all declarations and declaration assignments are checked for Nah types and duplicates. Viper allows for declarations inside of loops, therefore scoping becomes complicated. To achieve the desired scoping outcome, we implemented symbol tables that are connected like a tree, each having a parent which is in an outer scope. Using this method, we are able to check the declarations and declaration assignments inside of loops while creating symbol tables for the global statements and the function declarations which the driver uses. Viper also allows overloading functions, therefore the key for these symbol tables are a concatenation of the function name and the parameter types. After checking and creating these symbol tables, the driver semantically checks the global statements and then the function declarations, returning an SAST. The semantic checker then checks to see if a main exists; if it does then it does nothing, however if a main does not exist, it creates a main and puts all the global statements in it. Finally, the semantically checked global statements and function declarations are returned for code generation. 
 ## `13.6` The Code Generator
 ## `13.7` C Libraries 
+The C library is used for three components of Viper, Advanced math functions/operations, List data structure and methods, Dictionary data structure and methods
+The C library can be found in `library.c`, with optional tests for all standard library data structures and functions included in the main function (blocked by an ifdef). Note that `library.c` also includes `stdio.h`, `stdlib.h`, `math.h`, and `string.h`.
 # `14` Testing
 ## `14.1` Scanner, Parser, AST 
+Tests for the scanning and parsing stage contain syntactically correct code which may or may not be semantically correct code. The tests also include demonstrations of incorrect syntax which yields a syntax error. There is a test that covers everything in the AST for robustness. 
 ## `14.2` Semantic Checker
+The AST tests are not the right kind to test on the semantic checker. This is because an assignment can be syntactically correct, however if the variable never was declared, the Semantic Checker will throw an error. Therefore a new list of tests had to be created to abide by the semantic checker. The most important tests regard type checking; this includes checking the types of declaration assignments, assignments, function return types, loop predicates, etc. This set of tests was forced to be type sensitive.
 ## `14.3` Code Generation 
 # `15` Lessons Learned
-Raghav -
-Mustafa - 
-Matthew - 
-Tommy - 
+Raghav -  
+
+Mustafa - Grammars are wild and powerful. I had a ton of fun taking time experimenting with all of the funky syntax and features possible when building the grammar for our parser. That’s one of the bigger bottlenecks in your language’s power, so make sure to mess around with it and add some new stuff. Also, lambda calculus is cracked. Super cool lesson towards the end of the class, I absolutely loved it.  
+  
+Advice: Don’t try to get everything working at once. Nothing will ever work. Get one thing working. Then another. And another. The grammar, parser, and AST will need to be kinda-complete before semantics and codegen, but start by making the simplest things fully compile, then start adding more and more.  
+    
+Matthew - I have a newfound respect for semantic checking, which is where I spent a majority of my time coding. The semantic checker is the glue between the frontend and backend of the compiler. I needed to make sure that I was reaching every case in the AST properly, bend to the structure in which our program is situated, and then return a simplified SAST to make codegen as easy as it can be. I also learned how important communication is for a large project with many moving parts. A lot of time can be saved by collaborating and planning the architecture of the compiler together opposed to trying to figure out everyone's code alone.
+
+Advice: Start early, ask questions, and try to have your demo working early so that you can build more and enjoy the potential of writing a compiler.
+
+Tommy - The beauty of this course is that it bridges the gap between programmer and computer. Before PLT, I knew almost nothing about the compilation process, except that it magically sucks in a program and produces some output. Today, not only do I know how to think like a programmer, but I’ve also learned how to think like a computer. I now understand why programming languages look the way they do, and what implications small changes in code can have for the computer running it, down to the lowest levels of compilation. Knowing how the code I write will be interpreted, checked, and eventually run has made me a more thoughtful developer and a more efficient debugger. In addition to this general knowledge, I’ve picked up a number of concrete skills. Some of these include generating Makefiles, better understanding the command line, thinking about low-level languages like LLVM and assembly, and of course, coding in the first functional language I’ve seen, OCaml.
+
+Advice: My advice to future students would be to start with a smaller set of language functionality. We started by brainstorming our favorite features of many different languages, and then sought to encapsulate them all in Viper. This seemed really cool at first, but we didn’t realize how much work it would create in the future. By the time we got to code generation, we were stretched pretty thin, and we weren’t able to flush out all of our language’s features as fully as I would have liked. I also would recommend not using as much desugaring as we did. While desugars seemed like clever and efficient ways to bring new features to Viper’s syntax, they proved to be difficult to maintain in semantic checking and LLVM generation. Keeping them as their own statements makes for more work, but allows for better control and understanding of the language as a whole.
+
 Trey - 
 # `16` Appendix
 
