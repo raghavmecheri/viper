@@ -1,5 +1,0 @@
-int func test(int x) {
-    return x * x;
-}
-
-test(10);

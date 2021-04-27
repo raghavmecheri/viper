@@ -1,5 +1,0 @@
-(int, float) tuple = [1, 5.0];
-
-(bool, bool) tup = [true, true];
-
-(bool, bool, (int, bool)) tup2 = [true, true, [10, false]];

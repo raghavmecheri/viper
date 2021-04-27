@@ -1,5 +1,0 @@
-int[] func returnArray() {
-    return [1,2,3,4];
-}
-
-returnArray()[5];
