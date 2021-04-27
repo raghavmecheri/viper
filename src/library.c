@@ -540,7 +540,12 @@ void print_int_list(struct list *inlist)
 
     for (int i = 0; i < inlist->size; i++)
     {
-        printf(" %d ", access_int(inlist, i));
+        printf("%d", access_int(inlist, i));
+
+        if (i < inlist->size - 1)
+        {
+            printf(", ");
+        }
     }
 
     printf("]\n");
@@ -557,10 +562,39 @@ void print_str_list(struct list *inlist)
 
     for (int i = 0; i < inlist->size; i++)
     {
-        printf(" %s ", access_str(inlist, i));
+        printf("%s", access_str(inlist, i));
+
+        if (i < inlist->size - 1)
+        {
+            printf(", ");
+        }
     }
 
     printf("]\n");
+}
+
+int contains_str_key(struct dict *indict, char *key)
+{
+    for (int i = 0; i < indict->pairs->size; i++)
+    {
+        if (!strcmp((char *)access_pair(indict->pairs, i)->key, key))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int contains_char_key(struct dict *indict, char key)
+{
+    for (int i = 0; i < indict->pairs->size; i++)
+    {
+        if (*((char *)access_pair(indict->pairs, i)->key) != key)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 struct list *get_char_keys(struct dict *indict)
@@ -575,7 +609,9 @@ struct list *get_char_keys(struct dict *indict)
     for (int i = 0; i < indict->pairs->size; i++)
     {
         char toadd = *((char *)access_pair(indict->pairs, i)->key);
-        append_char(keys, toadd);
+        if (!contains_char(keys, toadd)){
+            append_char(keys, toadd);
+        }
     }
     return keys;
 }
@@ -592,7 +628,9 @@ struct list *get_str_keys(struct dict *indict)
     for (int i = 0; i < indict->pairs->size; i++)
     {
         char *toadd = (char *)access_pair(indict->pairs, i)->key;
-        append_str(keys, toadd);
+        if (!contains_str(keys, toadd)){
+            append_str(keys, toadd);
+        }
     }
     return keys;
 }
@@ -637,30 +675,6 @@ void remove_char_key(struct dict *indict, char key)
     }
 
     indict->pairs->size -= 1;
-}
-
-int contains_str_key(struct dict *indict, char *key)
-{
-    for (int i = 0; i < indict->pairs->size; i++)
-    {
-        if (!strcmp((char *)access_pair(indict->pairs, i)->key, key))
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int contains_char_key(struct dict *indict, char key)
-{
-    for (int i = 0; i < indict->pairs->size; i++)
-    {
-        if (*((char *)access_pair(indict->pairs, i)->key) != key)
-        {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 int void_to_int(void *v_ptr)

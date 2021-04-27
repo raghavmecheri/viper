@@ -40,21 +40,20 @@ let translate (_, functions) =
   (* create hashtbl for the structs we use in standard library *)
   let struct_types:(string, L.lltype) Hashtbl.t = Hashtbl.create 3 in
 
-  (* lookup struct type *)
+  (* function to lookup struct type *)
   let find_struct_type name = try Hashtbl.find struct_types name 
     with Not_found -> raise (Error "Invalid struct name")
   in 
 
-  (* declare struct type *)
+  (* declare struct type in llvm and retain its lltype in a map *)
   let declare_struct_typ name =
     let struct_type = L.named_struct_type context name in
     Hashtbl.add struct_types name struct_type
   in
 
-  (* build struct body *)
+  (* build struct body by passing lltypes its body contains*)
   let define_struct_body name lltypes = 
-    let struct_type = try Hashtbl.find struct_types name
-      with Not_found -> raise (Error "undefined struct typ") in
+    let struct_type = find_struct_type name in
     L.struct_set_body struct_type lltypes false
   in
 
@@ -80,39 +79,48 @@ let translate (_, functions) =
     | A.Float                   -> float_t
     | A.String                  -> str_t
     | A.Array(_)                -> (L.pointer_type (find_struct_type "list"))
-    | A.Function(_)             -> raise (Error "fucntion lltype? idk chief") (* (ltype_of_typ t) *)
-    | A.Group(_)                -> raise (Error "Group lltype not implemented")
     | A.Dictionary(_, _)        -> (L.pointer_type (find_struct_type "dict"))
+    | A.Function(_)             -> raise (Error "Function lltype not implemented")
+    | A.Group(_)                -> raise (Error "Group lltype not implemented")
   in
 
-  (* Return initial value for a declaration *)
+  (* Return an initial value for a declaration *)
   let rec lvalue_of_typ typ = function
       A.Int | A.Bool | A.Nah | A.Char -> L.const_int (ltype_of_typ typ) 0
     | A.Float                         -> L.const_float (ltype_of_typ typ) 0.0
     | A.String                        -> L.const_pointer_null (ltype_of_typ typ)
-    (* TODO: I believe null pointers would work here, but leaving as exception *)
     | A.Array(_)                      -> L.const_pointer_null (find_struct_type "list")
-    | A.Group(_)                      -> raise (Error "Group llvalue not implemented")
     | A.Dictionary(_, _)              -> L.const_pointer_null (find_struct_type "dict")
-    | A.Function(_)                   -> raise (Error "What should a function init value be ?")
+    | A.Function(_)                   -> raise (Error "Function lltype not implemented")
+    | A.Group(_)                      -> raise (Error "Group llvalue not implemented")
   in
 
   (* BUILT-IN FUNCTIONS HERE*)
+  (* These functions are either built-in C functions or defined in our library.c file *)
 
   (* PRINT FUNCTIONS HERE *)
 
-  let printf_t : L.lltype = 
-    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  let printf_func : L.llvalue = 
-    L.declare_function "printf" printf_t the_module in
-
+  (* Prints a char[] list *)
   let print_char_list_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")) |] in 
   let print_char_list_func : L.llvalue =
     L.declare_function "print_char_list" print_char_list_t the_module in 
 
+  (* Prints a string[] list*)
+  let print_str_list_t : L.lltype =
+    L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")) |] in 
+  let print_str_list_func : L.llvalue =
+    L.declare_function "print_str_list" print_str_list_t the_module in 
+
   (* C STANDARD LIBRARY FUNCTIONS HERE *)
 
+  (* C's printf function *)
+  let printf_t : L.lltype = 
+    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+  let printf_func : L.llvalue = 
+    L.declare_function "printf" printf_t the_module in
+
+  (* Raises a float to the power of 2 *)
   let pow2_t : L.lltype = 
     L.function_type float_t [| float_t |] in
   let pow2_func : L.llvalue = 
@@ -120,7 +128,7 @@ let translate (_, functions) =
 
   (* BUILTIN LIST FUNCTIONS HERE*)
 
-  (* takes in a char pointer to a string of the type *)
+  (* Creates an empty list given a type string *)
   let create_list_t : L.lltype =
     L.function_type (L.pointer_type (find_struct_type "list")) [| L.pointer_type i8_t |] in
   let create_list_func : L.llvalue = 
@@ -128,23 +136,25 @@ let translate (_, functions) =
 
   (* ACCESS LIST FUNCTIONS HERE*)
 
-  (* takes in a list and an int and returns the index of the list *)
+  (* takes in a char[] list and an int and returns the value at the index *)
   let access_char_t : L.lltype =
     L.function_type (ltype_of_typ A.Char) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
   let access_char_func : L.llvalue = 
     L.declare_function "access_char" access_char_t the_module in
 
-  (* takes in a list and an int and returns the index of the list *)
+  (* takes in a int[] list and an int and returns the value at the index *)
   let access_int_t : L.lltype =
     L.function_type (ltype_of_typ A.Int) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int)|] in
   let access_int_func : L.llvalue = 
     L.declare_function "access_int" access_int_t the_module in
 
+  (* takes in a string[] list and an int and returns the value at the index *)
   let access_str_t : L.lltype =
     L.function_type (ltype_of_typ A.String) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int)|] in
   let access_str_func : L.llvalue = 
     L.declare_function "access_str" access_str_t the_module in
 
+  (* takes in a float[] list and an int and returns the value at the index*)
   let access_float_t : L.lltype =
     L.function_type (ltype_of_typ A.Float) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int)|] in
   let access_float_func : L.llvalue = 
@@ -152,23 +162,25 @@ let translate (_, functions) =
 
   (* APPEND LIST FUNCTIONS HERE *)
 
-  (* takes in a list and a char to append *)
+  (* appends a char to a char[] list *)
   let append_char_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Char) |] in
   let append_char_func : L.llvalue = 
     L.declare_function "append_char" append_char_t the_module in
 
-  (* takes in a list and a char to append *)
+  (* appends an int to a int[] list *)
   let append_int_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Int) |] in
   let append_int_func : L.llvalue = 
     L.declare_function "append_int" append_int_t the_module in
 
+  (* appends a string to a string[] list *)
   let append_str_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.String) |] in
   let append_str_func : L.llvalue = 
     L.declare_function "append_str" append_str_t the_module in
 
+  (* appends a float to a float[] list *)
   let append_float_t : L.lltype =
     L.function_type (ltype_of_typ A.Nah) [| (L.pointer_type (find_struct_type "list")); (ltype_of_typ A.Float) |] in
   let append_float_func : L.llvalue = 
@@ -252,7 +264,12 @@ let translate (_, functions) =
   let contains_str_key_func : L.llvalue =
     L.declare_function "contains_str_key" contains_str_key_t the_module in
 
-  (* void pointer -> type derefernce functions *)
+  (* KEYS DICT FUNCTIONS *)
+
+  let get_str_keys_t : L.lltype =
+    L.function_type (L.pointer_type (find_struct_type "list")) [| (L.pointer_type (find_struct_type "dict")) |] in 
+  let get_str_keys_func: L.llvalue =
+    L.declare_function "get_str_keys" get_str_keys_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -566,16 +583,12 @@ let translate (_, functions) =
 
       | SCall("print", [((p_t, p_v) as params)]) -> (match p_t with
           | A.Dictionary(_,_) -> raise (Error "Printing dictionary not supported currently")
-          | A.Array(_) -> L.build_call print_char_list_func [| (expr builder params) |] "" builder
+          | A.Array(arr) -> (match arr with 
+              | A.Char   -> L.build_call print_char_list_func [| (expr builder params) |] "" builder
+              | A.String -> L.build_call print_str_list_func [| (expr builder params) |] "" builder
+              | _ -> raise (Error "Print not supported for array type"))
           | _ -> 
             let print_value = (match p_t with
-                (* pattern matching for turning bools to strings here *)
-                (* | A.Bool  -> 
-                   let t_val = (match p_v with 
-                      | SBoolLiteral(bln) -> if bln then "true" else "false")
-                      | _ -> t_val
-                   in
-                   expr builder (A.String, SStringLiteral(t_val)) *)
                 | A.Float -> L.build_fpext (expr builder params) double_t "ext" builder
                 | _       -> expr builder params)
             in 
@@ -623,7 +636,7 @@ let translate (_, functions) =
         let li = expr builder (List.hd params) in
         L.build_call listlen_func [| li |] "len" builder
 
-      (* contains TODO: only works for lists *)
+      (* contains *)
       | SCall ("contains", params) ->
         let typ = (fst (List.hd params)) in
         let li = expr builder (List.hd params) in
@@ -639,6 +652,15 @@ let translate (_, functions) =
           | _             -> raise (Error "contains function not defined for type")
         in 
         L.build_call (contains_func typ) [| li; p |] "contains" builder
+
+      (* takes in a dict pointer and returns a list pointer of the keys in the dict *)
+      | SCall ("keys", [params]) ->
+        let typ = fst params in
+        (match typ with 
+         | A.Dictionary(_,_) ->
+           let dict = expr builder params in 
+           L.build_call get_str_keys_func [| dict |] "get_str_keys" builder
+         | _                 -> raise (Error "Keys only supported for Dictionaries"))
 
       (* add is a wrapper over keyval, takes in dict, void * key, void * to val *)
       | SCall ("add", params) ->
